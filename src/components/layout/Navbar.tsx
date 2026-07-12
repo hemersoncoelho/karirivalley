@@ -1,0 +1,154 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+const NAV_LINKS = [
+  { href: "/sobre",           label: "Sobre"           },
+  { href: "/membros",         label: "Membros"         },
+  { href: "/como-participar", label: "Como Participar" },
+  { href: "/contato",         label: "Contato"         },
+] as const;
+
+export default function Navbar() {
+  const [stuck, setStuck] = useState(false);
+  const [open,  setOpen]  = useState(false);
+
+  useEffect(() => {
+    const handler = () => setStuck(window.scrollY > 50);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  return (
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between"
+      style={{
+        padding: stuck ? "13px 52px" : "22px 52px",
+        background: stuck ? "rgba(6,13,8,.92)" : "transparent",
+        backdropFilter: stuck ? "blur(24px)" : "none",
+        WebkitBackdropFilter: stuck ? "blur(24px)" : "none",
+        borderBottom: stuck ? "1px solid rgba(255,255,255,.07)" : "1px solid transparent",
+        transition: "padding .4s, background .4s, border-color .4s",
+      }}
+    >
+      {/* Logo */}
+      <Link
+        href="/"
+        className="flex items-center gap-3 flex-shrink-0 no-underline"
+        style={{ opacity: 0, animation: "kv-fade-in .6s cubic-bezier(.16,1,.3,1) .2s forwards" }}
+      >
+        <svg width="40" height="40" viewBox="-130 -110 260 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <polygon points="0,-90 90,0 0,90 -90,0" fill="none" stroke="#E9B23C" strokeWidth="11" strokeLinejoin="round"/>
+          <polygon points="0,-44 44,0 0,44 -44,0" fill="#239D8C"/>
+          <path d="M-128,-36 L-68,0 L-128,36 Z" fill="#E0715A"/>
+          <path d="M128,-36 L68,0 L128,36 Z"  fill="#E0715A"/>
+        </svg>
+        <div className="flex flex-col leading-none">
+          <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 4, textTransform: "uppercase", color: "#F4EDDF" }}>Kariri</span>
+          <span style={{ fontSize: 9, fontWeight: 500, letterSpacing: 5, textTransform: "uppercase", color: "#E9B23C", opacity: .75, marginTop: 3 }}>Valley</span>
+        </div>
+      </Link>
+
+      {/* Desktop nav links */}
+      <ul className="hidden md:flex items-center gap-9 list-none m-0 p-0">
+        {NAV_LINKS.map((link, i) => (
+          <li
+            key={link.href}
+            style={{ opacity: 0, animation: `kv-fade-in .6s cubic-bezier(.16,1,.3,1) ${.32 + i * .1}s forwards` }}
+          >
+            <Link
+              href={link.href}
+              className="no-underline transition-colors duration-200"
+              style={{ fontSize: 14, fontWeight: 500, color: "rgba(244,237,223,.6)" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#F4EDDF")}
+              onMouseLeave={e => (e.currentTarget.style.color = "rgba(244,237,223,.6)")}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      {/* Desktop actions */}
+      <div
+        className="hidden md:flex items-center gap-2"
+        style={{ opacity: 0, animation: "kv-fade-in .6s cubic-bezier(.16,1,.3,1) .72s forwards" }}
+      >
+        <Link
+          href="/login"
+          className="kv-btn-ghost inline-block px-[18px] py-2 rounded-full no-underline"
+          style={{ fontSize: 13, fontWeight: 500, color: "rgba(244,237,223,.7)", border: "1px solid rgba(255,255,255,.18)" }}
+        >
+          Entrar
+        </Link>
+        <Link
+          href="/como-participar"
+          className="inline-block px-5 py-[9px] rounded-full no-underline"
+          style={{ fontSize: 13, fontWeight: 600, color: "#F4EDDF", background: "#1E4D3A", border: "1px solid rgba(255,255,255,.08)", transition: "all .25s" }}
+          onMouseEnter={e => { e.currentTarget.style.background = "#245f47"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 22px rgba(30,77,58,.45)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "#1E4D3A"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+        >
+          Fazer parte
+        </Link>
+      </div>
+
+      {/* Mobile hamburger */}
+      <button
+        className="md:hidden flex flex-col gap-[5px] p-2"
+        aria-label={open ? "Fechar menu" : "Abrir menu"}
+        onClick={() => setOpen(v => !v)}
+        style={{ background: "none", border: "none", cursor: "pointer" }}
+      >
+        {[0, 1, 2].map(i => (
+          <span
+            key={i}
+            className="block"
+            style={{
+              width: 22, height: 1.5, background: "rgba(244,237,223,.7)", borderRadius: 2,
+              transition: "transform .3s, opacity .3s",
+              transform: open
+                ? i === 0 ? "translateY(6.5px) rotate(45deg)"
+                : i === 2 ? "translateY(-6.5px) rotate(-45deg)" : "scaleX(0)"
+                : "none",
+              opacity: open && i === 1 ? 0 : 1,
+            }}
+          />
+        ))}
+      </button>
+
+      {/* Mobile dropdown */}
+      {open && (
+        <div
+          className="absolute top-full left-0 right-0 flex flex-col md:hidden"
+          style={{ background: "rgba(6,13,8,.96)", backdropFilter: "blur(24px)",
+            borderBottom: "1px solid rgba(255,255,255,.07)", padding: "20px 24px 28px" }}
+        >
+          {NAV_LINKS.map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="no-underline py-3 border-b"
+              style={{ fontSize: 15, fontWeight: 500, color: "rgba(244,237,223,.7)", borderColor: "rgba(255,255,255,.06)" }}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div className="flex gap-3 mt-5">
+            <Link href="/login" onClick={() => setOpen(false)}
+              className="flex-1 text-center py-[10px] rounded-full no-underline"
+              style={{ fontSize: 13, fontWeight: 500, color: "rgba(244,237,223,.7)", border: "1px solid rgba(255,255,255,.18)" }}>
+              Entrar
+            </Link>
+            <Link href="/como-participar" onClick={() => setOpen(false)}
+              className="flex-1 text-center py-[10px] rounded-full no-underline"
+              style={{ fontSize: 13, fontWeight: 600, color: "#F4EDDF", background: "#1E4D3A" }}>
+              Fazer parte
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}

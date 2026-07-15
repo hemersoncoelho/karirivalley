@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 const NAV_LINKS = [
@@ -35,19 +36,10 @@ export default function Navbar() {
       {/* Logo */}
       <Link
         href="/"
-        className="flex items-center gap-3 flex-shrink-0 no-underline"
+        className="flex items-center flex-shrink-0 no-underline"
         style={{ opacity: 0, animation: "kv-fade-in .6s cubic-bezier(.16,1,.3,1) .2s forwards" }}
       >
-        <svg width="40" height="40" viewBox="-130 -110 260 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <polygon points="0,-90 90,0 0,90 -90,0" fill="none" stroke="#E9B23C" strokeWidth="11" strokeLinejoin="round"/>
-          <polygon points="0,-44 44,0 0,44 -44,0" fill="#239D8C"/>
-          <path d="M-128,-36 L-68,0 L-128,36 Z" fill="#E0715A"/>
-          <path d="M128,-36 L68,0 L128,36 Z"  fill="#E0715A"/>
-        </svg>
-        <div className="flex flex-col leading-none">
-          <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 4, textTransform: "uppercase", color: "#F4EDDF" }}>Kariri</span>
-          <span style={{ fontSize: 9, fontWeight: 500, letterSpacing: 5, textTransform: "uppercase", color: "#E9B23C", opacity: .75, marginTop: 3 }}>Valley</span>
-        </div>
+        <Image src="/logo.png" alt="Kariri Valley" width={502} height={304} style={{ height: 44, width: "auto" }} priority />
       </Link>
 
       {/* Desktop nav links */}

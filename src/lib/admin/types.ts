@@ -1,0 +1,144 @@
+/**
+ * Tipos do painel administrativo.
+ *
+ * Esta camada espelha o schema esperado do banco (Supabase) para que a troca
+ * dos dados mockados pela integração real seja direta. Os nomes de campos em
+ * camelCase mapeiam 1:1 com as colunas snake_case das tabelas correspondentes.
+ */
+
+/** members.status */
+export type MemberStatus = "pending" | "approved" | "blocked" | "rejected"
+
+/** members.role — controle de acesso ao painel. */
+export type MemberRole = "member" | "curator" | "admin"
+
+/** members.occupation_areas (enum public.occupation_area) */
+export type OccupationArea =
+  | "founder"
+  | "estudante"
+  | "desenvolvedor"
+  | "designer"
+  | "marketing_vendas"
+  | "pesquisador"
+  | "professor"
+  | "investidor"
+  | "empresario"
+  | "mentor"
+  | "parceiro_institucional"
+  | "interessado_inovacao"
+
+export interface SocialLink {
+  platform: "linkedin" | "instagram" | "github" | "website"
+  url: string
+}
+
+/** Espelha a tabela `members` (+ relações agregadas para exibição). */
+export interface AdminMember {
+  id: string
+  profileId: string | null
+  fullName: string
+  displayName: string | null
+  email: string
+  phone: string | null
+  city: string
+  state: string | null
+  bio: string | null
+  photoUrl: string | null
+  company: string | null
+  position: string | null
+  occupationAreas: OccupationArea[]
+  /** slugs de interests (member_interests) */
+  interests: string[]
+  /** member_needs.title */
+  needs: string[]
+  /** member_offers.title */
+  offers: string[]
+  socialLinks: SocialLink[]
+  status: MemberStatus
+  role: MemberRole
+  isPublic: boolean
+  /** ISO date — members.created_at */
+  createdAt: string
+}
+
+/** Espelha a tabela `interests` + contagem de uso. */
+export interface AdminInterest {
+  id: string
+  name: string
+  slug: string
+  category: string
+  active: boolean
+  memberCount: number
+}
+
+/** Estrutura para a fase futura de eventos. */
+export type EventStatus = "draft" | "published" | "past"
+
+export interface AdminEvent {
+  id: string
+  title: string
+  description: string
+  /** ISO datetime */
+  startsAt: string
+  location: string
+  capacity: number | null
+  registrationsCount: number
+  status: EventStatus
+}
+
+/** Estrutura para a fase futura de oportunidades. */
+export type OpportunityStatus = "draft" | "open" | "closed"
+export type OpportunityType = "edital" | "vaga" | "mentoria" | "investimento" | "parceria"
+
+export interface AdminOpportunity {
+  id: string
+  title: string
+  description: string
+  type: OpportunityType
+  /** ISO date */
+  deadline: string | null
+  tags: string[]
+  status: OpportunityStatus
+}
+
+/** Log de auditoria — RN-024. */
+export type AuditAction =
+  | "approve_member"
+  | "reject_member"
+  | "block_member"
+  | "unblock_member"
+  | "edit_member"
+  | "create_interest"
+  | "update_interest"
+  | "toggle_interest"
+
+export interface AuditLogEntry {
+  id: string
+  /** ISO datetime */
+  timestamp: string
+  actorName: string
+  actorRole: MemberRole
+  action: AuditAction
+  targetType: "member" | "interest" | "event" | "opportunity"
+  targetName: string
+  details?: string
+}
+
+/** Métricas agregadas do dashboard. */
+export interface DashboardMetrics {
+  total: number
+  pending: number
+  approved: number
+  blocked: number
+  rejected: number
+  newThisMonth: number
+  incomplete: number
+  topCities: RankedItem[]
+  topInterests: RankedItem[]
+  topProfiles: RankedItem[]
+}
+
+export interface RankedItem {
+  label: string
+  value: number
+}

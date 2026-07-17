@@ -2,24 +2,36 @@
 -- Kariri Valley — 0001: extensões, enums e funções auxiliares
 -- =============================================================
 
+-- As funções abaixo referenciam tabelas criadas na migration 0002;
+-- desliga a validação de corpo para permitir a referência futura.
+set check_function_bodies = off;
+
 create extension if not exists unaccent with schema extensions;
 
--- ---------- ENUMS ----------
+-- ---------- ENUMS (idempotentes para re-execução segura) ----------
 
--- Status do membro (RN: pending -> approved | rejected | blocked)
-create type public.member_status as enum ('pending', 'approved', 'rejected', 'blocked');
+do $$ begin
+  -- Status do membro (RN: pending -> approved | rejected | blocked)
+  create type public.member_status as enum ('pending', 'approved', 'rejected', 'blocked');
+exception when duplicate_object then null; end $$;
 
--- Visibilidade por campo (RN-006/008/009)
-create type public.field_visibility as enum ('public', 'members', 'private');
+do $$ begin
+  -- Visibilidade por campo (RN-006/008/009)
+  create type public.field_visibility as enum ('public', 'members', 'private');
+exception when duplicate_object then null; end $$;
 
--- Papel do usuário na plataforma
-create type public.user_role as enum ('member', 'ambassador', 'admin');
+do $$ begin
+  -- Papel do usuário na plataforma
+  create type public.user_role as enum ('member', 'ambassador', 'admin');
+exception when duplicate_object then null; end $$;
 
--- Área de atuação (formulário de cadastro)
-create type public.occupation_area as enum (
-  'empreendedor', 'desenvolvedor', 'investidor', 'educador',
-  'gestor_publico', 'estudante', 'outro'
-);
+do $$ begin
+  -- Área de atuação (formulário de cadastro)
+  create type public.occupation_area as enum (
+    'empreendedor', 'desenvolvedor', 'investidor', 'educador',
+    'gestor_publico', 'estudante', 'outro'
+  );
+exception when duplicate_object then null; end $$;
 
 -- ---------- FUNÇÕES AUXILIARES ----------
 

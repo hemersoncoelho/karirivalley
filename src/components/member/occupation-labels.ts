@@ -1,0 +1,18 @@
+export const OCCUPATION_LABELS: Record<string, string> = {
+  empreendedor: "Empreendedor(a)",
+  desenvolvedor: "Desenvolvedor(a)",
+  investidor: "Investidor(a)",
+  educador: "Educador(a)",
+  gestor_publico: "Gestor(a) público",
+  estudante: "Estudante",
+  outro: "Outro",
+  founder: "Founder",
+  designer: "Designer",
+  marketing_vendas: "Marketing/Vendas",
+  pesquisador: "Pesquisador(a)",
+  professor: "Professor(a)",
+  empresario: "Empresário(a)",
+  mentor: "Mentor(a)",
+  parceiro_institucional: "Parceiro institucional",
+  interessado_inovacao: "Interessado em inovação",
+}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
   { href: "/sobre",           label: "Sobre"           },
@@ -14,12 +15,16 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [stuck, setStuck] = useState(false);
   const [open,  setOpen]  = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handler = () => setStuck(window.scrollY > 50);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  // O painel administrativo tem seu próprio layout — sem a navbar pública.
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <nav
@@ -39,7 +44,7 @@ export default function Navbar() {
         className="flex items-center flex-shrink-0 no-underline"
         style={{ opacity: 0, animation: "kv-fade-in .6s cubic-bezier(.16,1,.3,1) .2s forwards" }}
       >
-        <Image src="/logo.png" alt="Kariri Valley" width={502} height={304} style={{ height: 44, width: "auto" }} priority />
+        <Image src="/logo.png" alt="Kariri Valley" width={502} height={304} style={{ height: 54, width: "auto" }} priority />
       </Link>
 
       {/* Desktop nav links */}

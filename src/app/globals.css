@@ -360,3 +360,96 @@ h1, h2, h3, h4 {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* ── City connection map (About/Hero section) ────────────────────────────── */
+
+.kv-map-flow {
+  animation: kv-map-flow 2.8s linear infinite;
+}
+
+.kv-map-pulse {
+  animation: kv-map-pulse 3.2s ease-out infinite;
+}
+
+@keyframes kv-map-flow {
+  to { stroke-dashoffset: -52; }
+}
+
+@keyframes kv-map-pulse {
+  0%   { transform: scale(.85); opacity: .2; }
+  70%  { transform: scale(1.18); opacity: 0; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
+
+/* ── Ecosystem network visual (About section) ────────────────────────────── */
+
+.kv-hub-breathe {
+  animation: kv-hub-breathe 5s ease-in-out infinite;
+}
+
+@keyframes kv-hub-breathe {
+  0%, 100% { transform: scale(1);    opacity: .55; }
+  50%       { transform: scale(1.16); opacity: .85; }
+}
+
+/* ── Hero ↔ segunda seção: fio de continuidade ───────────────────────────── */
+
+.kv-bridge-line {
+  position: relative;
+  width: 1px;
+  height: 84px;
+  background: linear-gradient(to bottom, transparent, rgba(35,157,140,.6));
+}
+
+.kv-bridge-line::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #E9B23C;
+  transform: translate(-50%, 0);
+  animation: kv-bridge-flow 3.2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(232,184,75,.7);
+}
+
+.kv-bridge-line-up {
+  background: linear-gradient(to bottom, rgba(35,157,140,.6), transparent);
+}
+
+.kv-bridge-line-up::after {
+  animation-delay: 1.6s;
+}
+
+@keyframes kv-bridge-flow {
+  0%   { top: 0%;   opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-map-flow {
+    animation: none;
+    opacity: .32;
+  }
+  .kv-map-pulse {
+    animation: none;
+    opacity: .12;
+    transform: scale(1);
+  }
+  .kv-bridge-line::after {
+    animation: none;
+    opacity: .5;
+    top: 50%;
+  }
+  .kv-hub-breathe {
+    animation: none;
+    opacity: .65;
+  }
+  .kv-slow-spin {
+    animation: none;
+  }
+}

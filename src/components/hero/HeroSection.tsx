@@ -31,6 +31,15 @@ const METRICS = [
   { to:  40, sup: '+', lbl: 'Empresas' },
 ] as const;
 
+// Agentes do ecossistema orbitando a comunidade — a mesma linguagem visual
+// (nó + linha tracejada animada) reaparece no mapa de cidades da seção seguinte.
+const ORBIT_NODES = [
+  { key: 'pessoas',       label: 'Pessoas',       x: 0,    y: -195, tx: '-50%',  ty: '-140%', color: '#239D8C' },
+  { key: 'startups',      label: 'Startups',      x: 195,  y: 0,    tx: '8%',    ty: '-50%',  color: '#E9B23C' },
+  { key: 'universidades', label: 'Universidades', x: 0,    y: 195,  tx: '-50%',  ty: '25%',   color: '#E0715A' },
+  { key: 'investidores',  label: 'Investidores',  x: -160, y: -175, tx: '-112%', ty: '-40%',  color: '#C25A2E' },
+] as const;
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HeroSection() {
@@ -202,21 +211,21 @@ export default function HeroSection() {
 
           {/* Headline */}
           <h1 className="mb-6" style={{ fontFamily:'var(--font-fraunces), Georgia, serif',
-            fontSize:'clamp(48px, 5.2vw, 74px)', fontWeight:700, lineHeight:1.06,
+            fontSize:'clamp(40px, 4.6vw, 68px)', fontWeight:700, lineHeight:1.1,
             letterSpacing:'-1.5px', color:'#F4EDDF' }}>
             <span className="block overflow-hidden">
-              <span className="kv-line-up" style={{ animationDelay: '.7s' }}>O ecossistema</span>
+              <span className="kv-line-up" style={{ animationDelay: '.7s' }}>Uma comunidade</span>
             </span>
             <span className="block overflow-hidden">
               <span className="kv-line-up" style={{ animationDelay: '.88s' }}>
-                de{' '}
+                que{' '}
                 <span className="kv-em-word" style={{ fontStyle:'italic', color:'#239D8C', fontWeight:400,
-                  position:'relative', display:'inline-block' }}>inovação</span>
+                  position:'relative', display:'inline-block' }}>conecta</span>{' '}quem
               </span>
             </span>
             <span className="block overflow-hidden">
               <span className="kv-line-up" style={{ animationDelay: '1.06s' }}>
-                do <span style={{ color:'#C25A2E' }}>Cariri</span>
+                faz inovação no <span style={{ color:'#C25A2E' }}>Cariri</span>
               </span>
             </span>
           </h1>
@@ -224,7 +233,7 @@ export default function HeroSection() {
           {/* Subtitle */}
           <p className="kv-fade-in-up mb-10 max-w-[460px]"
             style={{ animationDelay:'1.3s', fontSize:'clamp(15px, 1.6vw, 18px)', lineHeight:1.68, color:'rgba(244,237,223,.5)' }}>
-            Tecnologia, startups e pessoas construindo o futuro do interior do Ceará. Uma comunidade que conecta quem está transformando a região.
+            Pessoas, startups, universidades e investidores se encontram aqui — o mapa vivo de quem está transformando o interior do Ceará.
           </p>
 
           {/* CTAs */}
@@ -232,15 +241,15 @@ export default function HeroSection() {
             <Link href="/como-participar"
               className="kv-btn-primary inline-flex items-center gap-2 px-9 py-4 rounded-full text-base font-semibold"
               style={{ background:'#1E4D3A', color:'#F4EDDF', border:'1px solid rgba(255,255,255,.1)', textDecoration:'none' }}>
-              Conhecer a comunidade
+              Entrar para a comunidade
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
-            <Link href="/login"
+            <Link href="/sobre"
               className="kv-btn-ghost inline-flex items-center gap-2 px-8 py-4 rounded-full text-base font-medium"
               style={{ color:'rgba(244,237,223,.65)', border:'1px solid rgba(255,255,255,.16)', textDecoration:'none' }}>
-              Já sou membro
+              Conhecer a Kariri Valley
             </Link>
           </div>
 
@@ -264,13 +273,45 @@ export default function HeroSection() {
         <div ref={visualRef} className="relative hidden lg:flex items-center justify-center"
           style={{ willChange: 'transform' }}>
 
-          {/* Rotating backdrop diamond */}
-          <div className="absolute inset-[-60px] flex items-center justify-center pointer-events-none kv-slow-spin" aria-hidden="true">
+          {/* Ecosystem orbit — os agentes conectados pela comunidade */}
+          <div className="absolute inset-[-60px] flex items-center justify-center pointer-events-none kv-slow-spin" style={{ animationDuration:'70s' }} aria-hidden="true">
             <svg viewBox="-220 -220 440 440" className="w-full h-full">
               <polygon points="0,-200 200,0 0,200 -200,0" fill="none" stroke="rgba(232,184,75,.055)" strokeWidth="1.5"/>
               <polygon points="0,-160 160,0 0,160 -160,0" fill="none" stroke="rgba(35,157,140,.04)" strokeWidth="1"/>
               <polygon points="0,-120 120,0 0,120 -120,0" fill="none" stroke="rgba(232,184,75,.028)" strokeWidth="1"/>
             </svg>
+          </div>
+
+          {/* Ecosystem nodes — pessoas, startups, universidades, investidores conectados ao centro */}
+          <svg viewBox="-220 -220 440 440" className="absolute inset-[-60px] w-[calc(100%+120px)] h-[calc(100%+120px)] pointer-events-none"
+            style={{ zIndex: 1 }} aria-hidden="true">
+            {ORBIT_NODES.map((n, i) => (
+              <path key={`edge-${n.key}`} d={`M0,0 L${n.x},${n.y}`} fill="none" stroke={n.color} strokeWidth="1.25"
+                strokeDasharray="2 10" strokeLinecap="round" opacity=".5" className="kv-map-flow"
+                style={{ animationDelay: `${i * -0.7}s` }} />
+            ))}
+            {ORBIT_NODES.map(n => (
+              <circle key={`ring-${n.key}`} cx={n.x} cy={n.y} r="15" fill={n.color} opacity=".18"
+                className="kv-map-pulse" style={{ transformBox:'fill-box', transformOrigin:'center' }} />
+            ))}
+            {ORBIT_NODES.map(n => (
+              <circle key={`dot-${n.key}`} cx={n.x} cy={n.y} r="4" fill={n.color} />
+            ))}
+          </svg>
+          <div className="absolute inset-[-60px] pointer-events-none" style={{ zIndex: 2 }} aria-hidden="true">
+            {ORBIT_NODES.map((n, i) => (
+              <div key={n.key} className="absolute kv-fade-in" style={{
+                left: `calc(50% + ${n.x}px)`, top: `calc(50% + ${n.y}px)`,
+                transform: `translate(${n.tx}, ${n.ty})`,
+                animation: `kv-fade-in .6s ease ${1.8 + i * 0.25}s both`,
+              }}>
+                <span className="inline-flex items-center gap-[6px] px-[10px] py-[5px] rounded-full whitespace-nowrap"
+                  style={{ fontSize: 11, fontWeight: 600, color: n.color,
+                    background: 'rgba(6,13,8,.72)', border: `1px solid ${n.color}55` }}>
+                  {n.label}
+                </span>
+              </div>
+            ))}
           </div>
 
           {/* Glass member card */}
@@ -371,7 +412,7 @@ export default function HeroSection() {
 
       {/* Metrics strip */}
       <div className="relative flex justify-center flex-wrap"
-        style={{ borderTop:'1px solid rgba(255,255,255,.07)', background:'rgba(255,255,255,.025)',
+        style={{ borderTop:'1px solid rgba(255,255,255,.045)', background:'rgba(255,255,255,.015)',
           zIndex:10, animation:'kv-fade-in .8s ease 2s both' }}>
         {METRICS.map((m, i) => (
           <div key={m.lbl} className="flex flex-col items-center gap-1"
@@ -384,6 +425,11 @@ export default function HeroSection() {
             <div className="text-[11px] tracking-[1.5px] uppercase font-semibold" style={{ color:'rgba(244,237,223,.32)' }}>{m.lbl}</div>
           </div>
         ))}
+      </div>
+
+      {/* Bridge connector — o fio que atravessa para a seção seguinte */}
+      <div className="absolute left-1/2 pointer-events-none" style={{ bottom:0, transform:'translateX(-50%)', zIndex:11 }} aria-hidden="true">
+        <div className="kv-bridge-line" />
       </div>
     </section>
   );

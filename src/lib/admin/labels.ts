@@ -6,6 +6,7 @@ import type {
   OpportunityStatus,
   OpportunityType,
   AuditAction,
+  StartupSector,
 } from "./types"
 
 export const STATUS_LABELS: Record<MemberStatus, string> = {
@@ -70,6 +71,7 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   block_member: "Bloqueou membro",
   unblock_member: "Desbloqueou membro",
   edit_member: "Editou membro",
+  role_change: "Alterou papel",
   create_interest: "Criou interesse",
   update_interest: "Editou interesse",
   toggle_interest: "Ativou/desativou interesse",
@@ -77,6 +79,23 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
 
 export function occupationLabel(value: string): string {
   return OCCUPATION_LABELS[value as OccupationArea] ?? value
+}
+
+export const SECTOR_LABELS: Record<StartupSector, string> = {
+  agro: "Agro",
+  turismo: "Turismo",
+  saude: "Health Tech",
+  deep_tech: "Deep Tech",
+  fintech: "Fintech",
+  edtech: "Edtech",
+  varejo_ecommerce: "Varejo/E-commerce",
+  industria: "Indústria",
+  impacto_social: "Impacto Social",
+  outro: "Outro",
+}
+
+export function sectorLabel(value: string): string {
+  return SECTOR_LABELS[value as StartupSector] ?? value
 }
 
 /** Formata data ISO para pt-BR (curto). */

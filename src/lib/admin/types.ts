@@ -32,6 +32,19 @@ export interface SocialLink {
   url: string
 }
 
+/** members.startup_sector (enum public.startup_sector) */
+export type StartupSector =
+  | "agro"
+  | "turismo"
+  | "saude"
+  | "deep_tech"
+  | "fintech"
+  | "edtech"
+  | "varejo_ecommerce"
+  | "industria"
+  | "impacto_social"
+  | "outro"
+
 /** Espelha a tabela `members` (+ relações agregadas para exibição). */
 export interface AdminMember {
   id: string
@@ -59,6 +72,12 @@ export interface AdminMember {
   isPublic: boolean
   /** ISO date — members.created_at */
   createdAt: string
+  startupName: string | null
+  startupStage: string | null
+  startupCnpj: string | null
+  startupLogoUrl: string | null
+  startupProblem: string | null
+  startupSector: StartupSector | null
 }
 
 /** Espelha a tabela `interests` + contagem de uso. */
@@ -109,6 +128,7 @@ export type AuditAction =
   | "block_member"
   | "unblock_member"
   | "edit_member"
+  | "role_change"
   | "create_interest"
   | "update_interest"
   | "toggle_interest"
@@ -120,7 +140,7 @@ export interface AuditLogEntry {
   actorName: string
   actorRole: MemberRole
   action: AuditAction
-  targetType: "member" | "interest" | "event" | "opportunity"
+  targetType: "member" | "profile" | "interest" | "event" | "opportunity"
   targetName: string
   details?: string
 }
@@ -137,6 +157,8 @@ export interface DashboardMetrics {
   topCities: RankedItem[]
   topInterests: RankedItem[]
   topProfiles: RankedItem[]
+  startupsCount: number
+  topSectors: RankedItem[]
 }
 
 export interface RankedItem {

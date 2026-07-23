@@ -13,6 +13,7 @@ import {
   Briefcase,
   AlertCircle,
   ArrowRight,
+  Rocket,
 } from "lucide-react"
 import { StatCard } from "@/components/admin/StatCard"
 import { BarList } from "@/components/admin/BarList"
@@ -54,7 +55,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* KPIs principais */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <StatCard label="Total de membros" value={metrics.total} icon={Users} tone="neutral" />
         <StatCard label="Pendentes" value={metrics.pending} icon={Clock} tone="amber" />
         <StatCard label="Aprovados" value={metrics.approved} icon={UserCheck} tone="teal" />
@@ -65,10 +66,11 @@ export default function AdminDashboardPage() {
           icon={TrendingUp}
           tone="gold"
         />
+        <StatCard label="Startups cadastradas" value={metrics.startupsCount} icon={Rocket} tone="teal" />
       </div>
 
       {/* Rankings */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -104,6 +106,18 @@ export default function AdminDashboardPage() {
             <BarList items={metrics.topProfiles} color="var(--kv-coral)" />
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Rocket className="size-4 text-[var(--kv-teal)]" />
+              Setores de startup mais comuns
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BarList items={metrics.topSectors} color="var(--kv-teal)" />
+          </CardContent>
+        </Card>
       </div>
 
       {/* Pendências + incompletos */}
@@ -114,7 +128,12 @@ export default function AdminDashboardPage() {
               <Clock className="size-4 text-amber-600" />
               Aprovações pendentes
             </CardTitle>
-            <Button variant="ghost" size="sm" render={<Link href="/admin/aprovacoes" />}>
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link href="/admin/aprovacoes" />}
+            >
               Ver todas <ArrowRight className="size-3.5" />
             </Button>
           </CardHeader>
@@ -153,7 +172,12 @@ export default function AdminDashboardPage() {
                 {metrics.incomplete}
               </span>
             </CardTitle>
-            <Button variant="ghost" size="sm" render={<Link href="/admin/membros" />}>
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link href="/admin/membros" />}
+            >
               Gerenciar <ArrowRight className="size-3.5" />
             </Button>
           </CardHeader>

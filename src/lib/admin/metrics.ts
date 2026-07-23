@@ -1,4 +1,4 @@
-import { occupationLabel } from "./labels"
+import { occupationLabel, sectorLabel } from "./labels"
 import type { AdminInterest, AdminMember, DashboardMetrics, RankedItem } from "./types"
 
 /** Rótulo do mês corrente (ex.: "julho de 2026"), usado no KPI de novos membros. */
@@ -54,6 +54,7 @@ export function computeMetrics(
   const ref = new Date()
   const cities = new Map<string, number>()
   const profiles = new Map<string, number>()
+  const sectors = new Map<string, number>()
 
   let pending = 0
   let approved = 0
@@ -61,6 +62,7 @@ export function computeMetrics(
   let rejected = 0
   let newThisMonth = 0
   let incomplete = 0
+  let startupsCount = 0
 
   for (const m of members) {
     if (m.status === "pending") pending++
@@ -75,6 +77,14 @@ export function computeMetrics(
     for (const area of m.occupationAreas) {
       const label = occupationLabel(area)
       profiles.set(label, (profiles.get(label) ?? 0) + 1)
+    }
+
+    if (m.startupStage) {
+      startupsCount++
+      if (m.startupSector) {
+        const label = sectorLabel(m.startupSector)
+        sectors.set(label, (sectors.get(label) ?? 0) + 1)
+      }
     }
   }
 
@@ -95,5 +105,7 @@ export function computeMetrics(
     topCities: rank(cities),
     topInterests,
     topProfiles: rank(profiles),
+    startupsCount,
+    topSectors: rank(sectors),
   }
 }

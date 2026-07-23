@@ -4,7 +4,7 @@ import { ArrowLeft, Briefcase, Camera, Code2, Globe, Mail, Phone, UserCircle2 } 
 
 import type { DirectoryMember } from "@/lib/members/directory"
 import { OCCUPATION_LABELS } from "@/components/member/occupation-labels"
-import { STARTUP_STAGE_LABELS } from "@/lib/onboarding/options"
+import { STARTUP_STAGE_LABELS, STARTUP_SECTOR_LABELS } from "@/lib/onboarding/options"
 
 const SOCIAL_ICONS: Record<string, typeof Globe> = {
   linkedin: Briefcase,
@@ -96,14 +96,35 @@ export function MemberProfileView({ member, showBackLink = true }: MemberProfile
       {member.startup_name && (
         <section>
           <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Startup</h2>
-          <p className="mt-2 flex items-center gap-2 text-sm text-[#F4EDDF]/60">
-            {member.startup_name}
-            {member.startup_stage && (
-              <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
-                {STARTUP_STAGE_LABELS[member.startup_stage] ?? member.startup_stage}
-              </span>
+          <div className="mt-2 flex items-start gap-3">
+            {member.startup_logo_url && (
+              <Image
+                src={member.startup_logo_url}
+                alt={member.startup_name}
+                width={40}
+                height={40}
+                className="size-10 shrink-0 rounded-lg object-cover"
+              />
             )}
-          </p>
+            <div>
+              <p className="flex flex-wrap items-center gap-2 text-sm text-[#F4EDDF]/60">
+                {member.startup_name}
+                {member.startup_stage && (
+                  <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+                    {STARTUP_STAGE_LABELS[member.startup_stage] ?? member.startup_stage}
+                  </span>
+                )}
+                {member.startup_sector && (
+                  <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-[#F4EDDF]/70">
+                    {STARTUP_SECTOR_LABELS[member.startup_sector] ?? member.startup_sector}
+                  </span>
+                )}
+              </p>
+              {member.startup_problem && (
+                <p className="mt-1 text-sm text-[#F4EDDF]/50">{member.startup_problem}</p>
+              )}
+            </div>
+          </div>
         </section>
       )}
 

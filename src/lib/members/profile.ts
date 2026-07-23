@@ -47,10 +47,26 @@ export async function saveSocialLinks(memberId: string, links: SocialLinkInput[]
 
 export type StartupStage = "ideacao" | "mvp" | "tracao" | "escala" | ""
 
+export type StartupSector =
+  | "agro"
+  | "turismo"
+  | "saude"
+  | "deep_tech"
+  | "fintech"
+  | "edtech"
+  | "varejo_ecommerce"
+  | "industria"
+  | "impacto_social"
+  | "outro"
+  | ""
+
 export interface StartupInfoInput {
   name: string
   stage: StartupStage
   cnpj: string
+  logoUrl: string | null
+  problem: string
+  sector: StartupSector
 }
 
 /**
@@ -66,7 +82,14 @@ export async function saveStartupInfo(memberId: string, input: StartupInfoInput)
     const supabase = getSupabaseBrowserClient()
     const { error } = await supabase
       .from("members")
-      .update({ startup_name: null, startup_stage: null, startup_cnpj: null })
+      .update({
+        startup_name: null,
+        startup_stage: null,
+        startup_cnpj: null,
+        startup_logo_url: null,
+        startup_problem: null,
+        startup_sector: null,
+      })
       .eq("id", memberId)
     if (error) throw new Error(`Não foi possível salvar a startup: ${error.message}`)
     return
@@ -86,6 +109,9 @@ export async function saveStartupInfo(memberId: string, input: StartupInfoInput)
       startup_name: name,
       startup_stage: stage,
       startup_cnpj: cnpjDigits || null,
+      startup_logo_url: input.logoUrl,
+      startup_problem: input.problem.trim() || null,
+      startup_sector: input.sector || null,
     })
     .eq("id", memberId)
   if (error) throw new Error(`Não foi possível salvar a startup: ${error.message}`)

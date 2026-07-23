@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Briefcase, CalendarDays, LayoutDashboard, LogOut, Menu, Users, UserCircle2, X } from "lucide-react"
+import { Briefcase, CalendarDays, LayoutDashboard, LogOut, Menu, Rocket, Users, UserCircle2, X } from "lucide-react"
 
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import { KaririMark } from "@/components/ui/KaririMark"
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/comunidade", label: "Comunidade", icon: Users },
+  { href: "/vitrine", label: "Startups", icon: Rocket },
   { href: "/eventos", label: "Eventos", icon: CalendarDays },
   { href: "/oportunidades", label: "Oportunidades", icon: Briefcase },
 ] as const

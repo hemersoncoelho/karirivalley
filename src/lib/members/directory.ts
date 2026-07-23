@@ -19,10 +19,13 @@ export interface DirectoryMember {
   social_links: { platform: string; url: string }[]
   startup_name: string | null
   startup_stage: string | null
+  startup_logo_url: string | null
+  startup_problem: string | null
+  startup_sector: string | null
 }
 
 const DIRECTORY_COLUMNS =
-  "id, slug, name, photo_url, city, company, position, bio, email, phone, occupation_areas, member_since, interest_slugs, need_titles, offer_titles, social_links, startup_name, startup_stage"
+  "id, slug, name, photo_url, city, company, position, bio, email, phone, occupation_areas, member_since, interest_slugs, need_titles, offer_titles, social_links, startup_name, startup_stage, startup_logo_url, startup_problem, startup_sector"
 
 /** Diretório interno da área de membros (member_directory_full — só authenticated). */
 export async function fetchDirectory(): Promise<DirectoryMember[]> {

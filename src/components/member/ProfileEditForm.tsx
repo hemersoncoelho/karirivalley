@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { UserCircle2 } from "lucide-react"
+import { UserCircle2, Rocket } from "lucide-react"
 
 import {
   fetchInterests,
@@ -11,6 +11,7 @@ import {
   syncInterests,
   syncSelections,
   uploadMemberPhoto,
+  uploadStartupLogo,
   type Interest,
 } from "@/lib/onboarding/api"
 import { validatePhotoFile } from "@/lib/onboarding/schemas"
@@ -21,10 +22,11 @@ import {
   saveStartupInfo,
   type SocialPlatform,
   type StartupStage,
+  type StartupSector,
 } from "@/lib/members/profile"
 import type { ProfileBundle } from "@/lib/members/profile-bundle"
 import type { CurrentMember } from "@/lib/members/current-member"
-import { STARTUP_STAGES } from "@/lib/onboarding/options"
+import { STARTUP_STAGES, STARTUP_SECTORS } from "@/lib/onboarding/options"
 import { Field, TextInput, TextArea, SelectInput, Chip, ToggleRow, ErrorBanner } from "@/components/onboarding/fields"
 
 interface ProfileEditFormProps {
@@ -52,6 +54,11 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
   const [startupStage, setStartupStage] = useState<StartupStage>((member.startup_stage as StartupStage) ?? "")
   const [startupName, setStartupName] = useState(member.startup_name ?? "")
   const [startupCnpj, setStartupCnpj] = useState(member.startup_cnpj ?? "")
+  const [startupSector, setStartupSector] = useState<StartupSector>((member.startup_sector as StartupSector) ?? "")
+  const [startupProblem, setStartupProblem] = useState(member.startup_problem ?? "")
+  const [logoUrl, setLogoUrl] = useState(member.startup_logo_url)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
   const [photoUrl, setPhotoUrl] = useState(member.photo_url)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -99,6 +106,19 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
     setPhotoPreview(URL.createObjectURL(file))
   }
 
+  function handleLogoChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const validationError = validatePhotoFile(file)
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+    setError(null)
+    setLogoFile(file)
+    setLogoPreview(URL.createObjectURL(file))
+  }
+
   function toggleInterest(id: string) {
     setSelectedInterestIds((current) => (current.includes(id) ? current.filter((v) => v !== id) : [...current, id]))
   }
@@ -138,7 +158,21 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         existingMemberId: member.id,
       })
 
-      await saveStartupInfo(member.id, { name: startupName, stage: startupStage, cnpj: startupCnpj })
+      let finalLogoUrl = logoUrl
+      if (logoFile && member.profile_id) {
+        finalLogoUrl = await uploadStartupLogo(member.profile_id, logoFile)
+        setLogoUrl(finalLogoUrl)
+        setLogoFile(null)
+      }
+
+      await saveStartupInfo(member.id, {
+        name: startupName,
+        stage: startupStage,
+        cnpj: startupCnpj,
+        logoUrl: finalLogoUrl,
+        problem: startupProblem,
+        sector: startupSector,
+      })
       await syncInterests(member.id, selectedInterestIds)
       await syncSelections("member_needs", member.id, selectedNeeds)
       await syncSelections("member_offers", member.id, selectedOffers)
@@ -239,8 +273,54 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </Field>
         {startupStage && (
           <>
+            <div className="flex items-center gap-4">
+              {logoPreview || logoUrl ? (
+                <Image
+                  src={logoPreview ?? logoUrl ?? ""}
+                  alt={startupName || "Logo da startup"}
+                  width={64}
+                  height={64}
+                  className="size-16 rounded-xl object-cover"
+                />
+              ) : (
+                <div className="flex size-16 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                  <Rocket size={26} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
+                </div>
+              )}
+              <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
+                Logo da startup
+                <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleLogoChange} />
+              </label>
+            </div>
             <Field label="Nome da startup" htmlFor="startupName">
               <TextInput id="startupName" value={startupName} onChange={(e) => setStartupName(e.target.value)} />
+            </Field>
+            <Field label="Área de atuação" htmlFor="startupSector" optional>
+              <SelectInput
+                id="startupSector"
+                value={startupSector}
+                onChange={(e) => setStartupSector(e.target.value as StartupSector)}
+              >
+                <option value="">Selecione um setor</option>
+                {STARTUP_SECTORS.map((sector) => (
+                  <option key={sector.value} value={sector.value}>
+                    {sector.label}
+                  </option>
+                ))}
+              </SelectInput>
+            </Field>
+            <Field
+              label="Qual problema a startup resolve?"
+              htmlFor="startupProblem"
+              optional
+              hint={`${startupProblem.length}/300 caracteres`}
+            >
+              <TextArea
+                id="startupProblem"
+                maxLength={300}
+                value={startupProblem}
+                onChange={(e) => setStartupProblem(e.target.value)}
+              />
             </Field>
             {startupStage !== "ideacao" && (
               <Field label="CNPJ" htmlFor="startupCnpj" hint="Somente números (14 dígitos)">

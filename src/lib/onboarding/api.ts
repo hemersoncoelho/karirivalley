@@ -27,6 +27,9 @@ export interface MemberRecord {
   startup_name: string | null
   startup_stage: string | null
   startup_cnpj: string | null
+  startup_logo_url: string | null
+  startup_problem: string | null
+  startup_sector: string | null
 }
 
 export interface VisibilityData {
@@ -40,7 +43,7 @@ export interface VisibilityData {
 }
 
 const MEMBER_COLUMNS =
-  "id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, startup_name, startup_stage, startup_cnpj"
+  "id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, startup_name, startup_stage, startup_cnpj, startup_logo_url, startup_problem, startup_sector"
 
 function toError(context: string, error: { message: string } | null): Error {
   return new Error(`${context}: ${error?.message ?? "erro desconhecido"}`)
@@ -246,5 +249,20 @@ export async function uploadMemberPhoto(userId: string, file: File): Promise<str
   if (error) throw toError("Não foi possível enviar a foto", error)
 
   const { data } = supabase.storage.from("member-photos").getPublicUrl(path)
+  return data.publicUrl
+}
+
+/** Upload da logo da startup (bucket startup-logos, pasta do próprio usuário). */
+export async function uploadStartupLogo(userId: string, file: File): Promise<string> {
+  const supabase = getSupabaseBrowserClient()
+  const extension = PHOTO_EXTENSIONS[file.type] ?? "jpg"
+  const path = `${userId}/logo-${Date.now()}.${extension}`
+
+  const { error } = await supabase.storage
+    .from("startup-logos")
+    .upload(path, file, { cacheControl: "3600", upsert: false })
+  if (error) throw toError("Não foi possível enviar a logo da startup", error)
+
+  const { data } = supabase.storage.from("startup-logos").getPublicUrl(path)
   return data.publicUrl
 }

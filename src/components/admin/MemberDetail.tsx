@@ -1,17 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { Mail, Phone, MapPin, Building2, Link2, Calendar } from "lucide-react"
+import Image from "next/image"
+import { Mail, Phone, MapPin, Building2, Link2, Calendar, Rocket } from "lucide-react"
 import { Modal } from "@/components/ui/modal"
 import { Input, Label, Select, Textarea } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar } from "./Avatar"
 import { StatusBadge, RoleBadge } from "./StatusBadge"
+import { ConfirmDialog } from "./ConfirmDialog"
 import { useAdmin } from "@/lib/admin/store"
 import { profileCompleteness } from "@/lib/admin/metrics"
-import { formatDate, occupationLabel } from "@/lib/admin/labels"
-import { BRAZIL_STATES } from "@/lib/onboarding/options"
-import type { AdminMember } from "@/lib/admin/types"
+import { formatDate, occupationLabel, sectorLabel, ROLE_LABELS } from "@/lib/admin/labels"
+import { BRAZIL_STATES, STARTUP_STAGE_LABELS } from "@/lib/onboarding/options"
+import type { AdminMember, MemberRole } from "@/lib/admin/types"
 
 function Chips({ items }: { items: string[] }) {
   if (items.length === 0) return <span className="text-sm text-neutral-400">—</span>
@@ -50,12 +52,19 @@ export function MemberDetailModal({
   open: boolean
   onClose: () => void
 }) {
+  const { currentUser, changeMemberRole } = useAdmin()
+  const [pendingRole, setPendingRole] = useState<MemberRole | null>(null)
+
   if (!member) return null
   const name = member.displayName || member.fullName
   const pct = profileCompleteness(member)
 
+  const isSelf = member.profileId === currentUser.id
+  const canChangeRole = currentUser.role === "admin" && Boolean(member.profileId) && !isSelf
+
   return (
-    <Modal open={open} onClose={onClose} className="sm:max-w-xl">
+    <>
+      <Modal open={open} onClose={onClose} className="sm:max-w-xl">
       <div className="flex flex-col gap-5">
         <div className="flex items-start gap-4">
           <Avatar name={name} photoUrl={member.photoUrl} size="lg" />
@@ -78,6 +87,32 @@ export function MemberDetailModal({
           </div>
         </div>
 
+        {currentUser.role === "admin" && (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-neutral-100 bg-neutral-50/60 px-4 py-3">
+            <Label htmlFor="member-role" className="shrink-0">
+              Papel
+            </Label>
+            <Select
+              id="member-role"
+              className="h-8 w-auto"
+              value={member.role}
+              disabled={!canChangeRole}
+              onChange={(e) => setPendingRole(e.target.value as MemberRole)}
+            >
+              <option value="member">Membro</option>
+              <option value="ambassador">Embaixador</option>
+              <option value="admin">Administrador</option>
+            </Select>
+            <span className="text-xs text-neutral-400">
+              {isSelf
+                ? "Você não pode alterar seu próprio papel"
+                : !member.profileId
+                  ? "Disponível após o membro ativar a conta"
+                  : "Alterações ficam registradas no log de auditoria"}
+            </span>
+          </div>
+        )}
+
         {member.bio && <p className="text-sm text-neutral-600">{member.bio}</p>}
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -93,6 +128,49 @@ export function MemberDetailModal({
         </div>
 
         <div className="flex flex-col gap-3 border-t border-neutral-100 pt-4">
+          {member.startupName && (
+            <div>
+              <p className="mb-1.5 text-[11px] font-medium tracking-wide text-neutral-400 uppercase">
+                Startup
+              </p>
+              <div className="flex items-start gap-3">
+                {member.startupLogoUrl ? (
+                  <Image
+                    src={member.startupLogoUrl}
+                    alt={member.startupName}
+                    width={40}
+                    height={40}
+                    className="size-10 shrink-0 rounded-lg object-cover"
+                  />
+                ) : (
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50">
+                    <Rocket className="size-4 text-neutral-400" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="flex flex-wrap items-center gap-1.5 text-sm font-medium text-neutral-800">
+                    {member.startupName}
+                    {member.startupStage && (
+                      <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600">
+                        {STARTUP_STAGE_LABELS[member.startupStage] ?? member.startupStage}
+                      </span>
+                    )}
+                    {member.startupSector && (
+                      <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600">
+                        {sectorLabel(member.startupSector)}
+                      </span>
+                    )}
+                  </p>
+                  {member.startupProblem && (
+                    <p className="mt-1 text-xs text-neutral-500">{member.startupProblem}</p>
+                  )}
+                  {member.startupCnpj && (
+                    <p className="mt-1 text-xs text-neutral-400">CNPJ: {member.startupCnpj}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           <div>
             <p className="mb-1.5 text-[11px] font-medium tracking-wide text-neutral-400 uppercase">
               Perfil na comunidade
@@ -142,7 +220,20 @@ export function MemberDetailModal({
           )}
         </div>
       </div>
-    </Modal>
+      </Modal>
+
+      <ConfirmDialog
+        open={pendingRole !== null}
+        onClose={() => setPendingRole(null)}
+        onConfirm={() => {
+          if (pendingRole) changeMemberRole(member, pendingRole)
+        }}
+        title={`Alterar papel de ${name}?`}
+        description={pendingRole ? `${ROLE_LABELS[member.role]} → ${ROLE_LABELS[pendingRole]}` : undefined}
+        confirmLabel="Confirmar"
+        tone={pendingRole === "admin" ? "default" : "destructive"}
+      />
+    </>
   )
 }
 

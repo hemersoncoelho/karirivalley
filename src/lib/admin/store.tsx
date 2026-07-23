@@ -21,6 +21,7 @@ import {
   type ReactNode,
 } from "react"
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
+import { ROLE_LABELS } from "./labels"
 import type {
   AdminEvent,
   AdminInterest,
@@ -35,6 +36,7 @@ import type {
   OpportunityStatus,
   OpportunityType,
   SocialLink,
+  StartupSector,
 } from "./types"
 
 export interface CurrentUser {
@@ -76,6 +78,7 @@ interface AdminStore {
   blockMember: (id: string, reason?: string) => void
   unblockMember: (id: string) => void
   editMember: (id: string, patch: EditableMemberFields) => void
+  changeMemberRole: (member: AdminMember, role: MemberRole) => void
 
   createInterest: (input: InterestInput) => void
   updateInterest: (id: string, input: InterestInput) => void
@@ -87,6 +90,7 @@ const AdminContext = createContext<AdminStore | null>(null)
 const MEMBER_SELECT = `
   id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url,
   company, position, occupation_areas, status, is_public, created_at,
+  startup_name, startup_stage, startup_cnpj, startup_logo_url, startup_problem, startup_sector,
   profile:profiles!profile_id(role),
   member_interests(interest:interests(slug)),
   member_needs(title, is_active),
@@ -111,6 +115,12 @@ interface MemberRow {
   status: MemberStatus
   is_public: boolean
   created_at: string
+  startup_name: string | null
+  startup_stage: string | null
+  startup_cnpj: string | null
+  startup_logo_url: string | null
+  startup_problem: string | null
+  startup_sector: StartupSector | null
   profile: { role: MemberRole } | null
   member_interests: { interest: { slug: string } | null }[] | null
   member_needs: { title: string; is_active: boolean }[] | null
@@ -143,6 +153,12 @@ function mapMember(row: MemberRow): AdminMember {
     role: row.profile?.role ?? "member",
     isPublic: row.is_public,
     createdAt: row.created_at,
+    startupName: row.startup_name,
+    startupStage: row.startup_stage,
+    startupCnpj: row.startup_cnpj,
+    startupLogoUrl: row.startup_logo_url,
+    startupProblem: row.startup_problem,
+    startupSector: row.startup_sector,
   }
 }
 
@@ -234,6 +250,7 @@ function memberStatusAction(from: unknown, to: unknown): AuditAction {
 function mapLog(row: LogRow): AuditLogEntry {
   const details = row.details ?? {}
   const isStatusChange = row.action === "member_status_change"
+  const isRoleChange = row.action === "role_change"
 
   const action = isStatusChange
     ? memberStatusAction(details.from, details.to)
@@ -243,7 +260,11 @@ function mapLog(row: LogRow): AuditLogEntry {
     ? (details.member_slug as string | undefined) ?? row.target_id ?? "—"
     : (details.name as string | undefined) ?? row.target_id ?? "—"
 
-  const reasonDetail = typeof details.reason === "string" ? (details.reason as string) : undefined
+  const reasonDetail = isRoleChange
+    ? `${ROLE_LABELS[details.from as MemberRole] ?? details.from} → ${ROLE_LABELS[details.to as MemberRole] ?? details.to}`
+    : typeof details.reason === "string"
+      ? (details.reason as string)
+      : undefined
 
   return {
     id: String(row.id),
@@ -421,6 +442,29 @@ export function AdminProvider({
     [fetchMembers, fetchLogs]
   )
 
+  /** profiles.role fica fora de members — precisa do profile_id (conta ativada). */
+  const changeMemberRole = useCallback(
+    (member: AdminMember, role: MemberRole) => {
+      void (async () => {
+        if (!member.profileId) {
+          setError("Este membro ainda não ativou a conta — não é possível alterar o papel.")
+          return
+        }
+        const supabase = getSupabaseBrowserClient()
+        const { error: err } = await supabase
+          .from("profiles")
+          .update({ role })
+          .eq("id", member.profileId)
+        if (err) {
+          setError(`Não foi possível alterar o papel: ${err.message}`)
+          return
+        }
+        await Promise.all([fetchMembers(), fetchLogs()])
+      })()
+    },
+    [fetchMembers, fetchLogs]
+  )
+
   const createInterest = useCallback(
     (input: InterestInput) => {
       void (async () => {
@@ -512,6 +556,7 @@ export function AdminProvider({
       blockMember,
       unblockMember,
       editMember,
+      changeMemberRole,
       createInterest,
       updateInterest,
       toggleInterest,
@@ -531,6 +576,7 @@ export function AdminProvider({
       blockMember,
       unblockMember,
       editMember,
+      changeMemberRole,
       createInterest,
       updateInterest,
       toggleInterest,

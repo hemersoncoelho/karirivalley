@@ -1,6 +1,12 @@
 import { occupationLabel } from "./labels"
 import type { AdminInterest, AdminMember, DashboardMetrics, RankedItem } from "./types"
 
+/** Rótulo do mês corrente (ex.: "julho de 2026"), usado no KPI de novos membros. */
+export const CURRENT_MONTH_LABEL = new Date().toLocaleDateString("pt-BR", {
+  month: "long",
+  year: "numeric",
+})
+
 /** Campos considerados no cálculo de completude do perfil. */
 const COMPLETENESS_FIELDS: Array<(m: AdminMember) => boolean> = [
   (m) => Boolean(m.displayName),

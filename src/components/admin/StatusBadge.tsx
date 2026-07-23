@@ -25,7 +25,7 @@ export function StatusBadge({ status }: { status: MemberStatus }) {
 
 const ROLE_CLASSES: Record<MemberRole, string> = {
   admin: "bg-[var(--kv-gold)]/15 text-[var(--kv-gold-dark)] ring-[var(--kv-gold)]/30",
-  curator: "bg-[var(--kv-coral)]/12 text-[var(--kv-coral)] ring-[var(--kv-coral)]/25",
+  ambassador: "bg-[var(--kv-coral)]/12 text-[var(--kv-coral)] ring-[var(--kv-coral)]/25",
   member: "bg-neutral-100 text-neutral-600 ring-neutral-200",
 }
 

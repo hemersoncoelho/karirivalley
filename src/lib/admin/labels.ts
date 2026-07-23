@@ -25,7 +25,7 @@ export const STATUS_TONE: Record<MemberStatus, "amber" | "teal" | "red" | "gray"
 
 export const ROLE_LABELS: Record<MemberRole, string> = {
   member: "Membro",
-  curator: "Curador",
+  ambassador: "Embaixador",
   admin: "Administrador",
 }
 
@@ -57,11 +57,11 @@ export const OPPORTUNITY_STATUS_LABELS: Record<OpportunityStatus, string> = {
 }
 
 export const OPPORTUNITY_TYPE_LABELS: Record<OpportunityType, string> = {
-  edital: "Edital",
-  vaga: "Vaga",
+  editais: "Edital",
+  vagas: "Vaga",
+  aceleracao: "Aceleração",
   mentoria: "Mentoria",
-  investimento: "Investimento",
-  parceria: "Parceria",
+  programas: "Programa",
 }
 
 export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {

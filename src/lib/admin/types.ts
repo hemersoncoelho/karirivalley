@@ -9,8 +9,8 @@
 /** members.status */
 export type MemberStatus = "pending" | "approved" | "blocked" | "rejected"
 
-/** members.role — controle de acesso ao painel. */
-export type MemberRole = "member" | "curator" | "admin"
+/** profiles.role (enum user_role) — controle de acesso ao painel. */
+export type MemberRole = "member" | "ambassador" | "admin"
 
 /** members.occupation_areas (enum public.occupation_area) */
 export type OccupationArea =
@@ -88,7 +88,8 @@ export interface AdminEvent {
 
 /** Estrutura para a fase futura de oportunidades. */
 export type OpportunityStatus = "draft" | "open" | "closed"
-export type OpportunityType = "edital" | "vaga" | "mentoria" | "investimento" | "parceria"
+/** opportunities.category */
+export type OpportunityType = "editais" | "vagas" | "aceleracao" | "mentoria" | "programas"
 
 export interface AdminOpportunity {
   id: string

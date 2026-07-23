@@ -26,7 +26,8 @@ export function MemberActions({
   const [dialog, setDialog] = useState<DialogKind>(null)
 
   const isAdmin = currentUser.role === "admin"
-  const canModerate = isAdmin || currentUser.role === "curator"
+  // Embaixadores acompanham indicações mas não moderam (só admin altera status).
+  const canModerate = isAdmin
   const name = member.displayName || member.fullName
 
   return (

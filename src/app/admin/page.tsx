@@ -21,8 +21,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAdmin } from "@/lib/admin/store"
-import { computeMetrics, profileCompleteness, isIncomplete } from "@/lib/admin/metrics"
-import { CURRENT_MONTH_LABEL } from "@/lib/admin/mock-data"
+import { computeMetrics, profileCompleteness, isIncomplete, CURRENT_MONTH_LABEL } from "@/lib/admin/metrics"
 import { formatDate } from "@/lib/admin/labels"
 
 export default function AdminDashboardPage() {

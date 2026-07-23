@@ -64,6 +64,19 @@ export default function LoginPage() {
       return
     }
 
+    // Admins vão direto ao painel — não precisam de registro em `members`.
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .maybeSingle()
+
+    if (profile?.role === "admin") {
+      router.push("/admin")
+      router.refresh()
+      return
+    }
+
     const { data: member, error: memberError } = await supabase
       .from("members")
       .select("status")
@@ -84,6 +97,7 @@ export default function LoginPage() {
 
     if (member.status !== "approved") {
       setNotice(STATUS_MESSAGES[member.status] ?? "Seu acesso ainda não está liberado.")
+      return
     }
 
     router.push("/dashboard")

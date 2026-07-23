@@ -57,7 +57,7 @@ function OpportunityFormModal({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="op-type">Tipo</Label>
-            <Select id="op-type" defaultValue="edital">
+            <Select id="op-type" defaultValue="editais">
               {types.map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}

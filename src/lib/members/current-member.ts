@@ -5,7 +5,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 import type { MemberRecord } from "@/lib/onboarding/api"
 
 const MEMBER_COLUMNS =
-  "id, profile_id, full_name, display_name, slug, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, approved_at, startup_name, startup_stage, startup_cnpj, startup_logo_url, startup_problem, startup_sector"
+  "id, profile_id, full_name, display_name, slug, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, approved_at, company_name, company_type, company_stage, company_cnpj, company_logo_url, company_problem, company_sector, company_review_status"
 
 export interface CurrentMember extends MemberRecord {
   slug: string | null

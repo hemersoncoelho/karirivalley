@@ -84,8 +84,18 @@ export const STARTUP_STAGE_LABELS: Record<string, string> = Object.fromEntries(
   STARTUP_STAGES.map((stage) => [stage.value, stage.label])
 )
 
-/** Área de atuação da startup (valores do enum public.startup_sector) */
-export const STARTUP_SECTORS: ChipOption[] = [
+/** Tipo de empresa (valores do enum public.company_type) */
+export const COMPANY_TYPES: ChipOption[] = [
+  { value: "startup", label: "Startup" },
+  { value: "tradicional", label: "Empresa tradicional" },
+]
+
+export const COMPANY_TYPE_LABELS: Record<string, string> = Object.fromEntries(
+  COMPANY_TYPES.map((type) => [type.value, type.label])
+)
+
+/** Área de atuação da empresa (valores do enum public.company_sector) */
+export const COMPANY_SECTORS: ChipOption[] = [
   { value: "agro", label: "Agro" },
   { value: "turismo", label: "Turismo" },
   { value: "saude", label: "Health Tech" },
@@ -98,8 +108,8 @@ export const STARTUP_SECTORS: ChipOption[] = [
   { value: "outro", label: "Outro" },
 ]
 
-export const STARTUP_SECTOR_LABELS: Record<string, string> = Object.fromEntries(
-  STARTUP_SECTORS.map((sector) => [sector.value, sector.label])
+export const COMPANY_SECTOR_LABELS: Record<string, string> = Object.fromEntries(
+  COMPANY_SECTORS.map((sector) => [sector.value, sector.label])
 )
 
 export const BRAZIL_STATES: string[] = [

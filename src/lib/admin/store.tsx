@@ -36,7 +36,9 @@ import type {
   OpportunityStatus,
   OpportunityType,
   SocialLink,
-  StartupSector,
+  CompanySector,
+  CompanyType,
+  CompanyReviewStatus,
 } from "./types"
 
 export interface CurrentUser {
@@ -83,6 +85,9 @@ interface AdminStore {
   createInterest: (input: InterestInput) => void
   updateInterest: (id: string, input: InterestInput) => void
   toggleInterest: (id: string) => void
+
+  approveCompany: (id: string) => void
+  rejectCompany: (id: string) => void
 }
 
 const AdminContext = createContext<AdminStore | null>(null)
@@ -90,7 +95,7 @@ const AdminContext = createContext<AdminStore | null>(null)
 const MEMBER_SELECT = `
   id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url,
   company, position, occupation_areas, status, is_public, created_at,
-  startup_name, startup_stage, startup_cnpj, startup_logo_url, startup_problem, startup_sector,
+  company_name, company_type, company_stage, company_cnpj, company_logo_url, company_problem, company_sector, company_review_status,
   profile:profiles!profile_id(role),
   member_interests(interest:interests(slug)),
   member_needs(title, is_active),
@@ -115,12 +120,14 @@ interface MemberRow {
   status: MemberStatus
   is_public: boolean
   created_at: string
-  startup_name: string | null
-  startup_stage: string | null
-  startup_cnpj: string | null
-  startup_logo_url: string | null
-  startup_problem: string | null
-  startup_sector: StartupSector | null
+  company_name: string | null
+  company_type: CompanyType | null
+  company_stage: string | null
+  company_cnpj: string | null
+  company_logo_url: string | null
+  company_problem: string | null
+  company_sector: CompanySector | null
+  company_review_status: CompanyReviewStatus | null
   profile: { role: MemberRole } | null
   member_interests: { interest: { slug: string } | null }[] | null
   member_needs: { title: string; is_active: boolean }[] | null
@@ -153,12 +160,14 @@ function mapMember(row: MemberRow): AdminMember {
     role: row.profile?.role ?? "member",
     isPublic: row.is_public,
     createdAt: row.created_at,
-    startupName: row.startup_name,
-    startupStage: row.startup_stage,
-    startupCnpj: row.startup_cnpj,
-    startupLogoUrl: row.startup_logo_url,
-    startupProblem: row.startup_problem,
-    startupSector: row.startup_sector,
+    companyName: row.company_name,
+    companyType: row.company_type,
+    companyStage: row.company_stage,
+    companyCnpj: row.company_cnpj,
+    companyLogoUrl: row.company_logo_url,
+    companyProblem: row.company_problem,
+    companySector: row.company_sector,
+    companyReviewStatus: row.company_review_status,
   }
 }
 
@@ -465,6 +474,39 @@ export function AdminProvider({
     [fetchMembers, fetchLogs]
   )
 
+  const setCompanyReviewStatus = useCallback(
+    (id: string, status: CompanyReviewStatus, action: "approve_company" | "reject_company") => {
+      void (async () => {
+        const supabase = getSupabaseBrowserClient()
+        const { error: err } = await supabase
+          .from("members")
+          .update({ company_review_status: status })
+          .eq("id", id)
+        if (err) {
+          setError(`Não foi possível atualizar a empresa: ${err.message}`)
+          return
+        }
+        await supabase.rpc("log_admin_action", {
+          p_action: action,
+          p_target_type: "member",
+          p_target_id: id,
+          p_details: {},
+        })
+        await Promise.all([fetchMembers(), fetchLogs()])
+      })()
+    },
+    [fetchMembers, fetchLogs]
+  )
+
+  const approveCompany = useCallback(
+    (id: string) => setCompanyReviewStatus(id, "approved", "approve_company"),
+    [setCompanyReviewStatus]
+  )
+  const rejectCompany = useCallback(
+    (id: string) => setCompanyReviewStatus(id, "rejected", "reject_company"),
+    [setCompanyReviewStatus]
+  )
+
   const createInterest = useCallback(
     (input: InterestInput) => {
       void (async () => {
@@ -560,6 +602,8 @@ export function AdminProvider({
       createInterest,
       updateInterest,
       toggleInterest,
+      approveCompany,
+      rejectCompany,
     }),
     [
       currentUser,
@@ -580,6 +624,8 @@ export function AdminProvider({
       createInterest,
       updateInterest,
       toggleInterest,
+      approveCompany,
+      rejectCompany,
     ]
   )
 

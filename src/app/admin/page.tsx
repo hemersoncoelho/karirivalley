@@ -66,7 +66,8 @@ export default function AdminDashboardPage() {
           icon={TrendingUp}
           tone="gold"
         />
-        <StatCard label="Startups cadastradas" value={metrics.startupsCount} icon={Rocket} tone="teal" />
+        <StatCard label="Empresas cadastradas" value={metrics.companiesCount} icon={Rocket} tone="teal" />
+        <StatCard label="Empresas pendentes" value={metrics.pendingCompaniesCount} icon={Clock} tone="amber" />
       </div>
 
       {/* Rankings */}
@@ -111,7 +112,7 @@ export default function AdminDashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Rocket className="size-4 text-[var(--kv-teal)]" />
-              Setores de startup mais comuns
+              Setores de empresa mais comuns
             </CardTitle>
           </CardHeader>
           <CardContent>

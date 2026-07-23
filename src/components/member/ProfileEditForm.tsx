@@ -11,7 +11,7 @@ import {
   syncInterests,
   syncSelections,
   uploadMemberPhoto,
-  uploadStartupLogo,
+  uploadCompanyLogo,
   type Interest,
 } from "@/lib/onboarding/api"
 import { validatePhotoFile } from "@/lib/onboarding/schemas"
@@ -19,14 +19,15 @@ import { NEED_OPTIONS, OFFER_OPTIONS, BRAZIL_STATES } from "@/lib/onboarding/opt
 import {
   saveSocialLinks,
   saveVisibilitySettings,
-  saveStartupInfo,
+  saveCompanyInfo,
   type SocialPlatform,
+  type CompanyType,
   type StartupStage,
-  type StartupSector,
+  type CompanySector,
 } from "@/lib/members/profile"
 import type { ProfileBundle } from "@/lib/members/profile-bundle"
 import type { CurrentMember } from "@/lib/members/current-member"
-import { STARTUP_STAGES, STARTUP_SECTORS } from "@/lib/onboarding/options"
+import { COMPANY_TYPES, STARTUP_STAGES, COMPANY_SECTORS } from "@/lib/onboarding/options"
 import { Field, TextInput, TextArea, SelectInput, Chip, ToggleRow, ErrorBanner } from "@/components/onboarding/fields"
 
 interface ProfileEditFormProps {
@@ -51,12 +52,14 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
   const [company, setCompany] = useState(member.company ?? "")
   const [position, setPosition] = useState(member.position ?? "")
 
-  const [startupStage, setStartupStage] = useState<StartupStage>((member.startup_stage as StartupStage) ?? "")
-  const [startupName, setStartupName] = useState(member.startup_name ?? "")
-  const [startupCnpj, setStartupCnpj] = useState(member.startup_cnpj ?? "")
-  const [startupSector, setStartupSector] = useState<StartupSector>((member.startup_sector as StartupSector) ?? "")
-  const [startupProblem, setStartupProblem] = useState(member.startup_problem ?? "")
-  const [logoUrl, setLogoUrl] = useState(member.startup_logo_url)
+  const [companyType, setCompanyType] = useState<CompanyType>((member.company_type as CompanyType) ?? "")
+  const [startupStage, setStartupStage] = useState<StartupStage>((member.company_stage as StartupStage) ?? "")
+  const [companyName, setCompanyName] = useState(member.company_name ?? "")
+  const [companyCnpj, setCompanyCnpj] = useState(member.company_cnpj ?? "")
+  const [companySector, setCompanySector] = useState<CompanySector>((member.company_sector as CompanySector) ?? "")
+  const [companyProblem, setCompanyProblem] = useState(member.company_problem ?? "")
+  const [companyReviewStatus, setCompanyReviewStatus] = useState(member.company_review_status)
+  const [logoUrl, setLogoUrl] = useState(member.company_logo_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
@@ -160,19 +163,21 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
 
       let finalLogoUrl = logoUrl
       if (logoFile && member.profile_id) {
-        finalLogoUrl = await uploadStartupLogo(member.profile_id, logoFile)
+        finalLogoUrl = await uploadCompanyLogo(member.profile_id, logoFile)
         setLogoUrl(finalLogoUrl)
         setLogoFile(null)
       }
 
-      await saveStartupInfo(member.id, {
-        name: startupName,
+      await saveCompanyInfo(member.id, {
+        type: companyType,
+        name: companyName,
         stage: startupStage,
-        cnpj: startupCnpj,
+        cnpj: companyCnpj,
         logoUrl: finalLogoUrl,
-        problem: startupProblem,
-        sector: startupSector,
+        problem: companyProblem,
+        sector: companySector,
       })
+      setCompanyReviewStatus(companyType ? "pending" : null)
       await syncInterests(member.id, selectedInterestIds)
       await syncSelections("member_needs", member.id, selectedNeeds)
       await syncSelections("member_offers", member.id, selectedOffers)
@@ -256,28 +261,40 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Startup</h2>
-        <Field label="Estágio" htmlFor="startupStage" optional hint="Ideação não exige CNPJ. A partir de MVP, o CNPJ passa a ser obrigatório.">
+        <div className="flex flex-wrap items-center gap-2">
+          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Empresa</h2>
+          {companyReviewStatus === "pending" && (
+            <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+              Em análise pelo admin
+            </span>
+          )}
+          {companyReviewStatus === "rejected" && (
+            <span className="rounded-full border border-[#E0715A]/30 bg-[#E0715A]/10 px-2.5 py-0.5 text-xs font-medium text-[#E0715A]">
+              Não aprovada — revise os dados e salve novamente
+            </span>
+          )}
+        </div>
+        <Field label="Tipo" htmlFor="companyType" optional>
           <SelectInput
-            id="startupStage"
-            value={startupStage}
-            onChange={(e) => setStartupStage(e.target.value as StartupStage)}
+            id="companyType"
+            value={companyType}
+            onChange={(e) => setCompanyType(e.target.value as CompanyType)}
           >
-            <option value="">Não tenho startup / não quero informar</option>
-            {STARTUP_STAGES.map((stage) => (
-              <option key={stage.value} value={stage.value}>
-                {stage.label}
+            <option value="">Não tenho empresa / não quero informar</option>
+            {COMPANY_TYPES.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
               </option>
             ))}
           </SelectInput>
         </Field>
-        {startupStage && (
+        {companyType && (
           <>
             <div className="flex items-center gap-4">
               {logoPreview || logoUrl ? (
                 <Image
                   src={logoPreview ?? logoUrl ?? ""}
-                  alt={startupName || "Logo da startup"}
+                  alt={companyName || "Logo da empresa"}
                   width={64}
                   height={64}
                   className="size-16 rounded-xl object-cover"
@@ -288,21 +305,37 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
                 </div>
               )}
               <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
-                Logo da startup
+                Logo da empresa
                 <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleLogoChange} />
               </label>
             </div>
-            <Field label="Nome da startup" htmlFor="startupName">
-              <TextInput id="startupName" value={startupName} onChange={(e) => setStartupName(e.target.value)} />
+            <Field label="Nome da empresa" htmlFor="companyName">
+              <TextInput id="companyName" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
             </Field>
-            <Field label="Área de atuação" htmlFor="startupSector" optional>
+            {companyType === "startup" && (
+              <Field label="Estágio" htmlFor="startupStage" hint="Ideação não exige CNPJ. A partir de MVP, o CNPJ passa a ser obrigatório.">
+                <SelectInput
+                  id="startupStage"
+                  value={startupStage}
+                  onChange={(e) => setStartupStage(e.target.value as StartupStage)}
+                >
+                  <option value="">Selecione um estágio</option>
+                  {STARTUP_STAGES.map((stage) => (
+                    <option key={stage.value} value={stage.value}>
+                      {stage.label}
+                    </option>
+                  ))}
+                </SelectInput>
+              </Field>
+            )}
+            <Field label="Área de atuação" htmlFor="companySector" optional>
               <SelectInput
-                id="startupSector"
-                value={startupSector}
-                onChange={(e) => setStartupSector(e.target.value as StartupSector)}
+                id="companySector"
+                value={companySector}
+                onChange={(e) => setCompanySector(e.target.value as CompanySector)}
               >
                 <option value="">Selecione um setor</option>
-                {STARTUP_SECTORS.map((sector) => (
+                {COMPANY_SECTORS.map((sector) => (
                   <option key={sector.value} value={sector.value}>
                     {sector.label}
                   </option>
@@ -310,26 +343,26 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
               </SelectInput>
             </Field>
             <Field
-              label="Qual problema a startup resolve?"
-              htmlFor="startupProblem"
+              label="Qual problema a empresa resolve?"
+              htmlFor="companyProblem"
               optional
-              hint={`${startupProblem.length}/300 caracteres`}
+              hint={`${companyProblem.length}/300 caracteres`}
             >
               <TextArea
-                id="startupProblem"
+                id="companyProblem"
                 maxLength={300}
-                value={startupProblem}
-                onChange={(e) => setStartupProblem(e.target.value)}
+                value={companyProblem}
+                onChange={(e) => setCompanyProblem(e.target.value)}
               />
             </Field>
-            {startupStage !== "ideacao" && (
-              <Field label="CNPJ" htmlFor="startupCnpj" hint="Somente números (14 dígitos)">
+            {(companyType === "tradicional" || (companyType === "startup" && startupStage !== "ideacao")) && (
+              <Field label="CNPJ" htmlFor="companyCnpj" hint="Somente números (14 dígitos)">
                 <TextInput
-                  id="startupCnpj"
+                  id="companyCnpj"
                   inputMode="numeric"
                   placeholder="00000000000000"
-                  value={startupCnpj}
-                  onChange={(e) => setStartupCnpj(e.target.value)}
+                  value={companyCnpj}
+                  onChange={(e) => setCompanyCnpj(e.target.value)}
                 />
               </Field>
             )}

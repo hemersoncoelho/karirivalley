@@ -62,7 +62,8 @@ export function computeMetrics(
   let rejected = 0
   let newThisMonth = 0
   let incomplete = 0
-  let startupsCount = 0
+  let companiesCount = 0
+  let pendingCompaniesCount = 0
 
   for (const m of members) {
     if (m.status === "pending") pending++
@@ -79,10 +80,11 @@ export function computeMetrics(
       profiles.set(label, (profiles.get(label) ?? 0) + 1)
     }
 
-    if (m.startupStage) {
-      startupsCount++
-      if (m.startupSector) {
-        const label = sectorLabel(m.startupSector)
+    if (m.companyName) {
+      companiesCount++
+      if (m.companyReviewStatus === "pending") pendingCompaniesCount++
+      if (m.companySector) {
+        const label = sectorLabel(m.companySector)
         sectors.set(label, (sectors.get(label) ?? 0) + 1)
       }
     }
@@ -105,7 +107,8 @@ export function computeMetrics(
     topCities: rank(cities),
     topInterests,
     topProfiles: rank(profiles),
-    startupsCount,
+    companiesCount,
+    pendingCompaniesCount,
     topSectors: rank(sectors),
   }
 }

@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/comunidade", label: "Comunidade", icon: Users },
-  { href: "/vitrine", label: "Startups", icon: Rocket },
+  { href: "/vitrine", label: "Empresas", icon: Rocket },
   { href: "/eventos", label: "Eventos", icon: CalendarDays },
   { href: "/oportunidades", label: "Oportunidades", icon: Briefcase },
 ] as const
@@ -54,8 +54,9 @@ export function MemberShell({ member, children }: MemberShellProps) {
 
   return (
     <div className="min-h-screen" style={{ background: "#2C2221" }}>
+      <div className="sticky top-0 z-40">
       <header
-        className="sticky top-0 z-40 flex items-center justify-between"
+        className="flex items-center justify-between"
         style={{
           padding: stuck ? "13px 24px" : "22px 24px",
           background: stuck ? "rgba(6,13,8,.92)" : "rgba(6,13,8,.55)",
@@ -172,7 +173,7 @@ export function MemberShell({ member, children }: MemberShellProps) {
 
       {mobileOpen && (
         <div
-          className="sticky top-[57px] z-30 flex flex-col md:hidden"
+          className="flex flex-col md:hidden"
           style={{
             background: "rgba(6,13,8,.96)",
             backdropFilter: "blur(20px)",
@@ -201,6 +202,7 @@ export function MemberShell({ member, children }: MemberShellProps) {
           })}
         </div>
       )}
+      </div>
 
       <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
     </div>

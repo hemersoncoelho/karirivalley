@@ -4,7 +4,7 @@ import { ArrowLeft, Briefcase, Camera, Code2, Globe, Mail, Phone, UserCircle2 } 
 
 import type { DirectoryMember } from "@/lib/members/directory"
 import { OCCUPATION_LABELS } from "@/components/member/occupation-labels"
-import { STARTUP_STAGE_LABELS, STARTUP_SECTOR_LABELS } from "@/lib/onboarding/options"
+import { STARTUP_STAGE_LABELS, COMPANY_SECTOR_LABELS } from "@/lib/onboarding/options"
 
 const SOCIAL_ICONS: Record<string, typeof Globe> = {
   linkedin: Briefcase,
@@ -16,6 +16,7 @@ const SOCIAL_ICONS: Record<string, typeof Globe> = {
 interface MemberProfileViewProps {
   member: DirectoryMember
   showBackLink?: boolean
+  isOwnProfile?: boolean
 }
 
 function formatMemberSince(value: string | null): string | null {
@@ -23,7 +24,7 @@ function formatMemberSince(value: string | null): string | null {
   return new Intl.DateTimeFormat("pt-BR", { year: "numeric" }).format(new Date(value))
 }
 
-export function MemberProfileView({ member, showBackLink = true }: MemberProfileViewProps) {
+export function MemberProfileView({ member, showBackLink = true, isOwnProfile = false }: MemberProfileViewProps) {
   const memberSince = formatMemberSince(member.member_since)
 
   return (
@@ -93,14 +94,26 @@ export function MemberProfileView({ member, showBackLink = true }: MemberProfile
         </section>
       )}
 
-      {member.startup_name && (
+      {member.company_name && (member.company_review_status === "approved" || isOwnProfile) && (
         <section>
-          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Startup</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Empresa</h2>
+            {isOwnProfile && member.company_review_status === "pending" && (
+              <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+                Em análise pelo admin
+              </span>
+            )}
+            {isOwnProfile && member.company_review_status === "rejected" && (
+              <span className="rounded-full border border-[#E0715A]/30 bg-[#E0715A]/10 px-2.5 py-0.5 text-xs font-medium text-[#E0715A]">
+                Não aprovada
+              </span>
+            )}
+          </div>
           <div className="mt-2 flex items-start gap-3">
-            {member.startup_logo_url && (
+            {member.company_logo_url && (
               <Image
-                src={member.startup_logo_url}
-                alt={member.startup_name}
+                src={member.company_logo_url}
+                alt={member.company_name}
                 width={40}
                 height={40}
                 className="size-10 shrink-0 rounded-lg object-cover"
@@ -108,20 +121,20 @@ export function MemberProfileView({ member, showBackLink = true }: MemberProfile
             )}
             <div>
               <p className="flex flex-wrap items-center gap-2 text-sm text-[#F4EDDF]/60">
-                {member.startup_name}
-                {member.startup_stage && (
+                {member.company_name}
+                {member.company_stage && (
                   <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
-                    {STARTUP_STAGE_LABELS[member.startup_stage] ?? member.startup_stage}
+                    {STARTUP_STAGE_LABELS[member.company_stage] ?? member.company_stage}
                   </span>
                 )}
-                {member.startup_sector && (
+                {member.company_sector && (
                   <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-[#F4EDDF]/70">
-                    {STARTUP_SECTOR_LABELS[member.startup_sector] ?? member.startup_sector}
+                    {COMPANY_SECTOR_LABELS[member.company_sector] ?? member.company_sector}
                   </span>
                 )}
               </p>
-              {member.startup_problem && (
-                <p className="mt-1 text-sm text-[#F4EDDF]/50">{member.startup_problem}</p>
+              {member.company_problem && (
+                <p className="mt-1 text-sm text-[#F4EDDF]/50">{member.company_problem}</p>
               )}
             </div>
           </div>

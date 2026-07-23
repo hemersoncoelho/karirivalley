@@ -4,32 +4,32 @@ import { useMemo, useState } from "react"
 import { Search, SearchX } from "lucide-react"
 
 import type { DirectoryMember } from "@/lib/members/directory"
-import { StartupCard } from "@/components/member/StartupCard"
+import { CompanyCard } from "@/components/member/CompanyCard"
 import { EmptyState } from "@/components/member/EmptyState"
-import { STARTUP_SECTOR_LABELS } from "@/lib/onboarding/options"
+import { COMPANY_SECTOR_LABELS } from "@/lib/onboarding/options"
 import { inputClass, SelectInput } from "@/components/onboarding/fields"
 
 const ALL = "all"
 
-interface StartupsClientProps {
-  startups: DirectoryMember[]
+interface CompaniesClientProps {
+  companies: DirectoryMember[]
 }
 
-export function StartupsClient({ startups }: StartupsClientProps) {
+export function CompaniesClient({ companies }: CompaniesClientProps) {
   const [search, setSearch] = useState("")
   const [sector, setSector] = useState(ALL)
 
   const sectors = useMemo(
-    () => Array.from(new Set(startups.map((s) => s.startup_sector).filter((v): v is string => Boolean(v)))),
-    [startups]
+    () => Array.from(new Set(companies.map((c) => c.company_sector).filter((v): v is string => Boolean(v)))),
+    [companies]
   )
 
-  const filtered = startups.filter((s) => {
+  const filtered = companies.filter((c) => {
     const term = search.trim().toLowerCase()
-    if (term && !(s.startup_name ?? "").toLowerCase().includes(term) && !s.name.toLowerCase().includes(term)) {
+    if (term && !(c.company_name ?? "").toLowerCase().includes(term) && !c.name.toLowerCase().includes(term)) {
       return false
     }
-    if (sector !== ALL && s.startup_sector !== sector) return false
+    if (sector !== ALL && c.company_sector !== sector) return false
     return true
   })
 
@@ -45,7 +45,7 @@ export function StartupsClient({ startups }: StartupsClientProps) {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar por nome da startup ou fundador..."
+          placeholder="Buscar por nome da empresa ou responsável..."
           className={`${inputClass} pl-10`}
         />
       </div>
@@ -55,20 +55,20 @@ export function StartupsClient({ startups }: StartupsClientProps) {
           <option value={ALL}>Todos os setores</option>
           {sectors.map((s) => (
             <option key={s} value={s}>
-              {STARTUP_SECTOR_LABELS[s] ?? s}
+              {COMPANY_SECTOR_LABELS[s] ?? s}
             </option>
           ))}
         </SelectInput>
       </div>
 
       <p className="text-xs text-[#F4EDDF]/40">
-        {filtered.length} {filtered.length === 1 ? "startup encontrada" : "startups encontradas"}
+        {filtered.length} {filtered.length === 1 ? "empresa encontrada" : "empresas encontradas"}
       </p>
 
       {filtered.length === 0 ? (
         <EmptyState
           icon={SearchX}
-          title="Nenhuma startup encontrada para este filtro"
+          title="Nenhuma empresa encontrada para este filtro"
           action={
             <button
               type="button"
@@ -81,8 +81,8 @@ export function StartupsClient({ startups }: StartupsClientProps) {
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((s) => (
-            <StartupCard key={s.id} member={s} />
+          {filtered.map((c) => (
+            <CompanyCard key={c.id} member={c} />
           ))}
         </div>
       )}

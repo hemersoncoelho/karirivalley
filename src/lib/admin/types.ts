@@ -32,8 +32,8 @@ export interface SocialLink {
   url: string
 }
 
-/** members.startup_sector (enum public.startup_sector) */
-export type StartupSector =
+/** members.company_sector (enum public.company_sector) */
+export type CompanySector =
   | "agro"
   | "turismo"
   | "saude"
@@ -44,6 +44,12 @@ export type StartupSector =
   | "industria"
   | "impacto_social"
   | "outro"
+
+/** members.company_type (enum public.company_type) */
+export type CompanyType = "startup" | "tradicional"
+
+/** members.company_review_status (enum public.company_review_status) */
+export type CompanyReviewStatus = "pending" | "approved" | "rejected"
 
 /** Espelha a tabela `members` (+ relações agregadas para exibição). */
 export interface AdminMember {
@@ -72,12 +78,14 @@ export interface AdminMember {
   isPublic: boolean
   /** ISO date — members.created_at */
   createdAt: string
-  startupName: string | null
-  startupStage: string | null
-  startupCnpj: string | null
-  startupLogoUrl: string | null
-  startupProblem: string | null
-  startupSector: StartupSector | null
+  companyName: string | null
+  companyType: CompanyType | null
+  companyStage: string | null
+  companyCnpj: string | null
+  companyLogoUrl: string | null
+  companyProblem: string | null
+  companySector: CompanySector | null
+  companyReviewStatus: CompanyReviewStatus | null
 }
 
 /** Espelha a tabela `interests` + contagem de uso. */
@@ -132,6 +140,8 @@ export type AuditAction =
   | "create_interest"
   | "update_interest"
   | "toggle_interest"
+  | "approve_company"
+  | "reject_company"
 
 export interface AuditLogEntry {
   id: string
@@ -157,7 +167,8 @@ export interface DashboardMetrics {
   topCities: RankedItem[]
   topInterests: RankedItem[]
   topProfiles: RankedItem[]
-  startupsCount: number
+  companiesCount: number
+  pendingCompaniesCount: number
   topSectors: RankedItem[]
 }
 

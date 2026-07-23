@@ -6,7 +6,9 @@ import type {
   OpportunityStatus,
   OpportunityType,
   AuditAction,
-  StartupSector,
+  CompanySector,
+  CompanyType,
+  CompanyReviewStatus,
 } from "./types"
 
 export const STATUS_LABELS: Record<MemberStatus, string> = {
@@ -75,13 +77,15 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   create_interest: "Criou interesse",
   update_interest: "Editou interesse",
   toggle_interest: "Ativou/desativou interesse",
+  approve_company: "Aprovou empresa",
+  reject_company: "Rejeitou empresa",
 }
 
 export function occupationLabel(value: string): string {
   return OCCUPATION_LABELS[value as OccupationArea] ?? value
 }
 
-export const SECTOR_LABELS: Record<StartupSector, string> = {
+export const SECTOR_LABELS: Record<CompanySector, string> = {
   agro: "Agro",
   turismo: "Turismo",
   saude: "Health Tech",
@@ -95,7 +99,18 @@ export const SECTOR_LABELS: Record<StartupSector, string> = {
 }
 
 export function sectorLabel(value: string): string {
-  return SECTOR_LABELS[value as StartupSector] ?? value
+  return SECTOR_LABELS[value as CompanySector] ?? value
+}
+
+export const COMPANY_TYPE_LABELS: Record<CompanyType, string> = {
+  startup: "Startup",
+  tradicional: "Empresa tradicional",
+}
+
+export const COMPANY_REVIEW_STATUS_LABELS: Record<CompanyReviewStatus, string> = {
+  pending: "Pendente",
+  approved: "Aprovada",
+  rejected: "Rejeitada",
 }
 
 /** Formata data ISO para pt-BR (curto). */

@@ -24,12 +24,14 @@ export interface MemberRecord {
   occupation_areas: string[]
   status: string
   is_public: boolean
-  startup_name: string | null
-  startup_stage: string | null
-  startup_cnpj: string | null
-  startup_logo_url: string | null
-  startup_problem: string | null
-  startup_sector: string | null
+  company_name: string | null
+  company_type: string | null
+  company_stage: string | null
+  company_cnpj: string | null
+  company_logo_url: string | null
+  company_problem: string | null
+  company_sector: string | null
+  company_review_status: string | null
 }
 
 export interface VisibilityData {
@@ -43,7 +45,7 @@ export interface VisibilityData {
 }
 
 const MEMBER_COLUMNS =
-  "id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, startup_name, startup_stage, startup_cnpj, startup_logo_url, startup_problem, startup_sector"
+  "id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, company_name, company_type, company_stage, company_cnpj, company_logo_url, company_problem, company_sector, company_review_status"
 
 function toError(context: string, error: { message: string } | null): Error {
   return new Error(`${context}: ${error?.message ?? "erro desconhecido"}`)
@@ -252,17 +254,17 @@ export async function uploadMemberPhoto(userId: string, file: File): Promise<str
   return data.publicUrl
 }
 
-/** Upload da logo da startup (bucket startup-logos, pasta do próprio usuário). */
-export async function uploadStartupLogo(userId: string, file: File): Promise<string> {
+/** Upload da logo da empresa (bucket company-logos, pasta do próprio usuário). */
+export async function uploadCompanyLogo(userId: string, file: File): Promise<string> {
   const supabase = getSupabaseBrowserClient()
   const extension = PHOTO_EXTENSIONS[file.type] ?? "jpg"
   const path = `${userId}/logo-${Date.now()}.${extension}`
 
   const { error } = await supabase.storage
-    .from("startup-logos")
+    .from("company-logos")
     .upload(path, file, { cacheControl: "3600", upsert: false })
-  if (error) throw toError("Não foi possível enviar a logo da startup", error)
+  if (error) throw toError("Não foi possível enviar a logo da empresa", error)
 
-  const { data } = supabase.storage.from("startup-logos").getPublicUrl(path)
+  const { data } = supabase.storage.from("company-logos").getPublicUrl(path)
   return data.publicUrl
 }

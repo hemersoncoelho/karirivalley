@@ -45,9 +45,11 @@ export async function saveSocialLinks(memberId: string, links: SocialLinkInput[]
   if (error) throw new Error(`Não foi possível salvar suas redes sociais: ${error.message}`)
 }
 
+export type CompanyType = "startup" | "tradicional" | ""
+
 export type StartupStage = "ideacao" | "mvp" | "tracao" | "escala" | ""
 
-export type StartupSector =
+export type CompanySector =
   | "agro"
   | "turismo"
   | "saude"
@@ -60,61 +62,75 @@ export type StartupSector =
   | "outro"
   | ""
 
-export interface StartupInfoInput {
+export interface CompanyInfoInput {
+  type: CompanyType
   name: string
   stage: StartupStage
   cnpj: string
   logoUrl: string | null
   problem: string
-  sector: StartupSector
+  sector: CompanySector
 }
 
 /**
- * Salva os dados da startup do membro. Ideação não exige CNPJ; a partir de
- * MVP/tração/escala o CNPJ (14 dígitos) é obrigatório — validado aqui e
- * reforçado por constraint no banco. Limpar o estágio zera todos os campos.
+ * Salva os dados de empresa/startup do membro. Estágio só se aplica a
+ * startups. CNPJ (14 dígitos) é sempre obrigatório para empresa tradicional,
+ * e para startup a partir do estágio MVP — validado aqui e reforçado por
+ * constraint no banco. Toda alteração volta para "pending", exigindo nova
+ * aprovação do admin antes de reaparecer na vitrine/perfil público — limpar
+ * o tipo zera todos os campos.
  */
-export async function saveStartupInfo(memberId: string, input: StartupInfoInput): Promise<void> {
+export async function saveCompanyInfo(memberId: string, input: CompanyInfoInput): Promise<void> {
   const name = input.name.trim()
-  const stage = input.stage
+  const type = input.type
 
-  if (!stage) {
+  if (!type) {
     const supabase = getSupabaseBrowserClient()
     const { error } = await supabase
       .from("members")
       .update({
-        startup_name: null,
-        startup_stage: null,
-        startup_cnpj: null,
-        startup_logo_url: null,
-        startup_problem: null,
-        startup_sector: null,
+        company_name: null,
+        company_type: null,
+        company_stage: null,
+        company_cnpj: null,
+        company_logo_url: null,
+        company_problem: null,
+        company_sector: null,
+        company_review_status: null,
       })
       .eq("id", memberId)
-    if (error) throw new Error(`Não foi possível salvar a startup: ${error.message}`)
+    if (error) throw new Error(`Não foi possível salvar a empresa: ${error.message}`)
     return
   }
 
-  if (!name) throw new Error("Informe o nome da startup")
+  if (!name) throw new Error("Informe o nome da empresa")
 
+  const stage = type === "startup" ? input.stage : ""
   const cnpjDigits = input.cnpj.replace(/\D/g, "")
-  if (stage !== "ideacao" && cnpjDigits.length !== 14) {
-    throw new Error("Informe um CNPJ válido (14 dígitos) — obrigatório a partir do estágio MVP")
+  const cnpjRequired = type === "tradicional" || (type === "startup" && stage !== "ideacao")
+  if (cnpjRequired && cnpjDigits.length !== 14) {
+    throw new Error(
+      type === "tradicional"
+        ? "Informe um CNPJ válido (14 dígitos) — obrigatório para empresa tradicional"
+        : "Informe um CNPJ válido (14 dígitos) — obrigatório a partir do estágio MVP"
+    )
   }
 
   const supabase = getSupabaseBrowserClient()
   const { error } = await supabase
     .from("members")
     .update({
-      startup_name: name,
-      startup_stage: stage,
-      startup_cnpj: cnpjDigits || null,
-      startup_logo_url: input.logoUrl,
-      startup_problem: input.problem.trim() || null,
-      startup_sector: input.sector || null,
+      company_name: name,
+      company_type: type,
+      company_stage: stage || null,
+      company_cnpj: cnpjDigits || null,
+      company_logo_url: input.logoUrl,
+      company_problem: input.problem.trim() || null,
+      company_sector: input.sector || null,
+      company_review_status: "pending",
     })
     .eq("id", memberId)
-  if (error) throw new Error(`Não foi possível salvar a startup: ${error.message}`)
+  if (error) throw new Error(`Não foi possível salvar a empresa: ${error.message}`)
 }
 
 export interface VisibilityFields {

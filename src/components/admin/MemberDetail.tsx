@@ -12,7 +12,7 @@ import { ConfirmDialog } from "./ConfirmDialog"
 import { useAdmin } from "@/lib/admin/store"
 import { profileCompleteness } from "@/lib/admin/metrics"
 import { formatDate, occupationLabel, sectorLabel, ROLE_LABELS } from "@/lib/admin/labels"
-import { BRAZIL_STATES, STARTUP_STAGE_LABELS } from "@/lib/onboarding/options"
+import { BRAZIL_STATES, STARTUP_STAGE_LABELS, COMPANY_TYPE_LABELS } from "@/lib/onboarding/options"
 import type { AdminMember, MemberRole } from "@/lib/admin/types"
 
 function Chips({ items }: { items: string[] }) {
@@ -52,7 +52,7 @@ export function MemberDetailModal({
   open: boolean
   onClose: () => void
 }) {
-  const { currentUser, changeMemberRole } = useAdmin()
+  const { currentUser, changeMemberRole, approveCompany, rejectCompany } = useAdmin()
   const [pendingRole, setPendingRole] = useState<MemberRole | null>(null)
 
   if (!member) return null
@@ -128,16 +128,33 @@ export function MemberDetailModal({
         </div>
 
         <div className="flex flex-col gap-3 border-t border-neutral-100 pt-4">
-          {member.startupName && (
+          {member.companyName && (
             <div>
-              <p className="mb-1.5 text-[11px] font-medium tracking-wide text-neutral-400 uppercase">
-                Startup
-              </p>
+              <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                <p className="text-[11px] font-medium tracking-wide text-neutral-400 uppercase">
+                  Empresa
+                </p>
+                {member.companyReviewStatus === "pending" && (
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                    Pendente de aprovação
+                  </span>
+                )}
+                {member.companyReviewStatus === "approved" && (
+                  <span className="rounded-full bg-[var(--kv-teal)]/12 px-2 py-0.5 text-[11px] font-medium text-[var(--kv-teal-dark)]">
+                    Aprovada
+                  </span>
+                )}
+                {member.companyReviewStatus === "rejected" && (
+                  <span className="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-medium text-red-600">
+                    Rejeitada
+                  </span>
+                )}
+              </div>
               <div className="flex items-start gap-3">
-                {member.startupLogoUrl ? (
+                {member.companyLogoUrl ? (
                   <Image
-                    src={member.startupLogoUrl}
-                    alt={member.startupName}
+                    src={member.companyLogoUrl}
+                    alt={member.companyName}
                     width={40}
                     height={40}
                     className="size-10 shrink-0 rounded-lg object-cover"
@@ -149,26 +166,41 @@ export function MemberDetailModal({
                 )}
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-center gap-1.5 text-sm font-medium text-neutral-800">
-                    {member.startupName}
-                    {member.startupStage && (
+                    {member.companyName}
+                    {member.companyType && (
                       <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600">
-                        {STARTUP_STAGE_LABELS[member.startupStage] ?? member.startupStage}
+                        {COMPANY_TYPE_LABELS[member.companyType]}
                       </span>
                     )}
-                    {member.startupSector && (
+                    {member.companyStage && (
                       <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600">
-                        {sectorLabel(member.startupSector)}
+                        {STARTUP_STAGE_LABELS[member.companyStage] ?? member.companyStage}
+                      </span>
+                    )}
+                    {member.companySector && (
+                      <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600">
+                        {sectorLabel(member.companySector)}
                       </span>
                     )}
                   </p>
-                  {member.startupProblem && (
-                    <p className="mt-1 text-xs text-neutral-500">{member.startupProblem}</p>
+                  {member.companyProblem && (
+                    <p className="mt-1 text-xs text-neutral-500">{member.companyProblem}</p>
                   )}
-                  {member.startupCnpj && (
-                    <p className="mt-1 text-xs text-neutral-400">CNPJ: {member.startupCnpj}</p>
+                  {member.companyCnpj && (
+                    <p className="mt-1 text-xs text-neutral-400">CNPJ: {member.companyCnpj}</p>
                   )}
                 </div>
               </div>
+              {member.companyReviewStatus === "pending" && (
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" onClick={() => approveCompany(member.id)}>
+                    Aprovar empresa
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => rejectCompany(member.id)}>
+                    Rejeitar
+                  </Button>
+                </div>
+              )}
             </div>
           )}
           <div>

@@ -59,7 +59,7 @@ export function MemberShell({ member, children }: MemberShellProps) {
         className="flex items-center justify-between"
         style={{
           padding: stuck ? "13px 24px" : "22px 24px",
-          background: stuck ? "rgba(6,13,8,.92)" : "rgba(6,13,8,.55)",
+          background: "rgba(6,13,8,.92)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           borderBottom: stuck ? "1px solid rgba(255,255,255,.08)" : "1px solid rgba(255,255,255,.04)",

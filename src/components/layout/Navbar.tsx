@@ -13,7 +13,7 @@ const NAV_LINKS = [
 ] as const;
 
 // Rotas da área de membros — possuem seu próprio header (MemberShell).
-const MEMBER_AREA_PREFIXES = ["/dashboard", "/comunidade", "/eventos", "/oportunidades", "/perfil"] as const;
+const MEMBER_AREA_PREFIXES = ["/dashboard", "/comunidade", "/vitrine", "/eventos", "/oportunidades", "/perfil"] as const;
 
 export default function Navbar() {
   const [stuck, setStuck] = useState(false);

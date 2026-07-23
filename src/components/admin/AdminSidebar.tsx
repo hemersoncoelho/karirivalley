@@ -71,7 +71,8 @@ export function AdminSidebar({ mobileOpen, onClose }: AdminSidebarProps) {
                 <ul className="flex flex-col gap-0.5">
                   {items.map((item) => {
                     const active =
-                      pathname === item.href || pathname.startsWith(item.href + "/")
+                      pathname === item.href ||
+                      (item.href !== "/admin" && pathname.startsWith(item.href + "/"))
                     return (
                       <li key={item.href}>
                         <Link

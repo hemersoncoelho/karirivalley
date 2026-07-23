@@ -8,6 +8,7 @@ import {
   Pencil,
   Plus,
   Tag,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -23,6 +24,7 @@ const ACTION_ICON: Record<AuditAction, LucideIcon> = {
   block_member: Ban,
   unblock_member: RotateCcw,
   edit_member: Pencil,
+  role_change: ShieldCheck,
   create_interest: Plus,
   update_interest: Pencil,
   toggle_interest: Tag,
@@ -34,6 +36,7 @@ const ACTION_TONE: Record<AuditAction, string> = {
   block_member: "bg-red-100 text-red-600",
   unblock_member: "bg-[var(--kv-teal)]/12 text-[var(--kv-teal-dark)]",
   edit_member: "bg-amber-100 text-amber-700",
+  role_change: "bg-[var(--kv-gold)]/15 text-[var(--kv-gold-dark)]",
   create_interest: "bg-[var(--kv-gold)]/15 text-[var(--kv-gold-dark)]",
   update_interest: "bg-amber-100 text-amber-700",
   toggle_interest: "bg-neutral-100 text-neutral-500",

@@ -21,8 +21,10 @@ function AccessDenied() {
         Esta área do painel administrativo é exclusiva para administradores.
       </p>
       <div className="mt-6 flex gap-2">
-        <Button render={<Link href="/admin" />}>Ir para o Dashboard</Button>
-        <Button variant="outline" render={<Link href="/" />}>
+        <Button nativeButton={false} render={<Link href="/admin" />}>
+          Ir para o Dashboard
+        </Button>
+        <Button variant="outline" nativeButton={false} render={<Link href="/" />}>
           Voltar ao site
         </Button>
       </div>

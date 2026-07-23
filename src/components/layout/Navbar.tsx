@@ -12,6 +12,9 @@ const NAV_LINKS = [
   { href: "/contato",         label: "Contato"         },
 ] as const;
 
+// Rotas da área de membros — possuem seu próprio header (MemberShell).
+const MEMBER_AREA_PREFIXES = ["/dashboard", "/comunidade", "/eventos", "/oportunidades", "/perfil"] as const;
+
 export default function Navbar() {
   const [stuck, setStuck] = useState(false);
   const [open,  setOpen]  = useState(false);
@@ -23,14 +26,18 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // O painel administrativo tem seu próprio layout — sem a navbar pública.
-  if (pathname?.startsWith("/admin")) return null;
+  // Áreas com layout próprio (admin e área de membros) não usam a navbar pública.
+  const hasOwnLayout =
+    pathname?.startsWith("/admin") ||
+    MEMBER_AREA_PREFIXES.some((prefix) => pathname?.startsWith(prefix));
+  if (hasOwnLayout) return null;
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-[52px]"
       style={{
-        padding: stuck ? "13px 52px" : "22px 52px",
+        paddingTop: stuck ? 13 : 22,
+        paddingBottom: stuck ? 13 : 22,
         background: stuck ? "rgba(6,13,8,.92)" : "transparent",
         backdropFilter: stuck ? "blur(24px)" : "none",
         WebkitBackdropFilter: stuck ? "blur(24px)" : "none",

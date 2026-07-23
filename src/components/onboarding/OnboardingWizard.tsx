@@ -59,26 +59,30 @@ export function OnboardingWizard() {
   const [visibility, setVisibility] = useState<Partial<VisibilityData>>({})
   const [interestOptions, setInterestOptions] = useState<ChipOption[]>([])
 
-  const advanceFromSession = useCallback(async (sessionUserId: string, sessionEmail: string | null) => {
-    setUserId(sessionUserId)
-    const member = await fetchMyMember(sessionUserId)
-    const draft = loadDraft()
+  const advanceFromSession = useCallback(
+    async (sessionUserId: string, sessionEmail: string | null, sessionFullName: string | null) => {
+      setUserId(sessionUserId)
+      const member = await fetchMyMember(sessionUserId)
+      const draft = loadDraft()
 
-    let minimumStep = 2
-    if (member) {
-      minimumStep = 3
-      setMemberId(member.id)
-      setFullName(member.full_name)
-      setEmail(member.email)
-      setBasics((current) => ({ ...basicsFromMember(member), ...current }))
-      setPhotoUrl((current) => current ?? member.photo_url)
-      setProfiles((current) => (current.length > 0 ? current : member.occupation_areas ?? []))
-    } else {
-      setEmail((current) => current || sessionEmail || "")
-    }
+      let minimumStep = 2
+      setFullName((current) => current || draft.fullName || sessionFullName || "")
+      if (member) {
+        minimumStep = 3
+        setMemberId(member.id)
+        setFullName(member.full_name)
+        setEmail(member.email)
+        setBasics((current) => ({ ...basicsFromMember(member), ...current }))
+        setPhotoUrl((current) => current ?? member.photo_url)
+        setProfiles((current) => (current.length > 0 ? current : member.occupation_areas ?? []))
+      } else {
+        setEmail((current) => current || sessionEmail || "")
+      }
 
-    setStep((current) => Math.max(current, minimumStep, draft.step ?? 1))
-  }, [])
+      setStep((current) => Math.max(current, minimumStep, draft.step ?? 1))
+    },
+    []
+  )
 
   useEffect(() => {
     const draft = loadDraft()
@@ -98,7 +102,12 @@ export function OnboardingWizard() {
     async function init() {
       const { data } = await supabase.auth.getSession()
       if (data.session?.user) {
-        await advanceFromSession(data.session.user.id, data.session.user.email ?? null)
+        const user = data.session.user
+        await advanceFromSession(
+          user.id,
+          user.email ?? null,
+          (user.user_metadata?.full_name as string | undefined) ?? null
+        )
       }
       setReady(true)
     }
@@ -108,7 +117,12 @@ export function OnboardingWizard() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session?.user) {
-        void advanceFromSession(session.user.id, session.user.email ?? null)
+        const user = session.user
+        void advanceFromSession(
+          user.id,
+          user.email ?? null,
+          (user.user_metadata?.full_name as string | undefined) ?? null
+        )
       }
     })
 
@@ -125,6 +139,13 @@ export function OnboardingWizard() {
   function goTo(next: number, patch?: Partial<OnboardingDraft>) {
     saveDraft({ ...patch, step: next })
     setStep(next)
+  }
+
+  async function handleSignOut() {
+    const supabase = getSupabaseBrowserClient()
+    await supabase.auth.signOut()
+    clearDraft()
+    window.location.reload()
   }
 
   if (!ready) {
@@ -146,12 +167,26 @@ export function OnboardingWizard() {
 
   return (
     <div className="space-y-8">
+      <h1 className="text-center text-2xl font-semibold text-[#F4EDDF]">
+        {STEP_TITLES[step - 1]}
+      </h1>
+
+      {userId && (
+        <p className="text-center text-xs text-[#F4EDDF]/40">
+          Continuando como <strong className="text-[#F4EDDF]/70">{email}</strong> —{" "}
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="underline underline-offset-2 hover:text-[#F4EDDF]"
+          >
+            não é você? Sair
+          </button>
+        </p>
+      )}
+
       <div>
-        <div className="mb-3 flex items-center justify-between text-xs text-[#F4EDDF]/45">
-          <span>
-            Passo {step} de {TOTAL_STEPS}
-          </span>
-          <span>{STEP_TITLES[step - 1]}</span>
+        <div className="mb-3 text-xs text-[#F4EDDF]/45">
+          Passo {step} de {TOTAL_STEPS}
         </div>
         <div className="flex gap-1.5">
           {STEP_TITLES.map((title, i) => (

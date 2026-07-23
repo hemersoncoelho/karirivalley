@@ -4,6 +4,7 @@ import { ArrowLeft, Briefcase, Camera, Code2, Globe, Mail, Phone, UserCircle2 } 
 
 import type { DirectoryMember } from "@/lib/members/directory"
 import { OCCUPATION_LABELS } from "@/components/member/occupation-labels"
+import { STARTUP_STAGE_LABELS } from "@/lib/onboarding/options"
 
 const SOCIAL_ICONS: Record<string, typeof Globe> = {
   linkedin: Briefcase,
@@ -89,6 +90,20 @@ export function MemberProfileView({ member, showBackLink = true }: MemberProfile
               </span>
             ))}
           </div>
+        </section>
+      )}
+
+      {member.startup_name && (
+        <section>
+          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Startup</h2>
+          <p className="mt-2 flex items-center gap-2 text-sm text-[#F4EDDF]/60">
+            {member.startup_name}
+            {member.startup_stage && (
+              <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+                {STARTUP_STAGE_LABELS[member.startup_stage] ?? member.startup_stage}
+              </span>
+            )}
+          </p>
         </section>
       )}
 

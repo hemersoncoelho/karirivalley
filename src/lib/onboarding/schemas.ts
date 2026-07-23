@@ -3,7 +3,7 @@ import { z } from "zod"
 const acceptRequired = (message: string) =>
   z.boolean().refine((value) => value === true, message)
 
-/** Etapa 1 — Conta (campos comuns aos dois modos) */
+/** Etapa 1 — Conta */
 export const accountBaseSchema = z.object({
   fullName: z
     .string()
@@ -15,7 +15,6 @@ export const accountBaseSchema = z.object({
   acceptPrivacy: acceptRequired("É preciso aceitar a política de privacidade"),
 })
 
-/** Etapa 1 — modo senha */
 export const accountPasswordSchema = accountBaseSchema.extend({
   password: z
     .string()

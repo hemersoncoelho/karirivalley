@@ -45,6 +45,52 @@ export async function saveSocialLinks(memberId: string, links: SocialLinkInput[]
   if (error) throw new Error(`Não foi possível salvar suas redes sociais: ${error.message}`)
 }
 
+export type StartupStage = "ideacao" | "mvp" | "tracao" | "escala" | ""
+
+export interface StartupInfoInput {
+  name: string
+  stage: StartupStage
+  cnpj: string
+}
+
+/**
+ * Salva os dados da startup do membro. Ideação não exige CNPJ; a partir de
+ * MVP/tração/escala o CNPJ (14 dígitos) é obrigatório — validado aqui e
+ * reforçado por constraint no banco. Limpar o estágio zera todos os campos.
+ */
+export async function saveStartupInfo(memberId: string, input: StartupInfoInput): Promise<void> {
+  const name = input.name.trim()
+  const stage = input.stage
+
+  if (!stage) {
+    const supabase = getSupabaseBrowserClient()
+    const { error } = await supabase
+      .from("members")
+      .update({ startup_name: null, startup_stage: null, startup_cnpj: null })
+      .eq("id", memberId)
+    if (error) throw new Error(`Não foi possível salvar a startup: ${error.message}`)
+    return
+  }
+
+  if (!name) throw new Error("Informe o nome da startup")
+
+  const cnpjDigits = input.cnpj.replace(/\D/g, "")
+  if (stage !== "ideacao" && cnpjDigits.length !== 14) {
+    throw new Error("Informe um CNPJ válido (14 dígitos) — obrigatório a partir do estágio MVP")
+  }
+
+  const supabase = getSupabaseBrowserClient()
+  const { error } = await supabase
+    .from("members")
+    .update({
+      startup_name: name,
+      startup_stage: stage,
+      startup_cnpj: cnpjDigits || null,
+    })
+    .eq("id", memberId)
+  if (error) throw new Error(`Não foi possível salvar a startup: ${error.message}`)
+}
+
 export interface VisibilityFields {
   email: "public" | "private"
   phone: "public" | "private"

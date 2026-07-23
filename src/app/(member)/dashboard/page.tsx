@@ -9,6 +9,16 @@ import { fetchUpcomingEvents } from "@/lib/members/events"
 import { fetchOpportunities } from "@/lib/members/opportunities"
 import { MemberCard } from "@/components/member/MemberCard"
 import { EmptyState } from "@/components/member/EmptyState"
+import { KaririMark } from "@/components/ui/KaririMark"
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="flex items-center gap-2 text-lg font-semibold text-[#F4EDDF]">
+      <KaririMark size={14} />
+      {children}
+    </h2>
+  )
+}
 
 function formatMemberSince(approvedAt: string | null): string | null {
   if (!approvedAt) return null
@@ -38,12 +48,18 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold text-[#F4EDDF]">Olá, {firstName}! 👋</h1>
-        {memberSince && <p className="mt-1 text-sm text-[#F4EDDF]/50">Membro desde {memberSince}</p>}
+      <div className="kv-fade-in-up flex items-center gap-3">
+        <KaririMark size={28} />
+        <div>
+          <h1 className="text-2xl font-semibold text-[#F4EDDF]">Olá, {firstName}!</h1>
+          {memberSince && <p className="mt-1 text-sm text-[#F4EDDF]/50">Membro desde {memberSince}</p>}
+        </div>
       </div>
 
-      <section className="rounded-2xl border border-white/8 bg-white/[0.03] p-6">
+      <section
+        className="kv-fade-in-up rounded-2xl border border-white/8 bg-white/[0.03] p-6"
+        style={{ animationDelay: ".05s" }}
+      >
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm font-semibold text-[#F4EDDF]">Completude do perfil</p>
@@ -54,27 +70,30 @@ export default async function DashboardPage() {
           <span className="text-lg font-semibold text-[#E9B23C]">{completeness.percent}%</span>
         </div>
         <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-[#E9B23C]" style={{ width: `${completeness.percent}%` }} />
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-[#E0715A] via-[#E9B23C] to-[#239D8C] transition-[width] duration-700"
+            style={{ width: `${completeness.percent}%` }}
+          />
         </div>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
             href="/perfil/editar"
-            className="rounded-xl bg-[#E9B23C] px-5 py-2.5 text-sm font-semibold text-[#2C2221] transition hover:bg-[#f0c05a]"
+            className="rounded-xl bg-[#E9B23C] px-5 py-2.5 text-sm font-semibold text-[#2C2221] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0c05a] hover:shadow-[0_12px_32px_rgba(233,178,60,.35)]"
           >
             Editar perfil
           </Link>
           <Link
             href="/comunidade/indicar"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-5 py-2.5 text-sm font-medium text-[#F4EDDF]/80 transition hover:bg-white/5"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-5 py-2.5 text-sm font-medium text-[#F4EDDF]/80 transition hover:border-white/30 hover:bg-white/5"
           >
             <UserPlus2 size={15} /> Indicar novo membro
           </Link>
         </div>
       </section>
 
-      <section>
+      <section className="kv-fade-in-up" style={{ animationDelay: ".1s" }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-[#F4EDDF]">Próximos eventos</h2>
+          <SectionTitle>Próximos eventos</SectionTitle>
           <Link href="/eventos" className="text-xs font-medium text-[#F4EDDF]/50 hover:text-[#F4EDDF]">
             Ver todos
           </Link>
@@ -84,7 +103,10 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-3">
             {events.map((event) => (
-              <div key={event.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+              <div
+                key={event.id}
+                className="rounded-xl border border-white/8 bg-white/[0.03] p-4 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.05]"
+              >
                 <p className="text-xs font-medium text-[#239D8C]">{formatEventDate(event.event_date)}</p>
                 <p className="mt-1.5 text-sm font-semibold text-[#F4EDDF]">{event.title}</p>
                 {event.location && <p className="mt-1 text-xs text-[#F4EDDF]/45">{event.location}</p>}
@@ -94,9 +116,9 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      <section>
+      <section className="kv-fade-in-up" style={{ animationDelay: ".15s" }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-[#F4EDDF]">Membros recomendados</h2>
+          <SectionTitle>Membros recomendados</SectionTitle>
           <Link href="/comunidade" className="text-xs font-medium text-[#F4EDDF]/50 hover:text-[#F4EDDF]">
             Ver diretório
           </Link>
@@ -112,9 +134,9 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      <section>
+      <section className="kv-fade-in-up" style={{ animationDelay: ".2s" }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-[#F4EDDF]">Oportunidades em destaque</h2>
+          <SectionTitle>Oportunidades em destaque</SectionTitle>
           <Link href="/oportunidades" className="text-xs font-medium text-[#F4EDDF]/50 hover:text-[#F4EDDF]">
             Ver todas
           </Link>
@@ -124,7 +146,10 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-3">
             {opportunities.map((opp) => (
-              <div key={opp.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+              <div
+                key={opp.id}
+                className="rounded-xl border border-white/8 bg-white/[0.03] p-4 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.05]"
+              >
                 <p className="text-xs font-medium text-[#E9B23C] capitalize">{opp.category}</p>
                 <p className="mt-1.5 text-sm font-semibold text-[#F4EDDF]">{opp.title}</p>
               </div>

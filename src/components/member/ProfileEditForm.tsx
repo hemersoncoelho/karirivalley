@@ -15,9 +15,16 @@ import {
 } from "@/lib/onboarding/api"
 import { validatePhotoFile } from "@/lib/onboarding/schemas"
 import { NEED_OPTIONS, OFFER_OPTIONS, BRAZIL_STATES } from "@/lib/onboarding/options"
-import { saveSocialLinks, saveVisibilitySettings, type SocialPlatform } from "@/lib/members/profile"
+import {
+  saveSocialLinks,
+  saveVisibilitySettings,
+  saveStartupInfo,
+  type SocialPlatform,
+  type StartupStage,
+} from "@/lib/members/profile"
 import type { ProfileBundle } from "@/lib/members/profile-bundle"
 import type { CurrentMember } from "@/lib/members/current-member"
+import { STARTUP_STAGES } from "@/lib/onboarding/options"
 import { Field, TextInput, TextArea, SelectInput, Chip, ToggleRow, ErrorBanner } from "@/components/onboarding/fields"
 
 interface ProfileEditFormProps {
@@ -41,6 +48,10 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
   const [bio, setBio] = useState(member.bio ?? "")
   const [company, setCompany] = useState(member.company ?? "")
   const [position, setPosition] = useState(member.position ?? "")
+
+  const [startupStage, setStartupStage] = useState<StartupStage>((member.startup_stage as StartupStage) ?? "")
+  const [startupName, setStartupName] = useState(member.startup_name ?? "")
+  const [startupCnpj, setStartupCnpj] = useState(member.startup_cnpj ?? "")
 
   const [photoUrl, setPhotoUrl] = useState(member.photo_url)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -127,6 +138,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         existingMemberId: member.id,
       })
 
+      await saveStartupInfo(member.id, { name: startupName, stage: startupStage, cnpj: startupCnpj })
       await syncInterests(member.id, selectedInterestIds)
       await syncSelections("member_needs", member.id, selectedNeeds)
       await syncSelections("member_offers", member.id, selectedOffers)
@@ -181,7 +193,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         <Field label="Nome de exibição" htmlFor="displayName">
           <TextInput id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
         </Field>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-[1fr_110px] gap-3">
           <Field label="Cidade" htmlFor="city">
             <TextInput id="city" value={city} onChange={(e) => setCity(e.target.value)} />
           </Field>
@@ -200,13 +212,49 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </Field>
       </section>
 
-      <section className="grid grid-cols-2 gap-3">
+      <section className="grid gap-3 sm:grid-cols-2">
         <Field label="Empresa/Instituição" htmlFor="company" optional>
           <TextInput id="company" value={company} onChange={(e) => setCompany(e.target.value)} />
         </Field>
         <Field label="Cargo" htmlFor="position" optional>
           <TextInput id="position" value={position} onChange={(e) => setPosition(e.target.value)} />
         </Field>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Startup</h2>
+        <Field label="Estágio" htmlFor="startupStage" optional hint="Ideação não exige CNPJ. A partir de MVP, o CNPJ passa a ser obrigatório.">
+          <SelectInput
+            id="startupStage"
+            value={startupStage}
+            onChange={(e) => setStartupStage(e.target.value as StartupStage)}
+          >
+            <option value="">Não tenho startup / não quero informar</option>
+            {STARTUP_STAGES.map((stage) => (
+              <option key={stage.value} value={stage.value}>
+                {stage.label}
+              </option>
+            ))}
+          </SelectInput>
+        </Field>
+        {startupStage && (
+          <>
+            <Field label="Nome da startup" htmlFor="startupName">
+              <TextInput id="startupName" value={startupName} onChange={(e) => setStartupName(e.target.value)} />
+            </Field>
+            {startupStage !== "ideacao" && (
+              <Field label="CNPJ" htmlFor="startupCnpj" hint="Somente números (14 dígitos)">
+                <TextInput
+                  id="startupCnpj"
+                  inputMode="numeric"
+                  placeholder="00000000000000"
+                  value={startupCnpj}
+                  onChange={(e) => setStartupCnpj(e.target.value)}
+                />
+              </Field>
+            )}
+          </>
+        )}
       </section>
 
       <section className="space-y-4">

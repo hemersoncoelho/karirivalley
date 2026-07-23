@@ -72,6 +72,18 @@ export const INTEREST_SLUG_ORDER: string[] = [
   "programacao",
 ]
 
+/** Estágio da startup (valores do enum public.startup_stage) */
+export const STARTUP_STAGES: ChipOption[] = [
+  { value: "ideacao", label: "Ideação" },
+  { value: "mvp", label: "MVP" },
+  { value: "tracao", label: "Tração" },
+  { value: "escala", label: "Escala" },
+]
+
+export const STARTUP_STAGE_LABELS: Record<string, string> = Object.fromEntries(
+  STARTUP_STAGES.map((stage) => [stage.value, stage.label])
+)
+
 export const BRAZIL_STATES: string[] = [
   "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
   "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI",
@@ -85,7 +97,7 @@ export const STEP_TITLES: string[] = [
   "Dados básicos",
   "Seu perfil na comunidade",
   "Temas de interesse",
-  "O que você busca",
-  "O que você oferece",
+  "O que você busca?",
+  "O que você oferece?",
   "Visibilidade do perfil",
 ]

@@ -24,6 +24,9 @@ export interface MemberRecord {
   occupation_areas: string[]
   status: string
   is_public: boolean
+  startup_name: string | null
+  startup_stage: string | null
+  startup_cnpj: string | null
 }
 
 export interface VisibilityData {
@@ -37,7 +40,7 @@ export interface VisibilityData {
 }
 
 const MEMBER_COLUMNS =
-  "id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public"
+  "id, profile_id, full_name, display_name, email, phone, city, state, bio, photo_url, company, position, occupation_areas, status, is_public, startup_name, startup_stage, startup_cnpj"
 
 function toError(context: string, error: { message: string } | null): Error {
   return new Error(`${context}: ${error?.message ?? "erro desconhecido"}`)

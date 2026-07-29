@@ -1,6 +1,7 @@
 "use client";
 
 import { useInView } from "@/hooks/useInView";
+import { useNbTheme } from "@/hooks/useNbTheme";
 import {
   Rocket, Code2, GraduationCap, FlaskConical,
   BookOpen, Building2, Compass, TrendingUp,
@@ -8,141 +9,58 @@ import {
 } from "lucide-react";
 import type React from "react";
 
+const ACCENTS = ["#1E4D3A", "#C25A2E", "#E9B23C", "#239D8C", "#0F3B36"] as const;
+const ACCENT_TEXT: Record<string, string> = { "#E9B23C": "#16140F" };
+
 const AUDIENCE = [
-  {
-    icon: Rocket,
-    title: "Fundadores de Startups",
-    desc: "Construindo o próximo grande projeto do Cariri",
-    color: "#E0715A",
-    bg: "rgba(224,113,90,.1)",
-    border: "rgba(224,113,90,.18)",
-    glow: "rgba(224,113,90,.15)",
-  },
-  {
-    icon: Code2,
-    title: "Devs & Engenheiros",
-    desc: "Profissionais de tecnologia que criam o futuro",
-    color: "#239D8C",
-    bg: "rgba(35,157,140,.1)",
-    border: "rgba(35,157,140,.18)",
-    glow: "rgba(35,157,140,.15)",
-  },
-  {
-    icon: GraduationCap,
-    title: "Estudantes",
-    desc: "Quem aprende e quer conectar carreira com inovação",
-    color: "#E9B23C",
-    bg: "rgba(232,184,75,.08)",
-    border: "rgba(232,184,75,.18)",
-    glow: "rgba(232,184,75,.15)",
-  },
-  {
-    icon: FlaskConical,
-    title: "Pesquisadores",
-    desc: "Academia aplicando ciência para impactar a região",
-    color: "#7BB8E8",
-    bg: "rgba(123,184,232,.08)",
-    border: "rgba(123,184,232,.18)",
-    glow: "rgba(123,184,232,.12)",
-  },
-  {
-    icon: BookOpen,
-    title: "Professores",
-    desc: "Educadores que formam a próxima geração de inovadores",
-    color: "#85D4B4",
-    bg: "rgba(133,212,180,.08)",
-    border: "rgba(133,212,180,.18)",
-    glow: "rgba(133,212,180,.12)",
-  },
-  {
-    icon: Building2,
-    title: "Empresas",
-    desc: "Negócios consolidados conectando ao ecossistema",
-    color: "#E9B23C",
-    bg: "rgba(232,184,75,.08)",
-    border: "rgba(232,184,75,.18)",
-    glow: "rgba(232,184,75,.15)",
-  },
-  {
-    icon: Compass,
-    title: "Mentores",
-    desc: "Experientes que contribuem com quem está começando",
-    color: "#239D8C",
-    bg: "rgba(35,157,140,.1)",
-    border: "rgba(35,157,140,.18)",
-    glow: "rgba(35,157,140,.15)",
-  },
-  {
-    icon: TrendingUp,
-    title: "Investidores",
-    desc: "Quem busca oportunidades no interior do Ceará",
-    color: "#E0715A",
-    bg: "rgba(224,113,90,.1)",
-    border: "rgba(224,113,90,.18)",
-    glow: "rgba(224,113,90,.15)",
-  },
-  {
-    icon: Handshake,
-    title: "Instituições Parceiras",
-    desc: "Organizações que fortalecem o ecossistema regional",
-    color: "#85D4B4",
-    bg: "rgba(133,212,180,.08)",
-    border: "rgba(133,212,180,.18)",
-    glow: "rgba(133,212,180,.12)",
-  },
-  {
-    icon: Sparkles,
-    title: "Entusiastas",
-    desc: "Qualquer pessoa apaixonada por inovação e pelo Cariri",
-    color: "#E9B23C",
-    bg: "rgba(232,184,75,.08)",
-    border: "rgba(232,184,75,.18)",
-    glow: "rgba(232,184,75,.15)",
-  },
+  { icon: Rocket,         title: "Fundadores de Startups",   desc: "Construindo o próximo grande projeto do Cariri." },
+  { icon: Building2,      title: "Área Corporativa",         desc: "Inove com propósito e gere impacto real." },
+  { icon: GraduationCap,  title: "Estudantes",                desc: "Quem aprende e quer conectar carreira com inovação." },
+  { icon: FlaskConical,   title: "Pesquisadores",             desc: "Academia aplicando ciência para impactar a região." },
+  { icon: BookOpen,       title: "Professores",               desc: "Educadores que formam a próxima geração de inovadores." },
+  { icon: Compass,        title: "Mentores",                  desc: "Experientes que contribuem com quem está começando." },
+  { icon: TrendingUp,     title: "Investidores",              desc: "Quem busca oportunidades no interior do Ceará." },
+  { icon: Handshake,      title: "Líderes Públicos",          desc: "Políticas, parcerias e ações que criam futuro." },
+  { icon: Code2,          title: "Profissionais de Mercado",  desc: "Conecte-se, cresça e impulsione a região." },
+  { icon: Sparkles,       title: "Entusiastas",                desc: "Qualquer pessoa apaixonada por inovação e pelo Cariri." },
 ] as const;
 
 type AudienceItem = (typeof AUDIENCE)[number];
 
-function AudienceCard({ item, fadeStyle }: { item: AudienceItem; delay: number; inView: boolean; fadeStyle: React.CSSProperties }) {
+function AudienceCard({ item, color, fadeStyle }: { item: AudienceItem; color: string; fadeStyle: React.CSSProperties }) {
+  const { theme } = useNbTheme();
+  const isDark = theme === "dark";
   const Icon = item.icon;
+  const iconText = ACCENT_TEXT[color] ?? "var(--nb-sand)";
   return (
     <div
+      className="kv-press"
       style={{
-        background: item.bg,
-        border: `1px solid ${item.border}`,
-        borderRadius: 14,
+        background: "var(--nb-card-bg)",
+        backdropFilter: "var(--nb-card-blur)",
+        WebkitBackdropFilter: "var(--nb-card-blur)",
+        border: "var(--nb-card-border)",
+        borderRadius: 12,
         padding: "22px 18px",
         cursor: "default",
-        transition: "transform .25s ease, border-color .25s, box-shadow .25s",
+        boxShadow: "var(--nb-card-shadow)",
         ...fadeStyle,
-      }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(-4px)";
-        el.style.borderColor = `${item.color}55`;
-        el.style.boxShadow = `0 16px 44px ${item.glow}`;
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.transform = "translateY(0)";
-        el.style.borderColor = item.border;
-        el.style.boxShadow = "none";
       }}
     >
       <div style={{
         width: 40, height: 40,
-        background: `${item.color}18`,
-        border: `1px solid ${item.color}35`,
+        background: color,
+        border: isDark ? "none" : "2px solid var(--nb-ink)",
         borderRadius: 10,
         display: "flex", alignItems: "center", justifyContent: "center",
         marginBottom: 14,
       }}>
-        <Icon size={18} strokeWidth={1.8} color={item.color} />
+        <Icon size={18} strokeWidth={2} color={iconText} />
       </div>
-      <h3 style={{ fontSize: 13, fontWeight: 700, color: "#F4EDDF", marginBottom: 6, lineHeight: 1.35 }}>
+      <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 6, lineHeight: 1.35 }}>
         {item.title}
       </h3>
-      <p style={{ fontSize: 12, lineHeight: 1.6, color: "rgba(244,237,223,.45)", margin: 0 }}>
+      <p style={{ fontSize: 12, lineHeight: 1.6, color: "var(--nb-body)", margin: 0 }}>
         {item.desc}
       </p>
     </div>
@@ -150,6 +68,8 @@ function AudienceCard({ item, fadeStyle }: { item: AudienceItem; delay: number; 
 }
 
 export default function AudienceSection() {
+  const { theme } = useNbTheme();
+  const isDark = theme === "dark";
   const { ref, inView } = useInView();
 
   const fadeUp = (delay: number): React.CSSProperties => ({
@@ -159,18 +79,18 @@ export default function AudienceSection() {
   });
 
   return (
-    <section className="relative overflow-hidden" style={{ background: "#10100E", padding: "110px 0 100px" }}>
+    <section className="relative overflow-hidden" style={{ background: isDark ? "#10100E" : "var(--nb-sand-2)", padding: "110px 0 100px", borderTop: "3px solid var(--nb-navbar-border)" }}>
 
       <div className="kv-aurora absolute pointer-events-none" style={{
         width: "40vw", height: "40vw", maxWidth: 560, maxHeight: 560,
         top: "-15%", left: "-5%",
-        background: "radial-gradient(circle, rgba(232,184,75,.1) 0%, rgba(232,184,75,.02) 55%, transparent 72%)",
+        background: "radial-gradient(circle, rgba(232,178,60,.18) 0%, rgba(232,178,60,.04) 55%, transparent 72%)",
         animationDuration: "32s", animationDelay: "-8s",
       }} />
       <div className="kv-aurora absolute pointer-events-none" style={{
         width: "30vw", height: "30vw", maxWidth: 400, maxHeight: 400,
         bottom: "-10%", right: "-5%",
-        background: "radial-gradient(circle, rgba(35,157,140,.12) 0%, rgba(35,157,140,.03) 55%, transparent 72%)",
+        background: "radial-gradient(circle, rgba(35,157,140,.16) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
         animationDuration: "25s", animationDelay: "-18s", animationDirection: "reverse",
       }} />
 
@@ -178,11 +98,11 @@ export default function AudienceSection() {
 
         <div className="text-center mb-16" style={fadeUp(0)}>
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div style={{ width: 28, height: 1, background: "#E9B23C" }} />
-            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase", color: "#E9B23C" }}>
+            <div style={{ width: 28, height: 2, background: "var(--nb-terracotta)" }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--nb-terracotta)", fontFamily: "var(--font-geo)" }}>
               Para quem é
             </span>
-            <div style={{ width: 28, height: 1, background: "#E9B23C" }} />
+            <div style={{ width: 28, height: 2, background: "var(--nb-terracotta)" }} />
           </div>
           <h2 style={{
             fontFamily: "var(--font-fraunces), Georgia, serif",
@@ -190,15 +110,15 @@ export default function AudienceSection() {
             fontWeight: 700,
             lineHeight: 1.15,
             letterSpacing: "-0.8px",
-            color: "#F4EDDF",
+            color: "var(--nb-heading)",
             marginBottom: 16,
           }}>
             A Kariri Valley é para{" "}
-            <span style={{ color: "#E9B23C", fontStyle: "italic" }}>você</span>
+            <span style={{ color: "var(--nb-terracotta)", fontStyle: "italic" }}>você</span>
           </h2>
           <p style={{
             fontSize: "clamp(14px, 1.4vw, 16px)",
-            color: "rgba(244,237,223,.48)",
+            color: "var(--nb-body)",
             maxWidth: 500,
             margin: "0 auto",
             lineHeight: 1.7,
@@ -213,8 +133,7 @@ export default function AudienceSection() {
             <AudienceCard
               key={a.title}
               item={a}
-              delay={i * 0.045}
-              inView={inView}
+              color={ACCENTS[i % ACCENTS.length]}
               fadeStyle={fadeUp(0.1 + i * 0.045)}
             />
           ))}

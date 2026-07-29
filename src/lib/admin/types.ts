@@ -170,9 +170,21 @@ export interface DashboardMetrics {
   companiesCount: number
   pendingCompaniesCount: number
   topSectors: RankedItem[]
+  /** Série dos últimos 6 meses (crescimento acumulado de membros). */
+  growthSeries: GrowthPoint[]
 }
 
 export interface RankedItem {
   label: string
   value: number
+}
+
+/** Ponto da série de crescimento de membros (agregado por mês, derivado de members.created_at). */
+export interface GrowthPoint {
+  /** Rótulo curto do mês (ex.: "jan", "fev"), em pt-BR. */
+  label: string
+  /** Total acumulado de membros até o fim deste mês. */
+  total: number
+  /** Novos membros registrados neste mês. */
+  newCount: number
 }

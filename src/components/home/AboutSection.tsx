@@ -23,32 +23,27 @@ export default function AboutSection() {
   });
 
   return (
-    <section id="ecossistema" className="relative overflow-hidden" style={{ background: "#060D08", padding: "88px 0 110px" }}>
-
-      {/* Bridge connector — continuação do fio que desce do Hero */}
-      <div className="absolute left-1/2 pointer-events-none" style={{ top: 0, transform: "translateX(-50%)", zIndex: 11 }} aria-hidden="true">
-        <div className="kv-bridge-line kv-bridge-line-up" />
-      </div>
+    <section id="ecossistema" className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)", padding: "88px 0 110px", borderTop: "3px solid var(--nb-navbar-border)" }}>
 
       <div className="kv-aurora absolute pointer-events-none" style={{
         width: "50vw", height: "50vw", maxWidth: 700, maxHeight: 700,
         top: "-20%", right: "-10%",
-        background: "radial-gradient(circle, rgba(35,157,140,.16) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
+        background: "radial-gradient(circle, rgba(35,157,140,.18) 0%, rgba(35,157,140,.05) 55%, transparent 72%)",
         animationDuration: "28s", animationDelay: "-6s",
       }} />
       <div className="kv-aurora absolute pointer-events-none" style={{
         width: "35vw", height: "35vw", maxWidth: 500, maxHeight: 500,
         bottom: "5%", left: "-8%",
-        background: "radial-gradient(circle, rgba(30,77,58,.3) 0%, rgba(30,77,58,.06) 55%, transparent 72%)",
+        background: "radial-gradient(circle, rgba(232,178,60,.2) 0%, rgba(232,178,60,.05) 55%, transparent 72%)",
         animationDuration: "22s", animationDelay: "-14s", animationDirection: "reverse",
       }} />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.35 }} />
+      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.6 }} />
 
       <div ref={ref} className="relative max-w-[1300px] mx-auto px-6 lg:px-16" style={{ zIndex: 10 }}>
 
         <div className="flex items-center gap-3 mb-16" style={fadeUp(0)}>
-          <div style={{ width: 32, height: 1, background: "#239D8C" }} />
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase", color: "#239D8C" }}>
+          <div style={{ width: 32, height: 2, background: "var(--nb-turquoise)" }} />
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--nb-turquoise)", fontFamily: "var(--font-geo)" }}>
             O Ecossistema
           </span>
         </div>
@@ -62,19 +57,19 @@ export default function AboutSection() {
               fontWeight: 700,
               lineHeight: 1.1,
               letterSpacing: "-1px",
-              color: "#F4EDDF",
+              color: "var(--nb-heading)",
               marginBottom: 24,
               ...fadeUp(0.1),
             }}>
               Um ecossistema formado por{" "}
-              <span style={{ color: "#239D8C", fontStyle: "italic" }}>quem constrói</span>
+              <span style={{ color: "var(--nb-turquoise)", fontStyle: "italic" }}>quem constrói</span>
               {" "}o Cariri
             </h2>
 
             <p style={{
               fontSize: "clamp(15px, 1.5vw, 17px)",
               lineHeight: 1.78,
-              color: "rgba(244,237,223,.52)",
+              color: "var(--nb-body)",
               marginBottom: 32,
               maxWidth: 480,
               ...fadeUp(0.2),
@@ -88,8 +83,8 @@ export default function AboutSection() {
             <div style={fadeUp(0.3)}>
               <Link href="/sobre" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
-                fontSize: 14, fontWeight: 600, color: "#239D8C", textDecoration: "none",
-                borderBottom: "1px solid rgba(35,157,140,.4)", paddingBottom: 3,
+                fontSize: 14, fontWeight: 700, color: "var(--nb-forest)", textDecoration: "none",
+                borderBottom: "2px solid var(--nb-forest)", paddingBottom: 3, fontFamily: "var(--font-geo)",
               }}>
                 Conheça nossa história
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">

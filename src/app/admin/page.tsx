@@ -14,11 +14,14 @@ import {
   AlertCircle,
   ArrowRight,
   Rocket,
+  Radar,
 } from "lucide-react"
 import { StatCard } from "@/components/admin/StatCard"
 import { BarList } from "@/components/admin/BarList"
 import { Avatar } from "@/components/admin/Avatar"
 import { StatusBadge } from "@/components/admin/StatusBadge"
+import { GrowthChart } from "@/components/admin/dashboard/GrowthChart"
+import { StatusRadial } from "@/components/admin/dashboard/StatusRadial"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAdmin } from "@/lib/admin/store"
@@ -50,14 +53,37 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <p className="text-sm text-neutral-500">Visão geral do ecossistema</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <p className="flex items-center gap-1.5 text-sm text-neutral-500">
+          <span className="kv-pulse-dot" />
+          Visão geral do ecossistema · atualizado agora
+        </p>
+
+        {metrics.pending > 0 && (
+          <Link
+            href="/admin/aprovacoes"
+            className="group inline-flex items-center gap-2 self-start rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1.5 text-xs font-medium text-amber-800 transition-colors hover:bg-amber-100"
+          >
+            <span className="relative flex size-1.5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-500 opacity-75 motion-reduce:hidden" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-amber-500" />
+            </span>
+            {metrics.pending} aguardando aprovação
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        )}
       </div>
 
       {/* KPIs principais */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <StatCard label="Total de membros" value={metrics.total} icon={Users} tone="neutral" />
-        <StatCard label="Pendentes" value={metrics.pending} icon={Clock} tone="amber" />
+        <StatCard
+          label="Total de membros"
+          value={metrics.total}
+          icon={Users}
+          tone="neutral"
+          trend={metrics.growthSeries.map((p) => p.total)}
+        />
+        <StatCard label="Pendentes" value={metrics.pending} icon={Clock} tone="amber" live={metrics.pending > 0} />
         <StatCard label="Aprovados" value={metrics.approved} icon={UserCheck} tone="teal" />
         <StatCard label="Bloqueados" value={metrics.blocked} icon={Ban} tone="red" />
         <StatCard
@@ -67,7 +93,38 @@ export default function AdminDashboardPage() {
           tone="gold"
         />
         <StatCard label="Empresas cadastradas" value={metrics.companiesCount} icon={Rocket} tone="teal" />
-        <StatCard label="Empresas pendentes" value={metrics.pendingCompaniesCount} icon={Clock} tone="amber" />
+      </div>
+
+      {/* Crescimento + status do ecossistema */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="size-4 text-[var(--kv-teal)]" />
+              Crescimento da comunidade
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GrowthChart data={metrics.growthSeries} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Radar className="size-4 text-[var(--kv-coral)]" />
+              Status do ecossistema
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <StatusRadial
+              approved={metrics.approved}
+              pending={metrics.pending}
+              blocked={metrics.blocked}
+              rejected={metrics.rejected}
+            />
+          </CardContent>
+        </Card>
       </div>
 
       {/* Rankings */}
@@ -92,7 +149,7 @@ export default function AdminDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <BarList items={metrics.topInterests} color="var(--kv-gold)" />
+            <BarList items={metrics.topInterests} color="var(--kv-gold-dark)" />
           </CardContent>
         </Card>
 
@@ -128,21 +185,20 @@ export default function AdminDashboardPage() {
             <CardTitle className="flex items-center gap-2">
               <Clock className="size-4 text-amber-600" />
               Aprovações pendentes
+              {pendingRecent.length > 0 && (
+                <span className="relative flex size-1.5">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-500 opacity-75 motion-reduce:hidden" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-amber-500" />
+                </span>
+              )}
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              nativeButton={false}
-              render={<Link href="/admin/aprovacoes" />}
-            >
+            <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/admin/aprovacoes" />}>
               Ver todas <ArrowRight className="size-3.5" />
             </Button>
           </CardHeader>
           <CardContent className="pt-3">
             {pendingRecent.length === 0 ? (
-              <p className="py-6 text-center text-sm text-neutral-400">
-                Nenhuma solicitação pendente.
-              </p>
+              <p className="py-6 text-center text-sm text-neutral-400">Nenhuma solicitação pendente.</p>
             ) : (
               <ul className="flex flex-col divide-y divide-neutral-100">
                 {pendingRecent.map((m) => (
@@ -173,12 +229,7 @@ export default function AdminDashboardPage() {
                 {metrics.incomplete}
               </span>
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              nativeButton={false}
-              render={<Link href="/admin/membros" />}
-            >
+            <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/admin/membros" />}>
               Gerenciar <ArrowRight className="size-3.5" />
             </Button>
           </CardHeader>
@@ -202,7 +253,7 @@ export default function AdminDashboardPage() {
                       </p>
                       <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
                         <div
-                          className="h-full rounded-full bg-[var(--kv-coral)]"
+                          className="h-full rounded-full bg-[var(--kv-coral)] transition-[width] duration-700"
                           style={{ width: `${pct}%` }}
                         />
                       </div>

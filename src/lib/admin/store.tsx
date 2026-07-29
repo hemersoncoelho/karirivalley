@@ -90,6 +90,103 @@ interface AdminStore {
   rejectCompany: (id: string) => void
 }
 
+// TEMP-QA-BYPASS-START: visual QA fixtures only, removed before finishing the task.
+function qaDaysAgo(days: number): string {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+}
+const QA_FIXTURE_MEMBERS: AdminMember[] = [
+  {
+    id: "qa-1", profileId: "p1", fullName: "Maria Eduarda Lima", displayName: "Duda Lima", email: "a@a.com", phone: "88999990001",
+    city: "Crato", state: "CE", bio: "Fundadora de agtech focada em irrigação inteligente no semiárido.", photoUrl: null,
+    company: "Kariri Valley", position: "CEO", occupationAreas: ["founder", "empresario"], interests: ["agro", "impacto"],
+    needs: ["Investimento"], offers: ["Mentoria"], socialLinks: [{ platform: "linkedin", url: "https://linkedin.com" }],
+    status: "approved", role: "admin", isPublic: true, createdAt: qaDaysAgo(210),
+    companyName: "AguaCerta", companyType: "startup", companyStage: "seed", companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: "agro", companyReviewStatus: "approved",
+  },
+  {
+    id: "qa-2", profileId: "p2", fullName: "João Pedro Nogueira", displayName: null, email: "b@b.com", phone: "88999990002",
+    city: "Juazeiro do Norte", state: "CE", bio: "Dev full-stack.", photoUrl: null, company: "Freelancer", position: "Dev",
+    occupationAreas: ["desenvolvedor"], interests: ["tecnologia"], needs: [], offers: ["Consultoria técnica"], socialLinks: [],
+    status: "approved", role: "member", isPublic: true, createdAt: qaDaysAgo(175),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+  {
+    id: "qa-3", profileId: "p3", fullName: "Ana Beatriz Sales", displayName: "Bia Sales", email: "c@c.com", phone: "88999990003",
+    city: "Barbalha", state: "CE", bio: "Designer de produto.", photoUrl: null, company: "Estúdio Serra", position: "Design lead",
+    occupationAreas: ["designer"], interests: ["design", "tecnologia"], needs: ["Networking"], offers: ["Design de produto"],
+    socialLinks: [{ platform: "instagram", url: "https://instagram.com" }], status: "approved", role: "ambassador",
+    isPublic: true, createdAt: qaDaysAgo(140),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+  {
+    id: "qa-4", profileId: null, fullName: "Carlos Eduardo Farias", displayName: null, email: "d@d.com", phone: "88999990004",
+    city: "Crato", state: "CE", bio: null, photoUrl: null, company: null, position: null, occupationAreas: ["investidor"],
+    interests: [], needs: [], offers: [], socialLinks: [], status: "pending", role: "member", isPublic: true, createdAt: qaDaysAgo(2),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+  {
+    id: "qa-5", profileId: null, fullName: "Fernanda Ribeiro Alves", displayName: "Fê Alves", email: "e@e.com", phone: "88999990005",
+    city: "Missão Velha", state: "CE", bio: "Empreendedora de turismo rural.", photoUrl: null, company: null, position: null,
+    occupationAreas: ["empresario"], interests: ["turismo"], needs: [], offers: [], socialLinks: [], status: "pending",
+    role: "member", isPublic: true, createdAt: qaDaysAgo(1),
+    companyName: "Trilhas do Cariri", companyType: "tradicional", companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: "turismo", companyReviewStatus: "pending",
+  },
+  {
+    id: "qa-6", profileId: "p6", fullName: "Rafael Torres Costa", displayName: null, email: "f@f.com", phone: "88999990006",
+    city: "Fortaleza", state: "CE", bio: "Investidor anjo em early-stage.", photoUrl: null, company: null, position: null,
+    occupationAreas: ["investidor", "mentor"], interests: ["fintech"], needs: [], offers: ["Investimento anjo"], socialLinks: [],
+    status: "approved", role: "member", isPublic: true, createdAt: qaDaysAgo(95),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+  {
+    id: "qa-7", profileId: "p7", fullName: "Patrícia Gomes Melo", displayName: "Pat Melo", email: "g@g.com", phone: "88999990007",
+    city: "Crato", state: "CE", bio: "Professora e pesquisadora em deep tech.", photoUrl: null, company: "UFCA",
+    position: "Professora", occupationAreas: ["professor", "pesquisador"], interests: ["tecnologia", "educação"],
+    needs: [], offers: ["Pesquisa aplicada"], socialLinks: [{ platform: "github", url: "https://github.com" }],
+    status: "approved", role: "member", isPublic: true, createdAt: qaDaysAgo(60),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+  {
+    id: "qa-8", profileId: "p8", fullName: "Diego Andrade Souza", displayName: null, email: "h@h.com", phone: "88999990008",
+    city: "Juazeiro do Norte", state: "CE", bio: "Founder de startup de saúde digital.", photoUrl: null, company: "SaudeCariri",
+    position: "CTO", occupationAreas: ["founder", "desenvolvedor"], interests: ["saude", "tecnologia"], needs: ["Investimento"],
+    offers: [], socialLinks: [], status: "approved", role: "member", isPublic: true, createdAt: qaDaysAgo(28),
+    companyName: "SaudeCariri", companyType: "startup", companyStage: "pre-seed", companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: "saude", companyReviewStatus: "approved",
+  },
+  {
+    id: "qa-9", profileId: null, fullName: "Lucas Martins Braga", displayName: null, email: "i@i.com", phone: "88999990009",
+    city: "Barbalha", state: "CE", bio: "Estudante de ciência da computação.", photoUrl: null, company: null, position: null,
+    occupationAreas: ["estudante"], interests: ["tecnologia"], needs: ["Mentoria"], offers: [], socialLinks: [], status: "blocked",
+    role: "member", isPublic: false, createdAt: qaDaysAgo(50),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+  {
+    id: "qa-10", profileId: null, fullName: "Vitória Cavalcante", displayName: null, email: "j@j.com", phone: "88999990010",
+    city: "Crato", state: "CE", bio: null, photoUrl: null, company: null, position: null, occupationAreas: [],
+    interests: [], needs: [], offers: [], socialLinks: [], status: "rejected", role: "member", isPublic: false,
+    createdAt: qaDaysAgo(80),
+    companyName: null, companyType: null, companyStage: null, companyCnpj: null, companyLogoUrl: null,
+    companyProblem: null, companySector: null, companyReviewStatus: null,
+  },
+]
+const QA_FIXTURE_INTERESTS: AdminInterest[] = [
+  { id: "i1", name: "Tecnologia", slug: "tecnologia", category: "geral", active: true, memberCount: 4 },
+  { id: "i2", name: "Agro", slug: "agro", category: "geral", active: true, memberCount: 1 },
+  { id: "i3", name: "Turismo", slug: "turismo", category: "geral", active: true, memberCount: 1 },
+  { id: "i4", name: "Fintech", slug: "fintech", category: "geral", active: true, memberCount: 1 },
+  { id: "i5", name: "Design", slug: "design", category: "geral", active: true, memberCount: 1 },
+]
+// TEMP-QA-BYPASS-END
+
 const AdminContext = createContext<AdminStore | null>(null)
 
 const MEMBER_SELECT = `
@@ -375,6 +472,19 @@ export function AdminProvider({
   }, [])
 
   useEffect(() => {
+    // TEMP-QA-BYPASS: visual QA only, reverted before finishing the task.
+    if (typeof window !== "undefined" && window.location.search.includes("qaEmpty")) {
+      setMembers([])
+      setInterests([])
+      setLoading(false)
+      return
+    }
+    if (typeof window !== "undefined" && window.location.search.includes("qaFixture")) {
+      setMembers(QA_FIXTURE_MEMBERS)
+      setInterests(QA_FIXTURE_INTERESTS)
+      setLoading(false)
+      return
+    }
     setLoading(true)
     Promise.all([fetchMembers(), fetchInterests(), fetchEvents(), fetchOpportunities(), fetchLogs()]).finally(
       () => setLoading(false)

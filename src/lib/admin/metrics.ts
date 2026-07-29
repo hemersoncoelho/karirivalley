@@ -1,5 +1,8 @@
 import { occupationLabel, sectorLabel } from "./labels"
-import type { AdminInterest, AdminMember, DashboardMetrics, RankedItem } from "./types"
+import type { AdminInterest, AdminMember, DashboardMetrics, GrowthPoint, RankedItem } from "./types"
+
+/** Quantidade de meses exibidos na série de crescimento do dashboard. */
+const GROWTH_WINDOW_MONTHS = 6
 
 /** Rótulo do mês corrente (ex.: "julho de 2026"), usado no KPI de novos membros. */
 export const CURRENT_MONTH_LABEL = new Date().toLocaleDateString("pt-BR", {
@@ -45,6 +48,28 @@ function rank(counts: Map<string, number>, limit = 5): RankedItem[] {
 function isSameMonth(iso: string, ref: Date): boolean {
   const d = new Date(iso)
   return d.getFullYear() === ref.getFullYear() && d.getMonth() === ref.getMonth()
+}
+
+/**
+ * Série de crescimento acumulado de membros nos últimos `months` meses,
+ * derivada exclusivamente de `members[].createdAt` — sem dados fictícios.
+ */
+export function computeGrowthSeries(
+  members: AdminMember[],
+  months: number = GROWTH_WINDOW_MONTHS
+): GrowthPoint[] {
+  const ref = new Date()
+  const windowStart = new Date(ref.getFullYear(), ref.getMonth() - (months - 1), 1)
+  const baseline = members.filter((m) => new Date(m.createdAt) < windowStart).length
+
+  let running = baseline
+  return Array.from({ length: months }, (_, i) => {
+    const monthDate = new Date(ref.getFullYear(), ref.getMonth() - (months - 1 - i), 1)
+    const newCount = members.filter((m) => isSameMonth(m.createdAt, monthDate)).length
+    running += newCount
+    const label = monthDate.toLocaleDateString("pt-BR", { month: "short" }).replace(/\.$/, "")
+    return { label, total: running, newCount }
+  })
 }
 
 export function computeMetrics(
@@ -110,5 +135,6 @@ export function computeMetrics(
     companiesCount,
     pendingCompaniesCount,
     topSectors: rank(sectors),
+    growthSeries: computeGrowthSeries(members),
   }
 }

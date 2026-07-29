@@ -219,6 +219,126 @@ h1, h2, h3, h4 {
   --kv-dark:  #060D08;
 }
 
+/* ── Neobrutalist public-site tokens (Hero → Footer) ─────────────────────────
+   Isolado das vars --kv-* acima (consumidas pelo admin/ui primitives) para não
+   causar regressão fora do escopo desta reformulação visual. */
+:root {
+  --nb-sand:        #F4EEE1;
+  --nb-sand-2:      #EAE0C6;
+  --nb-cream:       #FBF8EF;
+  --nb-forest:      #1E4D3A;
+  --nb-forest-dark: #123328;
+  --nb-petrol:      #0F3B36;
+  --nb-terracotta:  #C25A2E;
+  --nb-mustard:     #E9B23C;
+  --nb-turquoise:   #239D8C;
+  --nb-ink:         #16140F;
+}
+
+@theme inline {
+  --color-nb-sand:        var(--nb-sand);
+  --color-nb-sand-2:      var(--nb-sand-2);
+  --color-nb-cream:       var(--nb-cream);
+  --color-nb-forest:      var(--nb-forest);
+  --color-nb-forest-dark: var(--nb-forest-dark);
+  --color-nb-petrol:      var(--nb-petrol);
+  --color-nb-terracotta:  var(--nb-terracotta);
+  --color-nb-mustard:     var(--nb-mustard);
+  --color-nb-turquoise:   var(--nb-turquoise);
+  --color-nb-ink:         var(--nb-ink);
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-geo:     var(--font-space-grotesk), var(--font-inter), Arial, sans-serif;
+
+  --shadow-nb-sm:    3px 3px 0 0 var(--nb-ink);
+  --shadow-nb:       5px 5px 0 0 var(--nb-ink);
+  --shadow-nb-lg:    8px 8px 0 0 var(--nb-ink);
+  --shadow-nb-press: 2px 2px 0 0 var(--nb-ink);
+  --shadow-nb-sand:  5px 5px 0 0 var(--nb-sand);
+}
+
+/* ── Tema claro (neobrutalismo) / escuro (versão publicada) ──────────────────
+   O site público (Navbar, Hero e demais seções) usa a mesma estrutura JSX nos
+   dois temas — só a "pele" visual muda via estes tokens. Footer e CTA final
+   são um acento fixo de contraste e não respondem ao tema (ver nb-forest*). */
+:root {
+  --nb-page-bg:            var(--nb-sand);
+  --nb-heading:            var(--nb-ink);
+  --nb-body:               rgba(22, 20, 15, .62);
+  --nb-body-strong:        rgba(22, 20, 15, .78);
+
+  --nb-navbar-bg:          var(--nb-sand);
+  --nb-navbar-border:      var(--nb-ink);
+  --nb-link-fg:            var(--nb-ink);
+
+  --nb-btn-primary-bg:     var(--nb-forest);
+  --nb-btn-primary-fg:     var(--nb-sand);
+  --nb-btn-primary-border: 3px solid var(--nb-ink);
+  --nb-btn-ghost-fg:       var(--nb-ink);
+  --nb-btn-ghost-bg:       var(--nb-sand);
+  --nb-btn-ghost-border:   3px solid var(--nb-ink);
+
+  --nb-card-bg:            var(--nb-cream);
+  --nb-card-blur:          none;
+  --nb-card-border:        3px solid var(--nb-ink);
+  --nb-card-shadow:        var(--shadow-nb-lg);
+  --nb-card-radius:        16px;
+  --nb-card-header-bg:     var(--nb-sand-2);
+  --nb-card-header-border: 2px solid var(--nb-ink);
+  --nb-card-divider:       rgba(22, 20, 15, .1);
+  --nb-avatar-ring:        var(--nb-cream);
+  --nb-label-accent:       #8A5C13;
+}
+
+[data-nb-theme="dark"] {
+  --nb-page-bg:            var(--kv-dark);
+  --nb-heading:            var(--kv-cream);
+  --nb-body:               rgba(244, 237, 223, .5);
+  --nb-body-strong:        rgba(244, 237, 223, .75);
+
+  --nb-navbar-bg:          var(--kv-dark);
+  --nb-navbar-border:      rgba(255, 255, 255, .1);
+  --nb-link-fg:            rgba(244, 237, 223, .75);
+
+  --nb-btn-primary-bg:     var(--nb-forest);
+  --nb-btn-primary-fg:     var(--kv-cream);
+  --nb-btn-primary-border: 1px solid rgba(255, 255, 255, .1);
+  --nb-btn-ghost-fg:       rgba(244, 237, 223, .65);
+  --nb-btn-ghost-bg:       transparent;
+  --nb-btn-ghost-border:   1px solid rgba(255, 255, 255, .16);
+
+  --nb-card-bg:            rgba(255, 255, 255, .056);
+  --nb-card-blur:          blur(24px) saturate(160%);
+  --nb-card-border:        1px solid rgba(255, 255, 255, .11);
+  --nb-card-shadow:        0 32px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
+  --nb-card-radius:        20px;
+  --nb-card-header-bg:     transparent;
+  --nb-card-header-border: 1px solid rgba(255, 255, 255, .07);
+  --nb-card-divider:       rgba(255, 255, 255, .05);
+  --nb-avatar-ring:        var(--kv-dark);
+  --nb-label-accent:       var(--nb-mustard);
+}
+
+.kv-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.kv-press {
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.kv-press:hover {
+  transform: translate(-2px, -2px);
+}
+.kv-press:active {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-nb-press) !important;
+}
+
 .kv-aurora {
   position: absolute;
   filter: blur(90px);
@@ -229,8 +349,8 @@ h1, h2, h3, h4 {
 
 .kv-hero-grid {
   background-image:
-    linear-gradient(rgba(255,255,255,.024) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.024) 1px, transparent 1px);
+    linear-gradient(rgba(22,20,15,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,20,15,.05) 1px, transparent 1px);
   background-size: 54px 54px;
   mask-image: radial-gradient(ellipse 90% 85% at 50% 35%, black 0%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 35%, black 0%, transparent 100%);

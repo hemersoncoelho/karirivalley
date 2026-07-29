@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { NbThemeProvider } from "@/components/providers/NbThemeProvider";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -49,6 +51,13 @@ export const metadata: Metadata = {
   },
 };
 
+const SET_NB_THEME_SCRIPT = `
+  try {
+    var t = localStorage.getItem("kv-nb-theme");
+    if (t === "dark") document.documentElement.setAttribute("data-nb-theme", "dark");
+  } catch (e) {}
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -58,10 +67,17 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${spaceGrotesk.variable} ${inter.variable} ${fraunces.variable} h-full antialiased scroll-smooth`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col" style={{ backgroundColor: "#2C2221" }}>
-        <Navbar />
-        {children}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SET_NB_THEME_SCRIPT }} />
+      </head>
+      <body className="min-h-full flex flex-col" style={{ backgroundColor: "var(--nb-sand)" }}>
+        <NbThemeProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </NbThemeProvider>
       </body>
     </html>
   );

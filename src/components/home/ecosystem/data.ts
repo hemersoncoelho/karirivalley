@@ -4,6 +4,8 @@ export type EcosystemGroup = {
   title: string;
   desc: string;
   color: string;
+  /** Variante do color com contraste garantido para uso como texto sobre fundo claro. */
+  textColor: string;
   bg: string;
   border: string;
   items: readonly string[];
@@ -19,8 +21,9 @@ export const ECOSYSTEM_GROUPS: readonly EcosystemGroup[] = [
     title: "Pessoas & Talentos",
     desc: "Empreendedores, devs, pesquisadores e todos que movem a inovação no Cariri.",
     color: "#239D8C",
-    bg: "rgba(35,157,140,.09)",
-    border: "rgba(35,157,140,.2)",
+    textColor: "#166E62",
+    bg: "rgba(35,157,140,.12)",
+    border: "rgba(35,157,140,.5)",
     items: ["Empreendedores", "Desenvolvedores", "Pesquisadores", "Estudantes"],
   },
   {
@@ -29,8 +32,9 @@ export const ECOSYSTEM_GROUPS: readonly EcosystemGroup[] = [
     title: "Startups & Empresas",
     desc: "Negócios que transformam desafios locais em oportunidades reais de impacto.",
     color: "#E9B23C",
-    bg: "rgba(232,184,75,.08)",
-    border: "rgba(232,184,75,.2)",
+    textColor: "#8A5C13",
+    bg: "rgba(232,178,60,.16)",
+    border: "rgba(232,178,60,.55)",
     items: ["Startups", "Empresas", "Serviços"],
   },
   {
@@ -38,9 +42,10 @@ export const ECOSYSTEM_GROUPS: readonly EcosystemGroup[] = [
     label: "Educação",
     title: "Educação & Pesquisa",
     desc: "Universidades, institutos e habitats que formam talento e sustentam o ecossistema.",
-    color: "#E0715A",
-    bg: "rgba(224,113,90,.09)",
-    border: "rgba(224,113,90,.2)",
+    color: "#C25A2E",
+    textColor: "#C25A2E",
+    bg: "rgba(194,90,46,.12)",
+    border: "rgba(194,90,46,.5)",
     items: ["Universidades", "Institutos de Pesquisa", "Habitats de Inovação"],
   },
   {
@@ -48,9 +53,10 @@ export const ECOSYSTEM_GROUPS: readonly EcosystemGroup[] = [
     label: "Investimento",
     title: "Investimento & Apoio",
     desc: "Investidores e mentores que apostam no potencial do interior do Ceará.",
-    color: "#C25A2E",
-    bg: "rgba(194,90,46,.1)",
-    border: "rgba(194,90,46,.22)",
+    color: "#1E4D3A",
+    textColor: "#1E4D3A",
+    bg: "rgba(30,77,58,.1)",
+    border: "rgba(30,77,58,.5)",
     items: ["Investidores Anjo", "Fundos", "Mentores"],
   },
   {
@@ -58,9 +64,10 @@ export const ECOSYSTEM_GROUPS: readonly EcosystemGroup[] = [
     label: "Governo",
     title: "Governo & Instituições",
     desc: "Gestões municipais e estaduais que criam políticas para a inovação regional.",
-    color: "#7FA4D8",
-    bg: "rgba(15,34,64,.35)",
-    border: "rgba(127,164,216,.25)",
+    color: "#0F3B36",
+    textColor: "#0F3B36",
+    bg: "rgba(15,59,54,.1)",
+    border: "rgba(15,59,54,.5)",
     items: ["Governos Municipais", "Instituições de Fomento", "Políticas Públicas"],
   },
   {
@@ -68,9 +75,10 @@ export const ECOSYSTEM_GROUPS: readonly EcosystemGroup[] = [
     label: "Comunidades",
     title: "Comunidades & Eventos",
     desc: "Coletivos e iniciativas locais que mantêm o ecossistema em movimento.",
-    color: "#85D4B4",
-    bg: "rgba(133,212,180,.08)",
-    border: "rgba(133,212,180,.2)",
+    color: "#8A5C13",
+    textColor: "#8A5C13",
+    bg: "rgba(138,92,19,.1)",
+    border: "rgba(138,92,19,.5)",
     items: ["Coletivos", "Iniciativas Locais", "Eventos"],
   },
 ] as const;

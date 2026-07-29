@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { useNbTheme } from "@/hooks/useNbTheme";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useVisible } from "@/hooks/useVisible";
 import { ECOSYSTEM_GROUPS, ellipsePoint, groupAngle } from "./data";
@@ -19,6 +20,8 @@ interface MobileNetworkProps {
 }
 
 export default function MobileNetwork({ inView, activeId, onActiveChange }: MobileNetworkProps) {
+  const { theme } = useNbTheme();
+  const isDark = theme === "dark";
   const reduceMotion = useReducedMotion();
   const { ref, visible } = useVisible<HTMLDivElement>();
   const [defaultIndex] = useState(0);
@@ -64,7 +67,7 @@ export default function MobileNetwork({ inView, activeId, onActiveChange }: Mobi
         })}
 
         <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r + 14} fill={`url(#${gradId})`} className="kv-hub-breathe" style={{ transformBox: "fill-box", transformOrigin: "center", animationPlayState: reduceMotion ? "paused" : playState }} />
-        <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r} fill="rgba(6,13,8,.8)" stroke="#E9B23C" strokeWidth="1.5" />
+        <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r} fill={isDark ? "rgba(6,13,8,.8)" : "var(--nb-ink)"} stroke="#E9B23C" strokeWidth={isDark ? 1.5 : 2.5} />
         <polygon points={`${HUB.cx},${HUB.cy - 9} ${HUB.cx + 9},${HUB.cy} ${HUB.cx},${HUB.cy + 9} ${HUB.cx - 9},${HUB.cy}`} fill="#E9B23C" />
 
         {ECOSYSTEM_GROUPS.map((g, i) => {
@@ -100,14 +103,19 @@ export default function MobileNetwork({ inView, activeId, onActiveChange }: Mobi
               style={{
                 display: "flex", alignItems: "center", gap: 8,
                 minHeight: 52, width: "100%", textAlign: "left",
-                background: isActive ? `${g.color}22` : "rgba(255,255,255,.05)",
-                border: `1px solid ${g.color}${isActive ? "aa" : "3a"}`,
-                borderRadius: 14, padding: "10px 14px",
-                transition: "background .2s ease, border-color .2s ease",
+                background: isDark
+                  ? (isActive ? `${g.color}22` : "rgba(255,255,255,.05)")
+                  : (isActive ? `${g.color}22` : "var(--nb-cream)"),
+                border: isDark
+                  ? `1px solid ${g.color}${isActive ? "aa" : "3a"}`
+                  : `2px solid ${isActive ? g.color : "rgba(22,20,15,.25)"}`,
+                borderRadius: isDark ? 14 : 12, padding: "10px 14px",
+                boxShadow: !isDark && isActive ? "var(--shadow-nb-sm)" : "none",
+                transition: "background .2s ease, border-color .2s ease, box-shadow .2s ease",
               }}
             >
-              <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: g.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.3, color: isActive ? g.color : "rgba(244,237,223,.75)" }}>{g.label}</span>
+              <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: g.color, border: isDark ? "none" : "1.5px solid var(--nb-ink)", flexShrink: 0 }} />
+              <span style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.3, color: isActive ? (isDark ? g.color : g.textColor) : (isDark ? "rgba(244,237,223,.75)" : "rgba(22,20,15,.7)") }}>{g.label}</span>
             </button>
           );
         })}

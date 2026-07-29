@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { useNbTheme } from "@/hooks/useNbTheme";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useVisible } from "@/hooks/useVisible";
 import { ECOSYSTEM_GROUPS, ellipsePoint, groupAngle, type NodePosition } from "./data";
@@ -39,6 +40,8 @@ interface DesktopNetworkProps {
 }
 
 export default function DesktopNetwork({ inView, activeId, onActiveChange }: DesktopNetworkProps) {
+  const { theme } = useNbTheme();
+  const isDark = theme === "dark";
   const reduceMotion = useReducedMotion();
   const { ref, visible } = useVisible<HTMLDivElement>();
   const [autoIndex, setAutoIndex] = useState(0);
@@ -92,7 +95,7 @@ export default function DesktopNetwork({ inView, activeId, onActiveChange }: Des
 
         {/* Decorative backdrop: slow-rotating hex ring */}
         <g aria-hidden="true" className="kv-slow-spin" style={{ transformBox: "fill-box", transformOrigin: "center", animationDuration: "110s", animationPlayState: playState }}>
-          <polygon points="320,80 486,185 486,375 320,480 154,375 154,185" fill="none" stroke="rgba(232,184,75,.05)" strokeWidth="1" />
+          <polygon points="320,80 486,185 486,375 320,480 154,375 154,185" fill="none" stroke={isDark ? "rgba(232,184,75,.05)" : "rgba(22,20,15,.09)"} strokeWidth={isDark ? 1 : 1.5} />
         </g>
 
         {/* Hub spokes — one per category; only the displayed category's is fully lit */}
@@ -138,7 +141,7 @@ export default function DesktopNetwork({ inView, activeId, onActiveChange }: Des
         <g aria-hidden="true">
           <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r + 20} fill={`url(#${gradId})`} className="kv-hub-breathe" style={{ transformBox: "fill-box", transformOrigin: "center", animationPlayState: playState }} />
           <g filter={`url(#${glowId})`}>
-            <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r} fill="rgba(6,13,8,.8)" stroke="#E9B23C" strokeWidth="1.5" />
+            <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r} fill={isDark ? "rgba(6,13,8,.8)" : "var(--nb-ink)"} stroke="#E9B23C" strokeWidth={isDark ? 1.5 : 2.5} />
           </g>
           <polygon points={`${HUB.cx},${HUB.cy - 13} ${HUB.cx + 13},${HUB.cy} ${HUB.cx},${HUB.cy + 13} ${HUB.cx - 13},${HUB.cy}`} fill="#E9B23C" />
         </g>
@@ -179,14 +182,21 @@ export default function DesktopNetwork({ inView, activeId, onActiveChange }: Des
                   onClick={() => setPinnedId(prev => (prev === g.id ? null : g.id))}
                   style={{
                     display: "flex", alignItems: "center", gap: 8, height: "100%", width: "100%",
-                    cursor: "pointer", background: isActive ? `${g.color}26` : "rgba(6,13,8,.8)",
-                    border: `1.5px solid ${g.color}${isActive ? "cc" : "55"}`, borderRadius: 999,
+                    cursor: "pointer",
+                    background: isDark
+                      ? (isActive ? `${g.color}26` : "rgba(6,13,8,.8)")
+                      : (isActive ? `${g.color}28` : "var(--nb-cream)"),
+                    border: isDark
+                      ? `1.5px solid ${g.color}${isActive ? "cc" : "55"}`
+                      : `2px solid ${isActive ? g.color : "rgba(22,20,15,.3)"}`,
+                    borderRadius: 999,
+                    boxShadow: !isDark && isActive ? "var(--shadow-nb-sm)" : "none",
                     padding: "0 14px", whiteSpace: "nowrap", font: "inherit",
-                    transition: "background .2s ease, border-color .2s ease",
+                    transition: "background .2s ease, border-color .2s ease, box-shadow .2s ease",
                   }}
                 >
-                  <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: g.color, flexShrink: 0 }} />
-                  <span style={{ fontSize: 14, fontWeight: 700, color: g.color, letterSpacing: ".2px" }}>{g.label}</span>
+                  <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: g.color, border: isDark ? "none" : "1.5px solid var(--nb-ink)", flexShrink: 0 }} />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: isDark ? g.color : g.textColor, letterSpacing: ".2px" }}>{g.label}</span>
                 </button>
               </foreignObject>
             </g>

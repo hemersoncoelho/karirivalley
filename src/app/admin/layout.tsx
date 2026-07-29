@@ -10,10 +10,30 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // TEMP-QA-BYPASS: visual QA only, reverted before finishing the task.
-  const currentUser: CurrentUser = { id: "qa", name: "QA Admin", role: "admin" }
-  void redirect
-  void getSupabaseServerClient
+  const supabase = await getSupabaseServerClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/login")
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, full_name, role")
+    .eq("id", user.id)
+    .maybeSingle()
+
+  if (!profile || profile.role !== "admin") {
+    redirect("/")
+  }
+
+  const currentUser: CurrentUser = {
+    id: profile.id,
+    name: profile.full_name ?? "Administrador",
+    role: "admin",
+  }
 
   return (
     <AdminProvider currentUser={currentUser}>

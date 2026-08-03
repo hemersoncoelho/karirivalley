@@ -50,6 +50,38 @@ function isSameMonth(iso: string, ref: Date): boolean {
   return d.getFullYear() === ref.getFullYear() && d.getMonth() === ref.getMonth()
 }
 
+/** Dias da semana em pt-BR, começando na segunda (convenção de calendário no Brasil). */
+const WEEKDAY_LABELS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]
+/** Índices de Date.getDay() (0=domingo) na ordem de exibição acima. */
+const WEEKDAY_ORDER = [1, 2, 3, 4, 5, 6, 0]
+
+/** Cadastros por dia da semana — derivado de members.created_at, sem recorte de status. */
+function computeWeekdaySignups(members: AdminMember[]): RankedItem[] {
+  const counts = new Array(7).fill(0)
+  for (const m of members) counts[new Date(m.createdAt).getDay()]++
+  return WEEKDAY_ORDER.map((dayIndex, i) => ({ label: WEEKDAY_LABELS[i], value: counts[dayIndex] }))
+}
+
+const COMPLETENESS_BUCKETS = [
+  { label: "0–20%", min: 0, max: 20 },
+  { label: "21–40%", min: 21, max: 40 },
+  { label: "41–60%", min: 41, max: 60 },
+  { label: "61–80%", min: 61, max: 80 },
+  { label: "81–100%", min: 81, max: 100 },
+]
+
+/** Distribuição de completude de perfil entre membros aprovados, em faixas de 20%. */
+function computeCompletenessHistogram(members: AdminMember[]): RankedItem[] {
+  const approved = members.filter((m) => m.status === "approved")
+  const counts = COMPLETENESS_BUCKETS.map(() => 0)
+  for (const m of approved) {
+    const pct = profileCompleteness(m)
+    const bucketIndex = COMPLETENESS_BUCKETS.findIndex((b) => pct >= b.min && pct <= b.max)
+    if (bucketIndex >= 0) counts[bucketIndex]++
+  }
+  return COMPLETENESS_BUCKETS.map((b, i) => ({ label: b.label, value: counts[i] }))
+}
+
 /**
  * Série de crescimento acumulado de membros nos últimos `months` meses,
  * derivada exclusivamente de `members[].createdAt` — sem dados fictícios.
@@ -136,5 +168,7 @@ export function computeMetrics(
     pendingCompaniesCount,
     topSectors: rank(sectors),
     growthSeries: computeGrowthSeries(members),
+    weekdaySignups: computeWeekdaySignups(members),
+    completenessHistogram: computeCompletenessHistogram(members),
   }
 }

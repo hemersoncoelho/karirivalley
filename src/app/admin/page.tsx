@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   Users,
@@ -11,26 +12,38 @@ import {
   MapPin,
   Tag,
   Briefcase,
-  AlertCircle,
   ArrowRight,
   Rocket,
   Radar,
+  CalendarDays,
+  PieChart,
 } from "lucide-react"
 import { StatCard } from "@/components/admin/StatCard"
 import { BarList } from "@/components/admin/BarList"
-import { Avatar } from "@/components/admin/Avatar"
-import { StatusBadge } from "@/components/admin/StatusBadge"
 import { GrowthChart } from "@/components/admin/dashboard/GrowthChart"
+import { GrowthPeriodToggle } from "@/components/admin/dashboard/GrowthPeriodToggle"
 import { StatusRadial } from "@/components/admin/dashboard/StatusRadial"
+import { WeekdayChart } from "@/components/admin/dashboard/WeekdayChart"
+import { CompletenessHistogram } from "@/components/admin/dashboard/CompletenessHistogram"
+import { PendingApprovalsList } from "@/components/admin/dashboard/PendingApprovalsList"
+import { IncompleteProfilesList } from "@/components/admin/dashboard/IncompleteProfilesList"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { useAdmin } from "@/lib/admin/store"
-import { computeMetrics, profileCompleteness, isIncomplete, CURRENT_MONTH_LABEL } from "@/lib/admin/metrics"
-import { formatDate } from "@/lib/admin/labels"
+import { computeMetrics, computeGrowthSeries, profileCompleteness, isIncomplete, CURRENT_MONTH_LABEL } from "@/lib/admin/metrics"
+import type { MemberStatus } from "@/lib/admin/types"
+
+const DEFAULT_GROWTH_MONTHS = 6
 
 export default function AdminDashboardPage() {
+  const router = useRouter()
   const { members, interests } = useAdmin()
   const metrics = useMemo(() => computeMetrics(members, interests), [members, interests])
+
+  const [growthMonths, setGrowthMonths] = useState(DEFAULT_GROWTH_MONTHS)
+  const growthSeries = useMemo(
+    () => (growthMonths === DEFAULT_GROWTH_MONTHS ? metrics.growthSeries : computeGrowthSeries(members, growthMonths)),
+    [members, growthMonths, metrics.growthSeries]
+  )
 
   const pendingRecent = useMemo(
     () =>
@@ -50,6 +63,11 @@ export default function AdminDashboardPage() {
         .slice(0, 5),
     [members]
   )
+
+  function goToMembers(params: Record<string, string>) {
+    const search = new URLSearchParams(params).toString()
+    router.push(`/admin/membros?${search}`)
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -98,14 +116,15 @@ export default function AdminDashboardPage() {
       {/* Crescimento + status do ecossistema */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader>
+          <CardHeader className="flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="size-4 text-[var(--kv-teal)]" />
               Crescimento da comunidade
             </CardTitle>
+            <GrowthPeriodToggle value={growthMonths} onChange={setGrowthMonths} />
           </CardHeader>
           <CardContent>
-            <GrowthChart data={metrics.growthSeries} />
+            <GrowthChart data={growthSeries} />
           </CardContent>
         </Card>
 
@@ -122,7 +141,35 @@ export default function AdminDashboardPage() {
               pending={metrics.pending}
               blocked={metrics.blocked}
               rejected={metrics.rejected}
+              onSelect={(status: MemberStatus) => goToMembers({ status })}
             />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Padrões de cadastro e completude */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card className="kv-fade-in-up">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CalendarDays className="size-4 text-[var(--kv-teal)]" />
+              Cadastros por dia da semana
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <WeekdayChart data={metrics.weekdaySignups} />
+          </CardContent>
+        </Card>
+
+        <Card className="kv-fade-in-up" style={{ animationDelay: "80ms" }}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <PieChart className="size-4 text-[var(--kv-coral)]" />
+              Completude de perfil (aprovados)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CompletenessHistogram data={metrics.completenessHistogram} />
           </CardContent>
         </Card>
       </div>
@@ -137,7 +184,11 @@ export default function AdminDashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <BarList items={metrics.topCities} color="var(--kv-teal)" />
+            <BarList
+              items={metrics.topCities}
+              color="var(--kv-teal)"
+              onItemClick={(city) => goToMembers({ city })}
+            />
           </CardContent>
         </Card>
 
@@ -180,91 +231,8 @@ export default function AdminDashboardPage() {
 
       {/* Pendências + incompletos */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader className="flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="size-4 text-amber-600" />
-              Aprovações pendentes
-              {pendingRecent.length > 0 && (
-                <span className="relative flex size-1.5">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-500 opacity-75 motion-reduce:hidden" />
-                  <span className="relative inline-flex size-1.5 rounded-full bg-amber-500" />
-                </span>
-              )}
-            </CardTitle>
-            <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/admin/aprovacoes" />}>
-              Ver todas <ArrowRight className="size-3.5" />
-            </Button>
-          </CardHeader>
-          <CardContent className="pt-3">
-            {pendingRecent.length === 0 ? (
-              <p className="py-6 text-center text-sm text-neutral-400">Nenhuma solicitação pendente.</p>
-            ) : (
-              <ul className="flex flex-col divide-y divide-neutral-100">
-                {pendingRecent.map((m) => (
-                  <li key={m.id} className="flex items-center gap-3 py-2.5">
-                    <Avatar name={m.displayName || m.fullName} photoUrl={m.photoUrl} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-neutral-800">
-                        {m.displayName || m.fullName}
-                      </p>
-                      <p className="truncate text-xs text-neutral-500">
-                        {m.city} · {formatDate(m.createdAt)}
-                      </p>
-                    </div>
-                    <StatusBadge status={m.status} />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <AlertCircle className="size-4 text-[var(--kv-coral)]" />
-              Perfis incompletos
-              <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500">
-                {metrics.incomplete}
-              </span>
-            </CardTitle>
-            <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/admin/membros" />}>
-              Gerenciar <ArrowRight className="size-3.5" />
-            </Button>
-          </CardHeader>
-          <CardContent className="pt-3">
-            {incompleteMembers.length === 0 ? (
-              <p className="py-6 text-center text-sm text-neutral-400">
-                Todos os perfis aprovados estão completos.
-              </p>
-            ) : (
-              <ul className="flex flex-col divide-y divide-neutral-100">
-                {incompleteMembers.map(({ member, pct }) => (
-                  <li key={member.id} className="flex items-center gap-3 py-2.5">
-                    <Avatar
-                      name={member.displayName || member.fullName}
-                      photoUrl={member.photoUrl}
-                      size="sm"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-neutral-800">
-                        {member.displayName || member.fullName}
-                      </p>
-                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
-                        <div
-                          className="h-full rounded-full bg-[var(--kv-coral)] transition-[width] duration-700"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                    </div>
-                    <span className="shrink-0 text-xs font-medium text-neutral-500">{pct}%</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
+        <PendingApprovalsList members={pendingRecent} />
+        <IncompleteProfilesList entries={incompleteMembers} total={metrics.incomplete} />
       </div>
     </div>
   )

@@ -572,4 +572,10 @@ h1, h2, h3, h4 {
   .kv-slow-spin {
     animation: none;
   }
+  .kv-fade-in-up,
+  .kv-metric-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

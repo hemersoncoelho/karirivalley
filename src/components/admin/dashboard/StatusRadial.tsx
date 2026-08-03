@@ -1,10 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
+import { cn } from "@/lib/utils"
 import { useReducedMotion } from "@/lib/admin/useReducedMotion"
+import type { MemberStatus } from "@/lib/admin/types"
 
 interface StatusSlice {
-  key: "approved" | "pending" | "blocked" | "rejected"
+  key: MemberStatus
   label: string
   value: number
   color: string
@@ -15,6 +18,8 @@ interface StatusRadialProps {
   pending: number
   blocked: number
   rejected: number
+  /** Navega/filtra para a lista de membros pelo status escolhido. */
+  onSelect?: (status: MemberStatus) => void
 }
 
 interface TooltipPayload {
@@ -39,8 +44,9 @@ function StatusTooltip({ active, payload }: { active?: boolean; payload?: Toolti
  * A legenda fica sempre em coluna cheia abaixo do rosco — nunca espremida ao
  * lado dele — para que "Bloqueados"/"Rejeitados" nunca sejam cortados.
  */
-export function StatusRadial({ approved, pending, blocked, rejected }: StatusRadialProps) {
+export function StatusRadial({ approved, pending, blocked, rejected, onSelect }: StatusRadialProps) {
   const reduced = useReducedMotion()
+  const [hoveredKey, setHoveredKey] = useState<MemberStatus | null>(null)
   const total = approved + pending + blocked + rejected
 
   const slices: StatusSlice[] = [
@@ -73,9 +79,18 @@ export function StatusRadial({ approved, pending, blocked, rejected }: StatusRad
                   stroke="none"
                   isAnimationActive={!reduced}
                   animationDuration={900}
+                  style={{ cursor: onSelect ? "pointer" : "default" }}
+                  onClick={(_, index) => onSelect?.(visible[index].key)}
+                  onMouseEnter={(_, index) => setHoveredKey(visible[index].key)}
+                  onMouseLeave={() => setHoveredKey(null)}
                 >
                   {visible.map((s) => (
-                    <Cell key={s.key} fill={s.color} />
+                    <Cell
+                      key={s.key}
+                      fill={s.color}
+                      style={{ transition: "opacity 150ms ease" }}
+                      fillOpacity={hoveredKey === null || hoveredKey === s.key ? 1 : 0.35}
+                    />
                   ))}
                 </Pie>
               </PieChart>
@@ -91,20 +106,42 @@ export function StatusRadial({ approved, pending, blocked, rejected }: StatusRad
       <ul className="grid w-full grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
         {slices.map((s) => {
           const pct = total > 0 ? Math.round((s.value / total) * 100) : 0
+          const clickable = Boolean(onSelect) && s.value > 0
           return (
-            <li key={s.key} className="flex min-w-0 items-center gap-2 text-sm" title={`${s.label}: ${s.value}`}>
-              <span className="relative flex size-2.5 shrink-0 items-center justify-center">
-                <span className="size-2 rounded-full" style={{ backgroundColor: s.color }} />
-                {s.key === "pending" && s.value > 0 && (
-                  <span
-                    className="absolute inline-flex size-2.5 animate-ping rounded-full opacity-60 motion-reduce:hidden"
-                    style={{ backgroundColor: s.color }}
-                  />
+            <li key={s.key}>
+              <div
+                role={clickable ? "button" : undefined}
+                tabIndex={clickable ? 0 : undefined}
+                onClick={clickable ? () => onSelect?.(s.key) : undefined}
+                onKeyDown={
+                  clickable
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") onSelect?.(s.key)
+                      }
+                    : undefined
+                }
+                onMouseEnter={() => s.value > 0 && setHoveredKey(s.key)}
+                onMouseLeave={() => setHoveredKey(null)}
+                title={`${s.label}: ${s.value}`}
+                className={cn(
+                  "flex w-full min-w-0 items-center gap-2 rounded-md px-1 py-0.5 text-sm transition-colors",
+                  clickable && "cursor-pointer hover:bg-neutral-50",
+                  hoveredKey === s.key && "bg-neutral-50"
                 )}
-              </span>
-              <span className="min-w-0 flex-1 truncate text-neutral-600">{s.label}</span>
-              <span className="shrink-0 font-medium tabular-nums text-neutral-800">{s.value}</span>
-              <span className="w-9 shrink-0 text-right text-xs tabular-nums text-neutral-400">{pct}%</span>
+              >
+                <span className="relative flex size-2.5 shrink-0 items-center justify-center">
+                  <span className="size-2 rounded-full" style={{ backgroundColor: s.color }} />
+                  {s.key === "pending" && s.value > 0 && (
+                    <span
+                      className="absolute inline-flex size-2.5 animate-ping rounded-full opacity-60 motion-reduce:hidden"
+                      style={{ backgroundColor: s.color }}
+                    />
+                  )}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-neutral-600">{s.label}</span>
+                <span className="shrink-0 font-medium tabular-nums text-neutral-800">{s.value}</span>
+                <span className="w-9 shrink-0 text-right text-xs tabular-nums text-neutral-400">{pct}%</span>
+              </div>
             </li>
           )
         })}

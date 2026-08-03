@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { Suspense, useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Search, Download, Filter } from "lucide-react"
 import { Avatar } from "@/components/admin/Avatar"
 import { StatusBadge } from "@/components/admin/StatusBadge"
@@ -38,11 +39,25 @@ function CompletenessTag({ member }: { member: AdminMember }) {
   )
 }
 
-export default function MembersPage() {
+const VALID_STATUSES: readonly string[] = ["pending", "approved", "blocked", "rejected"]
+
+/**
+ * Conteúdo real da página — separado do export default para isolar o uso de
+ * `useSearchParams` atrás de um `<Suspense>` (exigido em build de produção).
+ * Os filtros iniciais chegam via querystring quando o admin clica numa fatia
+ * do Status do ecossistema ou numa cidade do ranking, no dashboard.
+ */
+function MembersPageContent() {
   const { members } = useAdmin()
+  const searchParams = useSearchParams()
+  const initialStatus = searchParams.get("status")
+  const initialCity = searchParams.get("city")
+
   const [query, setQuery] = useState("")
-  const [status, setStatus] = useState<MemberStatus | "all">("all")
-  const [city, setCity] = useState("all")
+  const [status, setStatus] = useState<MemberStatus | "all">(
+    initialStatus && VALID_STATUSES.includes(initialStatus) ? (initialStatus as MemberStatus) : "all"
+  )
+  const [city, setCity] = useState(initialCity ?? "all")
   const [detail, setDetail] = useState<AdminMember | null>(null)
   const [editing, setEditing] = useState<AdminMember | null>(null)
 
@@ -225,5 +240,13 @@ export default function MembersPage() {
       <MemberDetailModal member={detail} open={!!detail} onClose={() => setDetail(null)} />
       <MemberEditModal member={editing} open={!!editing} onClose={() => setEditing(null)} />
     </div>
+  )
+}
+
+export default function MembersPage() {
+  return (
+    <Suspense fallback={<p className="py-10 text-center text-sm text-neutral-400">Carregando membros...</p>}>
+      <MembersPageContent />
+    </Suspense>
   )
 }

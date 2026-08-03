@@ -172,6 +172,10 @@ export interface DashboardMetrics {
   topSectors: RankedItem[]
   /** Série dos últimos 6 meses (crescimento acumulado de membros). */
   growthSeries: GrowthPoint[]
+  /** Cadastros por dia da semana (Seg→Dom), derivado de members.created_at. */
+  weekdaySignups: RankedItem[]
+  /** Distribuição de completude de perfil entre membros aprovados, em faixas de 20%. */
+  completenessHistogram: RankedItem[]
 }
 
 export interface RankedItem {

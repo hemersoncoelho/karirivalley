@@ -12,11 +12,11 @@ import { CheckboxRow, ErrorBanner, Field, StepButtons, TextInput } from "./field
 
 type AccountFormValues = z.infer<typeof accountPasswordSchema>
 
+const ALREADY_HAS_ACCOUNT_MESSAGE =
+  "Este e-mail já possui uma conta e a senha informada não confere. Se você já começou um cadastro antes, faça login em /login com a senha que usou naquela vez, ou use 'Esqueci minha senha' para redefinir."
+
 function translateAuthError(message: string): string {
   const normalized = message.toLowerCase()
-  if (normalized.includes("already registered")) {
-    return "Este e-mail já possui conta. Faça login em vez de solicitar um novo cadastro."
-  }
   if (normalized.includes("rate limit") || normalized.includes("too many")) {
     return "Muitas tentativas em sequência. Aguarde alguns minutos e tente de novo."
   }
@@ -64,12 +64,29 @@ export function StepAccount() {
       options: { emailRedirectTo, data: metadata },
     })
 
-    if (error) {
-      setFormError(translateAuthError(error.message))
+    const emailAlreadyHasAccount =
+      Boolean(error?.message.toLowerCase().includes("already registered")) ||
+      Boolean(data.user && (data.user.identities?.length ?? 0) === 0)
+
+    if (emailAlreadyHasAccount) {
+      // A conta pode ter ficado "presa" num cadastro anterior abandonado
+      // (auth criado, mas sem solicitação em members). Tenta logar com a
+      // mesma senha para retomar o wizard de onde parou em vez de travar
+      // o usuário com um erro de duplicidade.
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      })
+      if (signInError) {
+        setFormError(ALREADY_HAS_ACCOUNT_MESSAGE)
+      }
+      // Sessão iniciada com sucesso: o OnboardingWizard detecta o login e
+      // retoma o cadastro a partir do passo correto.
       return
     }
-    if (data.user && (data.user.identities?.length ?? 0) === 0) {
-      setFormError("Este e-mail já possui conta. Faça login em vez de solicitar um novo cadastro.")
+
+    if (error) {
+      setFormError(translateAuthError(error.message))
       return
     }
     if (!data.session) {

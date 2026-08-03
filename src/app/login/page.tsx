@@ -133,6 +133,12 @@ export default function LoginPage() {
             />
           </Field>
 
+          <p className="text-right text-sm">
+            <Link href="/login/esqueci-senha" className="text-[#F4EDDF]/50 underline underline-offset-4 hover:text-[#F4EDDF]">
+              Esqueci minha senha
+            </Link>
+          </p>
+
           {notice && (
             <p className="rounded-xl border border-[#E9B23C]/30 bg-[#E9B23C]/10 px-4 py-3 text-sm text-[#E9B23C]">
               {notice}

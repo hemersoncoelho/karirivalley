@@ -192,3 +192,24 @@ export interface GrowthPoint {
   /** Novos membros registrados neste mês. */
   newCount: number
 }
+
+/** Métricas agregadas da seção de eventos. */
+export interface EventStats {
+  total: number
+  published: number
+  draft: number
+  past: number
+  totalRegistrations: number
+  /** Eventos com mais inscritos (top 5). */
+  topByRegistrations: RankedItem[]
+}
+
+/** Métricas agregadas da seção de oportunidades. */
+export interface OpportunityStats {
+  total: number
+  open: number
+  draft: number
+  closed: number
+  /** Distribuição por tipo (editais, vagas, aceleração...). */
+  byType: RankedItem[]
+}

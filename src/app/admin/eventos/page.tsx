@@ -1,13 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, Calendar, MapPin, Users, Pencil } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { useMemo, useState } from "react"
+import { Plus, Calendar, MapPin, Users, Pencil, CalendarCheck2, FileClock, CalendarX2, Ticket } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
 import { Input, Label, Textarea } from "@/components/ui/input"
 import { FuturePhaseBanner } from "@/components/admin/FuturePhaseBanner"
+import { StatCard } from "@/components/admin/StatCard"
+import { BarList } from "@/components/admin/BarList"
 import { useAdmin } from "@/lib/admin/store"
+import { computeEventStats } from "@/lib/admin/metrics"
 import { EVENT_STATUS_LABELS, formatDate } from "@/lib/admin/labels"
 import type { EventStatus } from "@/lib/admin/types"
 
@@ -66,6 +69,7 @@ function EventFormModal({ open, onClose, title }: { open: boolean; onClose: () =
 
 export default function EventsPage() {
   const { events } = useAdmin()
+  const stats = useMemo(() => computeEventStats(events), [events])
   const [modal, setModal] = useState<{ open: boolean; title: string }>({ open: false, title: "" })
 
   return (
@@ -74,6 +78,25 @@ export default function EventsPage() {
         <strong>Fase futura.</strong> A estrutura visual de eventos está pronta. A publicação, o
         RSVP e a gestão de inscritos serão integrados ao banco em uma próxima etapa.
       </FuturePhaseBanner>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard label="Total de eventos" value={stats.total} icon={Calendar} tone="neutral" />
+        <StatCard label="Publicados" value={stats.published} icon={CalendarCheck2} tone="teal" />
+        <StatCard label="Rascunhos" value={stats.draft} icon={FileClock} tone="amber" />
+        <StatCard label="Passados" value={stats.past} icon={CalendarX2} tone="gold" />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Ticket className="size-4 text-[var(--kv-teal)]" />
+            Eventos com mais inscritos ({stats.totalRegistrations} inscrições no total)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <BarList items={stats.topByRegistrations} color="var(--kv-teal)" emptyLabel="Nenhum evento cadastrado ainda" />
+        </CardContent>
+      </Card>
 
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-neutral-500">{events.length} eventos</p>

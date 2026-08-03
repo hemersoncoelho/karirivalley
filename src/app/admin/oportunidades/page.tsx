@@ -1,13 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, CalendarClock, Tag as TagIcon, Pencil } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { useMemo, useState } from "react"
+import { Plus, CalendarClock, Tag as TagIcon, Pencil, Briefcase, FileClock, CircleCheck, CircleX } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
 import { Input, Label, Select, Textarea } from "@/components/ui/input"
 import { FuturePhaseBanner } from "@/components/admin/FuturePhaseBanner"
+import { StatCard } from "@/components/admin/StatCard"
+import { BarList } from "@/components/admin/BarList"
 import { useAdmin } from "@/lib/admin/store"
+import { computeOpportunityStats } from "@/lib/admin/metrics"
 import {
   OPPORTUNITY_STATUS_LABELS,
   OPPORTUNITY_TYPE_LABELS,
@@ -85,6 +88,7 @@ function OpportunityFormModal({
 
 export default function OpportunitiesPage() {
   const { opportunities } = useAdmin()
+  const stats = useMemo(() => computeOpportunityStats(opportunities), [opportunities])
   const [modal, setModal] = useState<{ open: boolean; title: string }>({ open: false, title: "" })
 
   return (
@@ -93,6 +97,29 @@ export default function OpportunitiesPage() {
         <strong>Fase futura.</strong> A estrutura visual de oportunidades está pronta. O fluxo de
         submissão, prazos e candidaturas será integrado ao banco em uma próxima etapa.
       </FuturePhaseBanner>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard label="Total de oportunidades" value={stats.total} icon={Briefcase} tone="neutral" />
+        <StatCard label="Abertas" value={stats.open} icon={CircleCheck} tone="teal" />
+        <StatCard label="Rascunhos" value={stats.draft} icon={FileClock} tone="amber" />
+        <StatCard label="Encerradas" value={stats.closed} icon={CircleX} tone="gold" />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TagIcon className="size-4 text-[var(--kv-coral)]" />
+            Oportunidades por tipo
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <BarList
+            items={stats.byType}
+            color="var(--kv-coral)"
+            emptyLabel="Nenhuma oportunidade cadastrada ainda"
+          />
+        </CardContent>
+      </Card>
 
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-neutral-500">{opportunities.length} oportunidades</p>

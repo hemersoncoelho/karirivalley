@@ -1,5 +1,15 @@
-import { occupationLabel, sectorLabel } from "./labels"
-import type { AdminInterest, AdminMember, DashboardMetrics, GrowthPoint, RankedItem } from "./types"
+import { occupationLabel, sectorLabel, OPPORTUNITY_TYPE_LABELS } from "./labels"
+import type {
+  AdminEvent,
+  AdminInterest,
+  AdminMember,
+  AdminOpportunity,
+  DashboardMetrics,
+  EventStats,
+  GrowthPoint,
+  OpportunityStats,
+  RankedItem,
+} from "./types"
 
 /** Quantidade de meses exibidos na série de crescimento do dashboard. */
 const GROWTH_WINDOW_MONTHS = 6
@@ -170,5 +180,40 @@ export function computeMetrics(
     growthSeries: computeGrowthSeries(members),
     weekdaySignups: computeWeekdaySignups(members),
     completenessHistogram: computeCompletenessHistogram(members),
+  }
+}
+
+/** Métricas agregadas da seção de eventos (fase futura — estrutura visual). */
+export function computeEventStats(events: AdminEvent[]): EventStats {
+  const topByRegistrations = events
+    .slice()
+    .sort((a, b) => b.registrationsCount - a.registrationsCount)
+    .slice(0, 5)
+    .map((e) => ({ label: e.title, value: e.registrationsCount }))
+
+  return {
+    total: events.length,
+    published: events.filter((e) => e.status === "published").length,
+    draft: events.filter((e) => e.status === "draft").length,
+    past: events.filter((e) => e.status === "past").length,
+    totalRegistrations: events.reduce((acc, e) => acc + e.registrationsCount, 0),
+    topByRegistrations,
+  }
+}
+
+/** Métricas agregadas da seção de oportunidades (fase futura — estrutura visual). */
+export function computeOpportunityStats(opportunities: AdminOpportunity[]): OpportunityStats {
+  const byTypeCounts = new Map<string, number>()
+  for (const o of opportunities) {
+    const label = OPPORTUNITY_TYPE_LABELS[o.type]
+    byTypeCounts.set(label, (byTypeCounts.get(label) ?? 0) + 1)
+  }
+
+  return {
+    total: opportunities.length,
+    open: opportunities.filter((o) => o.status === "open").length,
+    draft: opportunities.filter((o) => o.status === "draft").length,
+    closed: opportunities.filter((o) => o.status === "closed").length,
+    byType: rank(byTypeCounts),
   }
 }

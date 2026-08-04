@@ -43,8 +43,8 @@ export default async function OportunidadesPage() {
                 className="rounded-xl border border-white/8 bg-white/[0.03] p-5 scroll-mt-24"
               >
                 {opp.banner_url && (
-                  <div className="relative mb-3 h-36 w-full overflow-hidden rounded-lg">
-                    <Image src={opp.banner_url} alt={opp.title} fill sizes="(max-width: 640px) 100vw, 600px" className="object-cover" />
+                  <div className="relative mb-3 h-36 w-full overflow-hidden rounded-lg bg-white/[0.04]">
+                    <Image src={opp.banner_url} alt={opp.title} fill sizes="(max-width: 640px) 100vw, 600px" className="object-contain" />
                   </div>
                 )}
                 <div className="flex items-start justify-between gap-3">

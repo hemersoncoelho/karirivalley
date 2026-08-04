@@ -135,13 +135,13 @@ export default async function PublicOportunidadesPage() {
                 }}
               >
                 {opp.banner_url && (
-                  <div style={{ position: "relative", width: "100%", height: 150, marginBottom: 16, borderRadius: 10, overflow: "hidden" }}>
+                  <div style={{ position: "relative", width: "100%", height: 150, marginBottom: 16, borderRadius: 10, overflow: "hidden", background: "var(--nb-cream)" }}>
                     <Image
                       src={opp.banner_url}
                       alt={opp.title}
                       fill
                       sizes="(max-width: 640px) 100vw, 700px"
-                      style={{ objectFit: "cover" }}
+                      style={{ objectFit: "contain" }}
                     />
                   </div>
                 )}

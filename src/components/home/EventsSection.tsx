@@ -163,13 +163,13 @@ export default function EventsSection({ events }: EventsSectionProps) {
                 }}
               >
                 {event.banner_url && (
-                  <div style={{ position: "relative", width: "100%", height: 150 }}>
+                  <div style={{ position: "relative", width: "100%", height: 150, background: isDark ? "rgba(255,255,255,.04)" : "var(--nb-cream)" }}>
                     <Image
                       src={event.banner_url}
                       alt={event.title}
                       fill
                       sizes="(max-width: 640px) 100vw, 33vw"
-                      style={{ objectFit: "cover" }}
+                      style={{ objectFit: "contain" }}
                     />
                   </div>
                 )}

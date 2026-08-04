@@ -70,6 +70,8 @@ export interface CompanyInfoInput {
   logoUrl: string | null
   problem: string
   sector: CompanySector
+  mrr: number | null
+  subscribers: number | null
 }
 
 /**
@@ -97,6 +99,8 @@ export async function saveCompanyInfo(memberId: string, input: CompanyInfoInput)
         company_problem: null,
         company_sector: null,
         company_review_status: null,
+        company_mrr: null,
+        company_subscribers: null,
       })
       .eq("id", memberId)
     if (error) throw new Error(`Não foi possível salvar a empresa: ${error.message}`)
@@ -128,6 +132,8 @@ export async function saveCompanyInfo(memberId: string, input: CompanyInfoInput)
       company_problem: input.problem.trim() || null,
       company_sector: input.sector || null,
       company_review_status: "pending",
+      company_mrr: input.mrr,
+      company_subscribers: input.subscribers,
     })
     .eq("id", memberId)
   if (error) throw new Error(`Não foi possível salvar a empresa: ${error.message}`)

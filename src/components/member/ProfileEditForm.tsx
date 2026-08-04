@@ -42,16 +42,54 @@ const SOCIAL_FIELDS: { platform: SocialPlatform; label: string; placeholder: str
   { platform: "website", label: "Website", placeholder: "seusite.com" },
 ]
 
+function parseNonNegativeNumber(raw: string, label: string): number | null {
+  const trimmed = raw.trim()
+  if (!trimmed) return null
+  const value = Number(trimmed)
+  if (!Number.isFinite(value) || value < 0) {
+    throw new Error(`Informe um valor válido para "${label}"`)
+  }
+  return value
+}
+
+interface ProfileSectionProps {
+  step: string
+  title: string
+  description: string
+  hidden?: boolean
+  children: React.ReactNode
+}
+
+function ProfileSection({ step, title, description, hidden, children }: ProfileSectionProps) {
+  return (
+    <section role="tabpanel" hidden={hidden} className="space-y-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+      <div className="flex items-start gap-3">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-[#E9B23C]/30 bg-[#E9B23C]/10 text-xs font-bold text-[#E9B23C]">
+          {step}
+        </span>
+        <div>
+          <h2 className="text-base font-semibold text-[#F4EDDF]">{title}</h2>
+          <p className="mt-0.5 text-xs text-[#F4EDDF]/45">{description}</p>
+        </div>
+      </div>
+      {children}
+    </section>
+  )
+}
+
+type ProfileTab = "personal" | "company"
+
 export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
   const router = useRouter()
+  const [activeTab, setActiveTab] = useState<ProfileTab>("personal")
 
   const [displayName, setDisplayName] = useState(member.display_name ?? member.full_name)
   const [city, setCity] = useState(member.city)
   const [state, setState] = useState(member.state ?? "")
   const [bio, setBio] = useState(member.bio ?? "")
-  const [company, setCompany] = useState(member.company ?? "")
   const [position, setPosition] = useState(member.position ?? "")
 
+  const [company, setCompany] = useState(member.company ?? "")
   const [companyType, setCompanyType] = useState<CompanyType>((member.company_type as CompanyType) ?? "")
   const [startupStage, setStartupStage] = useState<StartupStage>((member.company_stage as StartupStage) ?? "")
   const [companyName, setCompanyName] = useState(member.company_name ?? "")
@@ -59,6 +97,10 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
   const [companySector, setCompanySector] = useState<CompanySector>((member.company_sector as CompanySector) ?? "")
   const [companyProblem, setCompanyProblem] = useState(member.company_problem ?? "")
   const [companyReviewStatus, setCompanyReviewStatus] = useState(member.company_review_status)
+  const [companyMrr, setCompanyMrr] = useState(member.company_mrr != null ? String(member.company_mrr) : "")
+  const [companySubscribers, setCompanySubscribers] = useState(
+    member.company_subscribers != null ? String(member.company_subscribers) : ""
+  )
   const [logoUrl, setLogoUrl] = useState(member.company_logo_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
@@ -168,6 +210,9 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         setLogoFile(null)
       }
 
+      const mrrValue = parseNonNegativeNumber(companyMrr, "MRR")
+      const subscribersValue = parseNonNegativeNumber(companySubscribers, "Assinantes")
+
       await saveCompanyInfo(member.id, {
         type: companyType,
         name: companyName,
@@ -176,6 +221,8 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         logoUrl: finalLogoUrl,
         problem: companyProblem,
         sector: companySector,
+        mrr: mrrValue,
+        subscribers: subscribersValue,
       })
       setCompanyReviewStatus(companyType ? "pending" : null)
       await syncInterests(member.id, selectedInterestIds)
@@ -206,244 +253,316 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8" noValidate>
-      <section className="flex items-center gap-5">
-        {photoPreview || photoUrl ? (
-          <Image
-            src={photoPreview ?? photoUrl ?? ""}
-            alt={displayName}
-            width={80}
-            height={80}
-            className="size-20 rounded-full object-cover"
-          />
-        ) : (
-          <div className="flex size-20 items-center justify-center rounded-full border border-white/10 bg-white/5">
-            <UserCircle2 size={36} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
-          </div>
-        )}
-        <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
-          Alterar foto
-          <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhotoChange} />
-        </label>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Informações básicas</h2>
-        <Field label="Nome de exibição" htmlFor="displayName">
-          <TextInput id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
-        </Field>
-        <div className="grid grid-cols-[1fr_110px] gap-3">
-          <Field label="Cidade" htmlFor="city">
-            <TextInput id="city" value={city} onChange={(e) => setCity(e.target.value)} />
-          </Field>
-          <Field label="Estado" htmlFor="state">
-            <SelectInput id="state" value={state} onChange={(e) => setState(e.target.value)}>
-              {BRAZIL_STATES.map((uf) => (
-                <option key={uf} value={uf}>
-                  {uf}
-                </option>
-              ))}
-            </SelectInput>
-          </Field>
-        </div>
-        <Field label="Bio" htmlFor="bio" hint={`${bio.length}/300 caracteres`}>
-          <TextArea id="bio" maxLength={300} value={bio} onChange={(e) => setBio(e.target.value)} />
-        </Field>
-      </section>
-
-      <section className="grid gap-3 sm:grid-cols-2">
-        <Field label="Empresa/Instituição" htmlFor="company" optional>
-          <TextInput id="company" value={company} onChange={(e) => setCompany(e.target.value)} />
-        </Field>
-        <Field label="Cargo" htmlFor="position" optional>
-          <TextInput id="position" value={position} onChange={(e) => setPosition(e.target.value)} />
-        </Field>
-      </section>
-
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Empresa</h2>
-          {companyReviewStatus === "pending" && (
-            <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
-              Em análise pelo admin
-            </span>
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      <div role="tablist" className="flex gap-2 rounded-2xl border border-white/10 bg-white/[0.02] p-1.5">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "personal"}
+          onClick={() => setActiveTab("personal")}
+          className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+            activeTab === "personal"
+              ? "bg-[#E9B23C] text-[#2C2221]"
+              : "text-[#F4EDDF]/70 hover:bg-white/5 hover:text-[#F4EDDF]"
+          }`}
+        >
+          1. Dados pessoais
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "company"}
+          onClick={() => setActiveTab("company")}
+          className={`relative flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+            activeTab === "company"
+              ? "bg-[#E9B23C] text-[#2C2221]"
+              : "text-[#F4EDDF]/70 hover:bg-white/5 hover:text-[#F4EDDF]"
+          }`}
+        >
+          2. Empresa
+          {(companyReviewStatus === "pending" || companyReviewStatus === "rejected") && (
+            <span
+              className={`absolute top-1.5 right-1.5 size-2 rounded-full ${
+                companyReviewStatus === "pending" ? "bg-[#E9B23C]" : "bg-[#E0715A]"
+              }`}
+            />
           )}
-          {companyReviewStatus === "rejected" && (
-            <span className="rounded-full border border-[#E0715A]/30 bg-[#E0715A]/10 px-2.5 py-0.5 text-xs font-medium text-[#E0715A]">
-              Não aprovada — revise os dados e salve novamente
-            </span>
-          )}
-        </div>
-        <Field label="Tipo" htmlFor="companyType" optional>
-          <SelectInput
-            id="companyType"
-            value={companyType}
-            onChange={(e) => setCompanyType(e.target.value as CompanyType)}
-          >
-            <option value="">Não tenho empresa / não quero informar</option>
-            {COMPANY_TYPES.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        {companyType && (
-          <>
-            <div className="flex items-center gap-4">
-              {logoPreview || logoUrl ? (
-                <Image
-                  src={logoPreview ?? logoUrl ?? ""}
-                  alt={companyName || "Logo da empresa"}
-                  width={64}
-                  height={64}
-                  className="size-16 rounded-xl object-cover"
-                />
-              ) : (
-                <div className="flex size-16 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <Rocket size={26} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
-                </div>
-              )}
-              <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
-                Logo da empresa
-                <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleLogoChange} />
-              </label>
+        </button>
+      </div>
+
+      <ProfileSection
+        step="1"
+        title="Dados pessoais"
+        description="Como você aparece para a comunidade"
+        hidden={activeTab !== "personal"}
+      >
+        <section className="flex items-center gap-5">
+          {photoPreview || photoUrl ? (
+            <Image
+              src={photoPreview ?? photoUrl ?? ""}
+              alt={displayName}
+              width={80}
+              height={80}
+              className="size-20 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex size-20 items-center justify-center rounded-full border border-white/10 bg-white/5">
+              <UserCircle2 size={36} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
             </div>
-            <Field label="Nome da empresa" htmlFor="companyName">
-              <TextInput id="companyName" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+          )}
+          <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
+            Alterar foto
+            <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhotoChange} />
+          </label>
+        </section>
+
+        <section className="space-y-4">
+          <Field label="Nome de exibição" htmlFor="displayName">
+            <TextInput id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+          </Field>
+          <div className="grid grid-cols-[1fr_110px] gap-3">
+            <Field label="Cidade" htmlFor="city">
+              <TextInput id="city" value={city} onChange={(e) => setCity(e.target.value)} />
             </Field>
-            {companyType === "startup" && (
-              <Field label="Estágio" htmlFor="startupStage" hint="Ideação não exige CNPJ. A partir de MVP, o CNPJ passa a ser obrigatório.">
-                <SelectInput
-                  id="startupStage"
-                  value={startupStage}
-                  onChange={(e) => setStartupStage(e.target.value as StartupStage)}
-                >
-                  <option value="">Selecione um estágio</option>
-                  {STARTUP_STAGES.map((stage) => (
-                    <option key={stage.value} value={stage.value}>
-                      {stage.label}
-                    </option>
-                  ))}
-                </SelectInput>
-              </Field>
-            )}
-            <Field label="Área de atuação" htmlFor="companySector" optional>
-              <SelectInput
-                id="companySector"
-                value={companySector}
-                onChange={(e) => setCompanySector(e.target.value as CompanySector)}
-              >
-                <option value="">Selecione um setor</option>
-                {COMPANY_SECTORS.map((sector) => (
-                  <option key={sector.value} value={sector.value}>
-                    {sector.label}
+            <Field label="Estado" htmlFor="state">
+              <SelectInput id="state" value={state} onChange={(e) => setState(e.target.value)}>
+                {BRAZIL_STATES.map((uf) => (
+                  <option key={uf} value={uf}>
+                    {uf}
                   </option>
                 ))}
               </SelectInput>
             </Field>
-            <Field
-              label="Qual problema a empresa resolve?"
-              htmlFor="companyProblem"
-              optional
-              hint={`${companyProblem.length}/300 caracteres`}
-            >
-              <TextArea
-                id="companyProblem"
-                maxLength={300}
-                value={companyProblem}
-                onChange={(e) => setCompanyProblem(e.target.value)}
+          </div>
+          <Field label="Bio" htmlFor="bio" hint={`${bio.length}/300 caracteres`}>
+            <TextArea id="bio" maxLength={300} value={bio} onChange={(e) => setBio(e.target.value)} />
+          </Field>
+          <Field label="Cargo" htmlFor="position" optional>
+            <TextInput id="position" value={position} onChange={(e) => setPosition(e.target.value)} />
+          </Field>
+        </section>
+
+        <section className="space-y-4">
+          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">Redes sociais</h3>
+          {SOCIAL_FIELDS.map((field) => (
+            <Field key={field.platform} label={field.label} htmlFor={field.platform} optional>
+              <TextInput
+                id={field.platform}
+                placeholder={field.placeholder}
+                value={socialValues[field.platform]}
+                onChange={(e) => setSocialValues((v) => ({ ...v, [field.platform]: e.target.value }))}
               />
             </Field>
-            {(companyType === "tradicional" || (companyType === "startup" && startupStage !== "ideacao")) && (
-              <Field label="CNPJ" htmlFor="companyCnpj" hint="Somente números (14 dígitos)">
-                <TextInput
-                  id="companyCnpj"
-                  inputMode="numeric"
-                  placeholder="00000000000000"
-                  value={companyCnpj}
-                  onChange={(e) => setCompanyCnpj(e.target.value)}
+          ))}
+        </section>
+
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">Interesses</h3>
+          <div className="flex flex-wrap gap-2">
+            {interests.map((interest) => (
+              <Chip
+                key={interest.id}
+                selected={selectedInterestIds.includes(interest.id)}
+                onClick={() => toggleInterest(interest.id)}
+              >
+                {interest.name}
+              </Chip>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">O que você busca</h3>
+          <div className="flex flex-wrap gap-2">
+            {NEED_OPTIONS.map((option) => (
+              <Chip
+                key={option}
+                selected={selectedNeeds.includes(option)}
+                onClick={() => toggleChip(selectedNeeds, setSelectedNeeds, option)}
+              >
+                {option}
+              </Chip>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">O que você oferece</h3>
+          <div className="flex flex-wrap gap-2">
+            {OFFER_OPTIONS.map((option) => (
+              <Chip
+                key={option}
+                selected={selectedOffers.includes(option)}
+                onClick={() => toggleChip(selectedOffers, setSelectedOffers, option)}
+              >
+                {option}
+              </Chip>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">Contato e visibilidade</h3>
+          <ToggleRow
+            label="Perfil público no diretório"
+            description="Se desativado, só membros aprovados veem seu perfil"
+            checked={isPublic}
+            onChange={setIsPublic}
+          />
+          <ToggleRow label={`E-mail público (${member.email})`} checked={showEmail} onChange={setShowEmail} />
+          {member.phone && (
+            <ToggleRow label={`WhatsApp público (${member.phone})`} checked={showPhone} onChange={setShowPhone} />
+          )}
+          <ToggleRow label="Cidade pública" checked={showCity} onChange={setShowCity} />
+        </section>
+      </ProfileSection>
+
+      <ProfileSection
+        step="2"
+        title="Empresa"
+        description="Sua empresa, startup ou negócio (opcional)"
+        hidden={activeTab !== "company"}
+      >
+        <section className="space-y-4">
+          <Field label="Empresa/Instituição" htmlFor="company" optional>
+            <TextInput id="company" value={company} onChange={(e) => setCompany(e.target.value)} />
+          </Field>
+          <Field label="Tipo" htmlFor="companyType" optional>
+            <SelectInput
+              id="companyType"
+              value={companyType}
+              onChange={(e) => setCompanyType(e.target.value as CompanyType)}
+            >
+              <option value="">Não tenho empresa / não quero informar</option>
+              {COMPANY_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </SelectInput>
+          </Field>
+          {companyType && (
+            <>
+              <div className="flex flex-wrap items-center gap-2">
+                {companyReviewStatus === "pending" && (
+                  <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+                    Em análise pelo admin
+                  </span>
+                )}
+                {companyReviewStatus === "rejected" && (
+                  <span className="rounded-full border border-[#E0715A]/30 bg-[#E0715A]/10 px-2.5 py-0.5 text-xs font-medium text-[#E0715A]">
+                    Não aprovada — revise os dados e salve novamente
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-4">
+                {logoPreview || logoUrl ? (
+                  <Image
+                    src={logoPreview ?? logoUrl ?? ""}
+                    alt={companyName || "Logo da empresa"}
+                    width={64}
+                    height={64}
+                    className="size-16 rounded-xl object-cover"
+                  />
+                ) : (
+                  <div className="flex size-16 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                    <Rocket size={26} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
+                  </div>
+                )}
+                <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
+                  Logo da empresa
+                  <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleLogoChange} />
+                </label>
+              </div>
+              <Field label="Nome da empresa" htmlFor="companyName">
+                <TextInput id="companyName" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+              </Field>
+              {companyType === "startup" && (
+                <Field label="Estágio" htmlFor="startupStage" hint="Ideação não exige CNPJ. A partir de MVP, o CNPJ passa a ser obrigatório.">
+                  <SelectInput
+                    id="startupStage"
+                    value={startupStage}
+                    onChange={(e) => setStartupStage(e.target.value as StartupStage)}
+                  >
+                    <option value="">Selecione um estágio</option>
+                    {STARTUP_STAGES.map((stage) => (
+                      <option key={stage.value} value={stage.value}>
+                        {stage.label}
+                      </option>
+                    ))}
+                  </SelectInput>
+                </Field>
+              )}
+              <Field label="Área de atuação" htmlFor="companySector" optional>
+                <SelectInput
+                  id="companySector"
+                  value={companySector}
+                  onChange={(e) => setCompanySector(e.target.value as CompanySector)}
+                >
+                  <option value="">Selecione um setor</option>
+                  {COMPANY_SECTORS.map((sector) => (
+                    <option key={sector.value} value={sector.value}>
+                      {sector.label}
+                    </option>
+                  ))}
+                </SelectInput>
+              </Field>
+              <Field
+                label="Qual problema a empresa resolve?"
+                htmlFor="companyProblem"
+                optional
+                hint={`${companyProblem.length}/300 caracteres`}
+              >
+                <TextArea
+                  id="companyProblem"
+                  maxLength={300}
+                  value={companyProblem}
+                  onChange={(e) => setCompanyProblem(e.target.value)}
                 />
               </Field>
-            )}
-          </>
-        )}
-      </section>
+              {(companyType === "tradicional" || (companyType === "startup" && startupStage !== "ideacao")) && (
+                <Field label="CNPJ" htmlFor="companyCnpj" hint="Somente números (14 dígitos)">
+                  <TextInput
+                    id="companyCnpj"
+                    inputMode="numeric"
+                    placeholder="00000000000000"
+                    value={companyCnpj}
+                    onChange={(e) => setCompanyCnpj(e.target.value)}
+                  />
+                </Field>
+              )}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="MRR (R$)" htmlFor="companyMrr" optional hint="Receita mensal recorrente, se aplicável">
+                  <TextInput
+                    id="companyMrr"
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step="0.01"
+                    placeholder="0,00"
+                    value={companyMrr}
+                    onChange={(e) => setCompanyMrr(e.target.value)}
+                  />
+                </Field>
+                <Field label="Assinantes" htmlFor="companySubscribers" optional hint="Número de clientes/assinantes ativos">
+                  <TextInput
+                    id="companySubscribers"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    step="1"
+                    placeholder="0"
+                    value={companySubscribers}
+                    onChange={(e) => setCompanySubscribers(e.target.value)}
+                  />
+                </Field>
+              </div>
+            </>
+          )}
+        </section>
 
-      <section className="space-y-4">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Redes sociais</h2>
-        {SOCIAL_FIELDS.map((field) => (
-          <Field key={field.platform} label={field.label} htmlFor={field.platform} optional>
-            <TextInput
-              id={field.platform}
-              placeholder={field.placeholder}
-              value={socialValues[field.platform]}
-              onChange={(e) => setSocialValues((v) => ({ ...v, [field.platform]: e.target.value }))}
-            />
-          </Field>
-        ))}
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Interesses</h2>
-        <div className="flex flex-wrap gap-2">
-          {interests.map((interest) => (
-            <Chip
-              key={interest.id}
-              selected={selectedInterestIds.includes(interest.id)}
-              onClick={() => toggleInterest(interest.id)}
-            >
-              {interest.name}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">O que você busca</h2>
-        <div className="flex flex-wrap gap-2">
-          {NEED_OPTIONS.map((option) => (
-            <Chip
-              key={option}
-              selected={selectedNeeds.includes(option)}
-              onClick={() => toggleChip(selectedNeeds, setSelectedNeeds, option)}
-            >
-              {option}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">O que você oferece</h2>
-        <div className="flex flex-wrap gap-2">
-          {OFFER_OPTIONS.map((option) => (
-            <Chip
-              key={option}
-              selected={selectedOffers.includes(option)}
-              onClick={() => toggleChip(selectedOffers, setSelectedOffers, option)}
-            >
-              {option}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Contato e visibilidade</h2>
-        <ToggleRow
-          label="Perfil público no diretório"
-          description="Se desativado, só membros aprovados veem seu perfil"
-          checked={isPublic}
-          onChange={setIsPublic}
-        />
-        <ToggleRow label={`E-mail público (${member.email})`} checked={showEmail} onChange={setShowEmail} />
-        {member.phone && (
-          <ToggleRow label={`WhatsApp público (${member.phone})`} checked={showPhone} onChange={setShowPhone} />
-        )}
-        <ToggleRow label="Cidade pública" checked={showCity} onChange={setShowCity} />
         <ToggleRow label="Empresa/cargo públicos" checked={showCompany} onChange={setShowCompany} />
-      </section>
+      </ProfileSection>
 
       {success && (
         <p className="rounded-xl border border-[#239D8C]/30 bg-[#239D8C]/10 px-4 py-3 text-sm text-[#5FD0C2]">

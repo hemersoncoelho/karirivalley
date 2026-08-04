@@ -4,6 +4,7 @@ import { Rocket } from "lucide-react"
 
 import type { DirectoryMember } from "@/lib/members/directory"
 import { STARTUP_STAGE_LABELS, COMPANY_SECTOR_LABELS, COMPANY_TYPE_LABELS } from "@/lib/onboarding/options"
+import { formatCurrencyBRL } from "@/lib/utils"
 
 interface CompanyCardProps {
   member: Pick<
@@ -17,6 +18,7 @@ interface CompanyCardProps {
     | "company_sector"
     | "company_logo_url"
     | "company_problem"
+    | "company_mrr"
   >
 }
 
@@ -64,6 +66,11 @@ export function CompanyCard({ member }: CompanyCardProps) {
         {member.company_stage && (
           <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2 py-0.5 text-[11px] font-medium text-[#E9B23C]">
             {STARTUP_STAGE_LABELS[member.company_stage] ?? member.company_stage}
+          </span>
+        )}
+        {member.company_mrr != null && (
+          <span className="rounded-full border border-[#239D8C]/25 bg-[#239D8C]/10 px-2 py-0.5 text-[11px] font-medium text-[#5FD0C2]">
+            MRR {formatCurrencyBRL(member.company_mrr)}
           </span>
         )}
         {member.city && <span className="text-[11px] text-[#F4EDDF]/40">{member.city}</span>}

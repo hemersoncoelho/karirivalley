@@ -5,6 +5,7 @@ import { ArrowLeft, Briefcase, Camera, Code2, Globe, Mail, Phone, UserCircle2 } 
 import type { DirectoryMember } from "@/lib/members/directory"
 import { OCCUPATION_LABELS } from "@/components/member/occupation-labels"
 import { STARTUP_STAGE_LABELS, COMPANY_SECTOR_LABELS } from "@/lib/onboarding/options"
+import { formatCurrencyBRL } from "@/lib/utils"
 
 const SOCIAL_ICONS: Record<string, typeof Globe> = {
   linkedin: Briefcase,
@@ -130,6 +131,11 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
                 {member.company_sector && (
                   <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-[#F4EDDF]/70">
                     {COMPANY_SECTOR_LABELS[member.company_sector] ?? member.company_sector}
+                  </span>
+                )}
+                {member.company_mrr != null && (
+                  <span className="rounded-full border border-[#239D8C]/25 bg-[#239D8C]/10 px-2.5 py-0.5 text-xs font-medium text-[#5FD0C2]">
+                    MRR {formatCurrencyBRL(member.company_mrr)}
                   </span>
                 )}
               </p>

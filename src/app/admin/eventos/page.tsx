@@ -17,7 +17,8 @@ import type { EventStatus } from "@/lib/admin/types"
 const STATUS_STYLE: Record<EventStatus, string> = {
   draft: "bg-neutral-100 text-neutral-600",
   published: "bg-[var(--kv-teal)]/12 text-[var(--kv-teal-dark)]",
-  past: "bg-neutral-100 text-neutral-400",
+  cancelled: "bg-red-50 text-red-500",
+  finished: "bg-neutral-100 text-neutral-400",
 }
 
 function EventFormModal({ open, onClose, title }: { open: boolean; onClose: () => void; title: string }) {

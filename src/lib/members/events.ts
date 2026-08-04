@@ -4,21 +4,21 @@ export interface EventRecord {
   id: string
   title: string
   description: string | null
-  event_date: string
+  starts_at: string
   location: string | null
-  external_url: string | null
+  meeting_url: string | null
 }
 
-const EVENT_COLUMNS = "id, title, description, event_date, location, external_url"
+const EVENT_COLUMNS = "id, title, description, starts_at, location, meeting_url"
 
-/** Próximos eventos (event_date >= agora), ordenados por data. `limit` opcional para widgets. */
+/** Próximos eventos (starts_at >= agora), ordenados por data. `limit` opcional para widgets. */
 export async function fetchUpcomingEvents(limit?: number): Promise<EventRecord[]> {
   const supabase = await getSupabaseServerClient()
   let query = supabase
     .from("events")
     .select(EVENT_COLUMNS)
-    .gte("event_date", new Date().toISOString())
-    .order("event_date", { ascending: true })
+    .gte("starts_at", new Date().toISOString())
+    .order("starts_at", { ascending: true })
 
   if (limit) query = query.limit(limit)
 

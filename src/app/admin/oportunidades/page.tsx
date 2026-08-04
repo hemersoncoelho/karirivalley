@@ -20,8 +20,9 @@ import type { OpportunityStatus, OpportunityType } from "@/lib/admin/types"
 
 const STATUS_STYLE: Record<OpportunityStatus, string> = {
   draft: "bg-neutral-100 text-neutral-600",
-  open: "bg-[var(--kv-teal)]/12 text-[var(--kv-teal-dark)]",
-  closed: "bg-neutral-100 text-neutral-400",
+  published: "bg-[var(--kv-teal)]/12 text-[var(--kv-teal-dark)]",
+  expired: "bg-amber-50 text-amber-600",
+  archived: "bg-neutral-100 text-neutral-400",
 }
 
 function OpportunityFormModal({
@@ -60,7 +61,7 @@ function OpportunityFormModal({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="op-type">Tipo</Label>
-            <Select id="op-type" defaultValue="editais">
+            <Select id="op-type" defaultValue="edital">
               {types.map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}

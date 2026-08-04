@@ -99,7 +99,7 @@ export interface AdminInterest {
 }
 
 /** Estrutura para a fase futura de eventos. */
-export type EventStatus = "draft" | "published" | "past"
+export type EventStatus = "draft" | "published" | "cancelled" | "finished"
 
 export interface AdminEvent {
   id: string
@@ -114,9 +114,18 @@ export interface AdminEvent {
 }
 
 /** Estrutura para a fase futura de oportunidades. */
-export type OpportunityStatus = "draft" | "open" | "closed"
-/** opportunities.category */
-export type OpportunityType = "editais" | "vagas" | "aceleracao" | "mentoria" | "programas"
+export type OpportunityStatus = "draft" | "published" | "expired" | "archived"
+/** opportunities.opportunity_type */
+export type OpportunityType =
+  | "edital"
+  | "vaga"
+  | "aceleracao"
+  | "mentoria"
+  | "chamada_publica"
+  | "bolsa"
+  | "investimento"
+  | "desafio"
+  | "evento_parceiro"
 
 export interface AdminOpportunity {
   id: string

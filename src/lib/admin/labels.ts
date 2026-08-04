@@ -50,21 +50,27 @@ export const OCCUPATION_LABELS: Record<OccupationArea, string> = {
 export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
   draft: "Rascunho",
   published: "Publicado",
-  past: "Encerrado",
+  cancelled: "Cancelado",
+  finished: "Encerrado",
 }
 
 export const OPPORTUNITY_STATUS_LABELS: Record<OpportunityStatus, string> = {
   draft: "Rascunho",
-  open: "Aberta",
-  closed: "Encerrada",
+  published: "Publicada",
+  expired: "Expirada",
+  archived: "Arquivada",
 }
 
 export const OPPORTUNITY_TYPE_LABELS: Record<OpportunityType, string> = {
-  editais: "Edital",
-  vagas: "Vaga",
+  edital: "Edital",
+  vaga: "Vaga",
   aceleracao: "Aceleração",
   mentoria: "Mentoria",
-  programas: "Programa",
+  chamada_publica: "Chamada pública",
+  bolsa: "Bolsa",
+  investimento: "Investimento",
+  desafio: "Desafio",
+  evento_parceiro: "Evento parceiro",
 }
 
 export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {

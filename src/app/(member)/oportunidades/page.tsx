@@ -35,13 +35,13 @@ export default async function OportunidadesPage() {
           <div className="space-y-3">
             {opportunities.map((opp) => (
               <div key={opp.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-xs font-medium text-[#E9B23C]">{CATEGORY_LABELS[opp.category] ?? opp.category}</p>
+                <p className="text-xs font-medium text-[#E9B23C]">{CATEGORY_LABELS[opp.opportunity_type] ?? opp.opportunity_type}</p>
                 <p className="mt-1.5 text-base font-semibold text-[#F4EDDF]">{opp.title}</p>
                 {opp.description && <p className="mt-1.5 text-sm text-[#F4EDDF]/55">{opp.description}</p>}
                 {opp.deadline && <p className="mt-2 text-xs text-[#F4EDDF]/40">{formatDeadline(opp.deadline)}</p>}
-                {opp.url && (
+                {opp.external_url && (
                   <a
-                    href={opp.url}
+                    href={opp.external_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-3 inline-block text-xs font-medium text-[#E9B23C] underline underline-offset-4"

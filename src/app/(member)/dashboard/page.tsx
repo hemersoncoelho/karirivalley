@@ -107,7 +107,7 @@ export default async function DashboardPage() {
                 key={event.id}
                 className="rounded-xl border border-white/8 bg-white/[0.03] p-4 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.05]"
               >
-                <p className="text-xs font-medium text-[#239D8C]">{formatEventDate(event.event_date)}</p>
+                <p className="text-xs font-medium text-[#239D8C]">{formatEventDate(event.starts_at)}</p>
                 <p className="mt-1.5 text-sm font-semibold text-[#F4EDDF]">{event.title}</p>
                 {event.location && <p className="mt-1 text-xs text-[#F4EDDF]/45">{event.location}</p>}
               </div>
@@ -150,7 +150,7 @@ export default async function DashboardPage() {
                 key={opp.id}
                 className="rounded-xl border border-white/8 bg-white/[0.03] p-4 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.05]"
               >
-                <p className="text-xs font-medium text-[#E9B23C] capitalize">{opp.category}</p>
+                <p className="text-xs font-medium text-[#E9B23C] capitalize">{opp.opportunity_type}</p>
                 <p className="mt-1.5 text-sm font-semibold text-[#F4EDDF]">{opp.title}</p>
               </div>
             ))}

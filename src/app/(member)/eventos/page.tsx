@@ -32,13 +32,13 @@ export default async function EventosPage() {
           <div className="space-y-3">
             {events.map((event) => (
               <div key={event.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-xs font-medium text-[#239D8C] capitalize">{formatEventDate(event.event_date)}</p>
+                <p className="text-xs font-medium text-[#239D8C] capitalize">{formatEventDate(event.starts_at)}</p>
                 <p className="mt-1.5 text-base font-semibold text-[#F4EDDF]">{event.title}</p>
                 {event.description && <p className="mt-1.5 text-sm text-[#F4EDDF]/55">{event.description}</p>}
                 {event.location && <p className="mt-2 text-xs text-[#F4EDDF]/40">{event.location}</p>}
-                {event.external_url && (
+                {event.meeting_url && (
                   <a
-                    href={event.external_url}
+                    href={event.meeting_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-3 inline-block text-xs font-medium text-[#E9B23C] underline underline-offset-4"

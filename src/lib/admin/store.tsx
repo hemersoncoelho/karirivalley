@@ -292,7 +292,7 @@ interface EventRow {
   id: string
   title: string
   description: string | null
-  event_date: string
+  starts_at: string
   location: string | null
   capacity: number | null
   status: EventStatus
@@ -304,7 +304,7 @@ function mapEvent(row: EventRow): AdminEvent {
     id: row.id,
     title: row.title,
     description: row.description ?? "",
-    startsAt: row.event_date,
+    startsAt: row.starts_at,
     location: row.location ?? "",
     capacity: row.capacity,
     registrationsCount: row.event_registrations?.[0]?.count ?? 0,
@@ -316,10 +316,9 @@ interface OpportunityRow {
   id: string
   title: string
   description: string | null
-  category: OpportunityType
+  opportunity_type: OpportunityType
   deadline: string | null
   status: OpportunityStatus
-  tags: string[] | null
 }
 
 function mapOpportunity(row: OpportunityRow): AdminOpportunity {
@@ -327,9 +326,10 @@ function mapOpportunity(row: OpportunityRow): AdminOpportunity {
     id: row.id,
     title: row.title,
     description: row.description ?? "",
-    type: row.category,
+    type: row.opportunity_type,
     deadline: row.deadline,
-    tags: row.tags ?? [],
+    // opportunities.tags não existe no schema atual — reservado para fase futura.
+    tags: [],
     status: row.status,
   }
 }
@@ -432,9 +432,9 @@ export function AdminProvider({
     const { data, error: err } = await supabase
       .from("events")
       .select(
-        "id, title, description, event_date, location, capacity, status, event_registrations(count)"
+        "id, title, description, starts_at, location, capacity, status, event_registrations(count)"
       )
-      .order("event_date", { ascending: false })
+      .order("starts_at", { ascending: false })
     if (err) {
       setError(`Não foi possível carregar os eventos: ${err.message}`)
       return
@@ -446,7 +446,7 @@ export function AdminProvider({
     const supabase = getSupabaseBrowserClient()
     const { data, error: err } = await supabase
       .from("opportunities")
-      .select("id, title, description, category, deadline, status, tags")
+      .select("id, title, description, opportunity_type, deadline, status")
       .order("created_at", { ascending: false })
     if (err) {
       setError(`Não foi possível carregar as oportunidades: ${err.message}`)

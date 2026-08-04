@@ -4,12 +4,12 @@ export interface OpportunityRecord {
   id: string
   title: string
   description: string | null
-  category: string
-  url: string | null
+  opportunity_type: string
+  external_url: string | null
   deadline: string | null
 }
 
-const OPPORTUNITY_COLUMNS = "id, title, description, category, url, deadline"
+const OPPORTUNITY_COLUMNS = "id, title, description, opportunity_type, external_url, deadline"
 
 /** Oportunidades ativas, ordenadas por prazo (as sem prazo aparecem por último). */
 export async function fetchOpportunities(limit?: number): Promise<OpportunityRecord[]> {

@@ -195,7 +195,7 @@ export function computeEventStats(events: AdminEvent[]): EventStats {
     total: events.length,
     published: events.filter((e) => e.status === "published").length,
     draft: events.filter((e) => e.status === "draft").length,
-    past: events.filter((e) => e.status === "past").length,
+    past: events.filter((e) => e.status === "finished").length,
     totalRegistrations: events.reduce((acc, e) => acc + e.registrationsCount, 0),
     topByRegistrations,
   }
@@ -211,9 +211,9 @@ export function computeOpportunityStats(opportunities: AdminOpportunity[]): Oppo
 
   return {
     total: opportunities.length,
-    open: opportunities.filter((o) => o.status === "open").length,
+    open: opportunities.filter((o) => o.status === "published").length,
     draft: opportunities.filter((o) => o.status === "draft").length,
-    closed: opportunities.filter((o) => o.status === "closed").length,
+    closed: opportunities.filter((o) => o.status === "archived").length,
     byType: rank(byTypeCounts),
   }
 }

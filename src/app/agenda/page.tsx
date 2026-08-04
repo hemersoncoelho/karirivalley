@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CalendarX2, Calendar, MapPin, ExternalLink } from "lucide-react";
 
 import { fetchPublicUpcomingEvents } from "@/lib/members/events";
+import { LinkifiedText } from "@/components/ui/linkified-text";
 
 export const metadata: Metadata = {
   title: "Eventos — Kariri Valley",
@@ -129,9 +130,10 @@ export default async function PublicAgendaPage() {
                   {event.title}
                 </h3>
                 {event.description && (
-                  <p style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", marginBottom: 10 }}>
-                    {event.description}
-                  </p>
+                  <LinkifiedText
+                    text={event.description}
+                    style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", marginBottom: 10 }}
+                  />
                 )}
                 {event.location && (
                   <p style={{ fontSize: 13, color: "var(--nb-body)", display: "flex", alignItems: "center", gap: 6 }}>

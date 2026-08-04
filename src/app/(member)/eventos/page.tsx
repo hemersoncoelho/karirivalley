@@ -2,6 +2,7 @@ import { CalendarX2 } from "lucide-react"
 
 import { fetchUpcomingEvents } from "@/lib/members/events"
 import { EmptyState } from "@/components/member/EmptyState"
+import { LinkifiedText } from "@/components/ui/linkified-text"
 
 function formatEventDate(value: string): string {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -34,7 +35,9 @@ export default async function EventosPage() {
               <div key={event.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
                 <p className="text-xs font-medium text-[#239D8C] capitalize">{formatEventDate(event.starts_at)}</p>
                 <p className="mt-1.5 text-base font-semibold text-[#F4EDDF]">{event.title}</p>
-                {event.description && <p className="mt-1.5 text-sm text-[#F4EDDF]/55">{event.description}</p>}
+                {event.description && (
+                  <LinkifiedText text={event.description} className="mt-1.5 text-sm leading-relaxed text-[#F4EDDF]/55" />
+                )}
                 {event.location && <p className="mt-2 text-xs text-[#F4EDDF]/40">{event.location}</p>}
                 {event.meeting_url && (
                   <a

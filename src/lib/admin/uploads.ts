@@ -23,3 +23,18 @@ export async function uploadEventBanner(eventId: string, file: File): Promise<st
   const { data } = supabase.storage.from("event-banners").getPublicUrl(path)
   return data.publicUrl
 }
+
+/** Upload da imagem de capa da oportunidade (bucket opportunity-banners, escrita restrita a admin). */
+export async function uploadOpportunityBanner(opportunityId: string, file: File): Promise<string> {
+  const supabase = getSupabaseBrowserClient()
+  const extension = PHOTO_EXTENSIONS[file.type] ?? "jpg"
+  const path = `${opportunityId}/banner-${Date.now()}.${extension}`
+
+  const { error } = await supabase.storage
+    .from("opportunity-banners")
+    .upload(path, file, { cacheControl: "3600", upsert: false })
+  if (error) throw new Error(`Não foi possível enviar a imagem da oportunidade: ${error.message}`)
+
+  const { data } = supabase.storage.from("opportunity-banners").getPublicUrl(path)
+  return data.publicUrl
+}

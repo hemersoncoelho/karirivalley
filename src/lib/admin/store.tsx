@@ -335,6 +335,8 @@ interface OpportunityRow {
   external_url: string
   deadline: string | null
   status: OpportunityStatus
+  is_public: boolean
+  banner_url: string | null
 }
 
 function mapOpportunity(row: OpportunityRow): AdminOpportunity {
@@ -348,6 +350,8 @@ function mapOpportunity(row: OpportunityRow): AdminOpportunity {
     // opportunities.tags não existe no schema atual — reservado para fase futura.
     tags: [],
     status: row.status,
+    isPublic: row.is_public,
+    bannerUrl: row.banner_url,
   }
 }
 
@@ -463,7 +467,7 @@ export function AdminProvider({
     const supabase = getSupabaseBrowserClient()
     const { data, error: err } = await supabase
       .from("opportunities")
-      .select("id, title, description, opportunity_type, external_url, deadline, status")
+      .select("id, title, description, opportunity_type, external_url, deadline, status, is_public, banner_url")
       .order("created_at", { ascending: false })
     if (err) {
       setError(`Não foi possível carregar as oportunidades: ${err.message}`)
@@ -711,6 +715,8 @@ export function AdminProvider({
           external_url: input.externalUrl,
           deadline: input.deadline,
           status: input.status,
+          is_public: input.isPublic,
+          banner_url: input.bannerUrl,
           created_by: currentUser.id,
           updated_by: currentUser.id,
         })
@@ -737,6 +743,8 @@ export function AdminProvider({
             external_url: input.externalUrl,
             deadline: input.deadline,
             status: input.status,
+            is_public: input.isPublic,
+            banner_url: input.bannerUrl,
             updated_by: currentUser.id,
           })
           .eq("id", id)

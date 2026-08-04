@@ -1,7 +1,20 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Plus, CalendarClock, Tag as TagIcon, Pencil, Briefcase, FileClock, CircleCheck, CircleX } from "lucide-react"
+import Image from "next/image"
+import {
+  Plus,
+  CalendarClock,
+  Tag as TagIcon,
+  Pencil,
+  Briefcase,
+  FileClock,
+  CircleCheck,
+  CircleX,
+  ImagePlus,
+  Globe,
+  Lock,
+} from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
@@ -16,6 +29,7 @@ import {
   OPPORTUNITY_TYPE_LABELS,
   formatDate,
 } from "@/lib/admin/labels"
+import { uploadOpportunityBanner, validatePhotoFile } from "@/lib/admin/uploads"
 import type { AdminOpportunity, OpportunityInput, OpportunityStatus, OpportunityType } from "@/lib/admin/types"
 
 const STATUS_STYLE: Record<OpportunityStatus, string> = {
@@ -32,6 +46,7 @@ interface OpportunityFormState {
   externalUrl: string
   deadline: string
   status: OpportunityStatus
+  isPublic: boolean
 }
 
 function emptyForm(): OpportunityFormState {
@@ -42,6 +57,7 @@ function emptyForm(): OpportunityFormState {
     externalUrl: "",
     deadline: "",
     status: "draft",
+    isPublic: true,
   }
 }
 
@@ -54,6 +70,7 @@ function buildFormState(opportunity: AdminOpportunity | null): OpportunityFormSt
     externalUrl: opportunity.externalUrl,
     deadline: opportunity.deadline ? opportunity.deadline.slice(0, 10) : "",
     status: opportunity.status,
+    isPublic: opportunity.isPublic,
   }
 }
 
@@ -70,8 +87,23 @@ function OpportunityFormModal({ open, onClose, title, opportunity }: Opportunity
   const statuses = Object.entries(OPPORTUNITY_STATUS_LABELS) as [OpportunityStatus, string][]
 
   const [form, setForm] = useState<OpportunityFormState>(() => buildFormState(opportunity))
+  const [bannerFile, setBannerFile] = useState<File | null>(null)
+  const [bannerPreview, setBannerPreview] = useState<string | null>(opportunity?.bannerUrl ?? null)
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+
+  function handleBannerChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const validationError = validatePhotoFile(file)
+    if (validationError) {
+      setFormError(validationError)
+      return
+    }
+    setFormError(null)
+    setBannerFile(file)
+    setBannerPreview(URL.createObjectURL(file))
+  }
 
   async function handleSubmit() {
     if (!form.title.trim() || !form.externalUrl.trim()) {
@@ -81,6 +113,12 @@ function OpportunityFormModal({ open, onClose, title, opportunity }: Opportunity
     setSaving(true)
     setFormError(null)
     try {
+      let bannerUrl = opportunity?.bannerUrl ?? null
+      if (bannerFile) {
+        const folderId = opportunity?.id ?? crypto.randomUUID()
+        bannerUrl = await uploadOpportunityBanner(folderId, bannerFile)
+      }
+
       const input: OpportunityInput = {
         title: form.title.trim(),
         description: form.description.trim(),
@@ -88,6 +126,8 @@ function OpportunityFormModal({ open, onClose, title, opportunity }: Opportunity
         externalUrl: form.externalUrl.trim(),
         deadline: form.deadline || null,
         status: form.status,
+        isPublic: form.isPublic,
+        bannerUrl,
       }
 
       if (opportunity) {
@@ -123,6 +163,32 @@ function OpportunityFormModal({ open, onClose, title, opportunity }: Opportunity
     >
       <div className="flex flex-col gap-4">
         {formError && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{formError}</p>}
+
+        <div className="flex items-center gap-4">
+          {bannerPreview ? (
+            <Image
+              src={bannerPreview}
+              alt="Imagem da oportunidade"
+              width={96}
+              height={64}
+              className="h-16 w-24 rounded-lg object-cover"
+              unoptimized={bannerPreview.startsWith("blob:")}
+            />
+          ) : (
+            <div className="flex h-16 w-24 items-center justify-center rounded-lg border border-dashed border-neutral-300 text-neutral-400">
+              <ImagePlus className="size-5" />
+            </div>
+          )}
+          <label className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50">
+            {bannerPreview ? "Trocar imagem" : "Adicionar imagem"}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleBannerChange}
+            />
+          </label>
+        </div>
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="op-title">Título</Label>
@@ -177,19 +243,32 @@ function OpportunityFormModal({ open, onClose, title, opportunity }: Opportunity
             onChange={(e) => setForm((prev) => ({ ...prev, externalUrl: e.target.value }))}
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="op-status">Status</Label>
-          <Select
-            id="op-status"
-            value={form.status}
-            onChange={(e) => setForm((prev) => ({ ...prev, status: e.target.value as OpportunityStatus }))}
-          >
-            {statuses.map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="op-visibility">Onde aparece</Label>
+            <Select
+              id="op-visibility"
+              value={form.isPublic ? "public" : "members"}
+              onChange={(e) => setForm((prev) => ({ ...prev, isPublic: e.target.value === "public" }))}
+            >
+              <option value="public">Site (visitantes e membros)</option>
+              <option value="members">Somente membros</option>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="op-status">Status</Label>
+            <Select
+              id="op-status"
+              value={form.status}
+              onChange={(e) => setForm((prev) => ({ ...prev, status: e.target.value as OpportunityStatus }))}
+            >
+              {statuses.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
       </div>
     </Modal>
@@ -250,11 +329,17 @@ export default function OpportunitiesPage() {
                 <span className="rounded-full bg-[var(--kv-coral)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--kv-coral)]">
                   {OPPORTUNITY_TYPE_LABELS[op.type]}
                 </span>
-                <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLE[op.status]}`}
-                >
-                  {OPPORTUNITY_STATUS_LABELS[op.status]}
-                </span>
+                <div className="flex shrink-0 flex-col items-end gap-1">
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLE[op.status]}`}
+                  >
+                    {OPPORTUNITY_STATUS_LABELS[op.status]}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] font-medium text-neutral-400">
+                    {op.isPublic ? <Globe className="size-3" /> : <Lock className="size-3" />}
+                    {op.isPublic ? "Site" : "Membros"}
+                  </span>
+                </div>
               </div>
               <h3 className="font-semibold text-neutral-900">{op.title}</h3>
               <p className="line-clamp-2 text-sm text-neutral-500">{op.description}</p>

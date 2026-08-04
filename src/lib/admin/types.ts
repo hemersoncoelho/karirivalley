@@ -159,6 +159,9 @@ export interface AdminOpportunity {
   deadline: string | null
   tags: string[]
   status: OpportunityStatus
+  /** true = aparece no site público (visitantes); false = só na área de membros. */
+  isPublic: boolean
+  bannerUrl: string | null
 }
 
 /** Campos editáveis do formulário de oportunidade (criar/editar). */
@@ -170,6 +173,8 @@ export interface OpportunityInput {
   externalUrl: string
   deadline: string | null
   status: OpportunityStatus
+  isPublic: boolean
+  bannerUrl: string | null
 }
 
 /** Log de auditoria — RN-024. */

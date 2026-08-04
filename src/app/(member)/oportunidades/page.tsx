@@ -1,7 +1,10 @@
+import Image from "next/image"
 import { SearchX } from "lucide-react"
 
 import { fetchOpportunities } from "@/lib/members/opportunities"
 import { EmptyState } from "@/components/member/EmptyState"
+import { LinkifiedText } from "@/components/ui/linkified-text"
+import { ShareButton } from "@/components/ui/share-button"
 
 const CATEGORY_LABELS: Record<string, string> = {
   editais: "Edital",
@@ -34,10 +37,29 @@ export default async function OportunidadesPage() {
         ) : (
           <div className="space-y-3">
             {opportunities.map((opp) => (
-              <div key={opp.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-xs font-medium text-[#E9B23C]">{CATEGORY_LABELS[opp.opportunity_type] ?? opp.opportunity_type}</p>
+              <div
+                key={opp.id}
+                id={`oportunidade-${opp.id}`}
+                className="rounded-xl border border-white/8 bg-white/[0.03] p-5 scroll-mt-24"
+              >
+                {opp.banner_url && (
+                  <div className="relative mb-3 h-36 w-full overflow-hidden rounded-lg">
+                    <Image src={opp.banner_url} alt={opp.title} fill sizes="(max-width: 640px) 100vw, 600px" className="object-cover" />
+                  </div>
+                )}
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-xs font-medium text-[#E9B23C]">{CATEGORY_LABELS[opp.opportunity_type] ?? opp.opportunity_type}</p>
+                  <ShareButton
+                    title={opp.title}
+                    text={opp.description ?? undefined}
+                    anchorId={`oportunidade-${opp.id}`}
+                    className="shrink-0 text-xs font-medium text-[#F4EDDF]/50 hover:text-[#F4EDDF]"
+                  />
+                </div>
                 <p className="mt-1.5 text-base font-semibold text-[#F4EDDF]">{opp.title}</p>
-                {opp.description && <p className="mt-1.5 text-sm text-[#F4EDDF]/55">{opp.description}</p>}
+                {opp.description && (
+                  <LinkifiedText text={opp.description} className="mt-1.5 text-sm leading-relaxed text-[#F4EDDF]/55" />
+                )}
                 {opp.deadline && <p className="mt-2 text-xs text-[#F4EDDF]/40">{formatDeadline(opp.deadline)}</p>}
                 {opp.external_url && (
                   <a

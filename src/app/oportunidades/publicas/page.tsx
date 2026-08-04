@@ -1,39 +1,46 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { CalendarX2, Calendar, MapPin, ExternalLink } from "lucide-react";
+import { SearchX, Briefcase, ExternalLink } from "lucide-react";
 
-import { fetchPublicUpcomingEvents } from "@/lib/members/events";
+import { fetchPublicOpportunities } from "@/lib/members/opportunities";
 import { LinkifiedText } from "@/components/ui/linkified-text";
 import { ShareButton } from "@/components/ui/share-button";
 
 export const metadata: Metadata = {
-  title: "Eventos — Kariri Valley",
+  title: "Oportunidades — Kariri Valley",
   description:
-    "Próximos encontros, workshops e talks da comunidade Kariri Valley — o ecossistema de inovação do Cariri.",
+    "Editais, vagas, aceleração, mentoria e outras oportunidades abertas ao ecossistema de inovação do Cariri.",
 };
 
-function formatEventDate(value: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
+const TYPE_LABELS: Record<string, string> = {
+  edital: "Edital",
+  vaga: "Vaga",
+  aceleracao: "Aceleração",
+  mentoria: "Mentoria",
+  chamada_publica: "Chamada pública",
+  bolsa: "Bolsa",
+  investimento: "Investimento",
+  desafio: "Desafio",
+  evento_parceiro: "Evento parceiro",
+};
+
+function formatDeadline(value: string | null): string | null {
+  if (!value) return null;
+  return `Prazo: ${new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value))}`;
 }
 
-export default async function PublicAgendaPage() {
-  const events = await fetchPublicUpcomingEvents();
+export default async function PublicOportunidadesPage() {
+  const opportunities = await fetchPublicOpportunities();
 
   return (
     <main className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)" }}>
       <div
         className="kv-aurora absolute pointer-events-none"
         style={{
-          width: "40vw", height: "40vw", maxWidth: 560, maxHeight: 560,
-          top: "-14%", right: "-6%",
-          background: "radial-gradient(circle, rgba(35,157,140,.16) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
-          animationDuration: "26s", animationDelay: "-10s",
+          width: "38vw", height: "38vw", maxWidth: 520, maxHeight: 520,
+          top: "-12%", left: "-6%",
+          background: "radial-gradient(circle, rgba(232,178,60,.18) 0%, rgba(232,178,60,.04) 55%, transparent 72%)",
+          animationDuration: "28s", animationDelay: "-15s",
         }}
       />
       <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
@@ -41,10 +48,10 @@ export default async function PublicAgendaPage() {
       <section className="relative max-w-[820px] mx-auto px-6 lg:px-16 text-center" style={{ zIndex: 10, padding: "160px 24px 56px" }}>
         <span
           className="inline-flex items-center gap-2 px-[18px] py-[7px] text-[11px] font-bold tracking-[2px] uppercase mb-7"
-          style={{ background: "var(--nb-turquoise)", border: "2px solid var(--nb-ink)", borderRadius: 999, color: "var(--nb-sand)", fontFamily: "var(--font-geo)" }}
+          style={{ background: "var(--nb-mustard)", border: "2px solid var(--nb-ink)", borderRadius: 999, color: "var(--nb-ink)", fontFamily: "var(--font-geo)" }}
         >
-          <Calendar size={12} strokeWidth={2.2} />
-          Agenda
+          <Briefcase size={12} strokeWidth={2.2} />
+          Oportunidades
         </span>
 
         <h1
@@ -58,8 +65,8 @@ export default async function PublicAgendaPage() {
             marginBottom: 16,
           }}
         >
-          Eventos da{" "}
-          <span style={{ color: "var(--nb-turquoise)", fontStyle: "italic" }}>Kariri Valley</span>
+          Oportunidades da{" "}
+          <span style={{ color: "var(--nb-terracotta)", fontStyle: "italic" }}>Kariri Valley</span>
         </h1>
 
         <p
@@ -71,13 +78,13 @@ export default async function PublicAgendaPage() {
             maxWidth: 560,
           }}
         >
-          Encontros, workshops e talks abertos à comunidade e a quem quer conhecer o
-          ecossistema de inovação do Cariri.
+          Editais, vagas, aceleração, mentoria e outras chamadas abertas ao ecossistema
+          de inovação do Cariri.
         </p>
       </section>
 
       <section className="relative max-w-[900px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, paddingBottom: 120 }}>
-        {events.length === 0 ? (
+        {opportunities.length === 0 ? (
           <div
             className="text-center"
             style={{
@@ -91,31 +98,31 @@ export default async function PublicAgendaPage() {
               className="flex items-center justify-center mx-auto"
               style={{
                 width: 72, height: 72,
-                background: "var(--nb-turquoise)",
+                background: "var(--nb-mustard)",
                 border: "2px solid var(--nb-ink)",
                 borderRadius: 16,
                 marginBottom: 24,
               }}
             >
-              <CalendarX2 size={28} strokeWidth={2} color="var(--nb-sand)" />
+              <SearchX size={28} strokeWidth={2} color="var(--nb-ink)" />
             </div>
             <h2 style={{
               fontFamily: "var(--font-fraunces), Georgia, serif",
               fontSize: "clamp(18px, 2vw, 22px)",
               fontWeight: 700, color: "var(--nb-heading)", marginBottom: 12,
             }}>
-              Nenhum evento publicado ainda
+              Nenhuma oportunidade publicada no momento
             </h2>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--nb-body)", maxWidth: 420, margin: "0 auto" }}>
-              Em breve, novos encontros da comunidade serão divulgados por aqui.
+              Em breve, editais, vagas, programas e mentorias estarão disponíveis aqui.
             </p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {events.map((event) => (
+            {opportunities.map((opp) => (
               <div
-                key={event.id}
-                id={`evento-${event.id}`}
+                key={opp.id}
+                id={`oportunidade-${opp.id}`}
                 className="p-6"
                 style={{
                   background: "var(--nb-card-bg)",
@@ -127,11 +134,11 @@ export default async function PublicAgendaPage() {
                   scrollMarginTop: 100,
                 }}
               >
-                {event.banner_url && (
-                  <div style={{ position: "relative", width: "100%", height: 180, marginBottom: 16, borderRadius: 10, overflow: "hidden" }}>
+                {opp.banner_url && (
+                  <div style={{ position: "relative", width: "100%", height: 150, marginBottom: 16, borderRadius: 10, overflow: "hidden" }}>
                     <Image
-                      src={event.banner_url}
-                      alt={event.title}
+                      src={opp.banner_url}
+                      alt={opp.title}
                       fill
                       sizes="(max-width: 640px) 100vw, 700px"
                       style={{ objectFit: "cover" }}
@@ -139,40 +146,37 @@ export default async function PublicAgendaPage() {
                   </div>
                 )}
                 <div className="flex items-start justify-between gap-3">
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-turquoise)", textTransform: "capitalize", marginBottom: 8 }}>
-                    {formatEventDate(event.starts_at)}
+                  <p style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-terracotta)", marginBottom: 8 }}>
+                    {TYPE_LABELS[opp.opportunity_type] ?? opp.opportunity_type}
                   </p>
                   <ShareButton
-                    title={event.title}
-                    text={event.description ?? undefined}
-                    anchorId={`evento-${event.id}`}
+                    title={opp.title}
+                    text={opp.description ?? undefined}
+                    anchorId={`oportunidade-${opp.id}`}
                     style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-label-accent)", flexShrink: 0 }}
                   />
                 </div>
                 <h3 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 8 }}>
-                  {event.title}
+                  {opp.title}
                 </h3>
-                {event.description && (
+                {opp.description && (
                   <LinkifiedText
-                    text={event.description}
+                    text={opp.description}
                     style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", marginBottom: 10 }}
                   />
                 )}
-                {event.location && (
-                  <p style={{ fontSize: 13, color: "var(--nb-body)", display: "flex", alignItems: "center", gap: 6 }}>
-                    <MapPin size={13} strokeWidth={2} />
-                    {event.location}
-                  </p>
+                {opp.deadline && (
+                  <p style={{ fontSize: 13, color: "var(--nb-body)" }}>{formatDeadline(opp.deadline)}</p>
                 )}
-                {event.meeting_url && (
+                {opp.external_url && (
                   <a
-                    href={event.meeting_url}
+                    href={opp.external_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold"
                     style={{ color: "var(--nb-label-accent)" }}
                   >
-                    Mais informações
+                    Saiba mais
                     <ExternalLink size={13} strokeWidth={2} />
                   </a>
                 )}

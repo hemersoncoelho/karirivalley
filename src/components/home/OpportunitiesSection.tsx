@@ -61,7 +61,7 @@ export default function OpportunitiesSection() {
               <span style={{ color: "var(--nb-terracotta)", fontStyle: "italic" }}>Destaque</span>
             </h2>
           </div>
-          <Link href="/oportunidades" style={{
+          <Link href="/oportunidades/publicas" style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             fontSize: 13, fontWeight: 700, color: isDark ? "rgba(244,237,223,.5)" : "var(--nb-forest)", fontFamily: "var(--font-geo)",
             textDecoration: "none",

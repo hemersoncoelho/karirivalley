@@ -3,6 +3,7 @@ import { CalendarX2 } from "lucide-react"
 import { fetchUpcomingEvents } from "@/lib/members/events"
 import { EmptyState } from "@/components/member/EmptyState"
 import { LinkifiedText } from "@/components/ui/linkified-text"
+import { ShareButton } from "@/components/ui/share-button"
 
 function formatEventDate(value: string): string {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -32,8 +33,20 @@ export default async function EventosPage() {
         ) : (
           <div className="space-y-3">
             {events.map((event) => (
-              <div key={event.id} className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-xs font-medium text-[#239D8C] capitalize">{formatEventDate(event.starts_at)}</p>
+              <div
+                key={event.id}
+                id={`evento-${event.id}`}
+                className="rounded-xl border border-white/8 bg-white/[0.03] p-5 scroll-mt-24"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-xs font-medium text-[#239D8C] capitalize">{formatEventDate(event.starts_at)}</p>
+                  <ShareButton
+                    title={event.title}
+                    text={event.description ?? undefined}
+                    anchorId={`evento-${event.id}`}
+                    className="shrink-0 text-xs font-medium text-[#F4EDDF]/50 hover:text-[#F4EDDF]"
+                  />
+                </div>
                 <p className="mt-1.5 text-base font-semibold text-[#F4EDDF]">{event.title}</p>
                 {event.description && (
                   <LinkifiedText text={event.description} className="mt-1.5 text-sm leading-relaxed text-[#F4EDDF]/55" />

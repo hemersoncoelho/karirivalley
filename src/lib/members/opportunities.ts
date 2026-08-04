@@ -11,12 +11,13 @@ export interface OpportunityRecord {
 
 const OPPORTUNITY_COLUMNS = "id, title, description, opportunity_type, external_url, deadline"
 
-/** Oportunidades ativas, ordenadas por prazo (as sem prazo aparecem por último). */
+/** Oportunidades publicadas, ordenadas por prazo (as sem prazo aparecem por último). */
 export async function fetchOpportunities(limit?: number): Promise<OpportunityRecord[]> {
   const supabase = await getSupabaseServerClient()
   let query = supabase
     .from("opportunities")
     .select(OPPORTUNITY_COLUMNS)
+    .eq("status", "published")
     .order("deadline", { ascending: true, nullsFirst: false })
 
   if (limit) query = query.limit(limit)

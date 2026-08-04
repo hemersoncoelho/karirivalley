@@ -98,8 +98,13 @@ export interface AdminInterest {
   memberCount: number
 }
 
-/** Estrutura para a fase futura de eventos. */
 export type EventStatus = "draft" | "published" | "cancelled" | "finished"
+
+/** events.schedule_items — um item da programação do evento. */
+export interface EventScheduleItem {
+  time: string
+  title: string
+}
 
 export interface AdminEvent {
   id: string
@@ -111,6 +116,23 @@ export interface AdminEvent {
   capacity: number | null
   registrationsCount: number
   status: EventStatus
+  /** true = aparece no site público (visitantes); false = só na área de membros. */
+  isPublic: boolean
+  bannerUrl: string | null
+  scheduleItems: EventScheduleItem[]
+}
+
+/** Campos editáveis do formulário de evento (criar/editar). */
+export interface EventInput {
+  title: string
+  description: string
+  startsAt: string
+  location: string
+  capacity: number | null
+  status: EventStatus
+  isPublic: boolean
+  bannerUrl: string | null
+  scheduleItems: EventScheduleItem[]
 }
 
 /** Estrutura para a fase futura de oportunidades. */
@@ -132,9 +154,21 @@ export interface AdminOpportunity {
   title: string
   description: string
   type: OpportunityType
+  externalUrl: string
   /** ISO date */
   deadline: string | null
   tags: string[]
+  status: OpportunityStatus
+}
+
+/** Campos editáveis do formulário de oportunidade (criar/editar). */
+export interface OpportunityInput {
+  title: string
+  description: string
+  type: OpportunityType
+  /** opportunities.external_url — obrigatório no banco (NOT NULL). */
+  externalUrl: string
+  deadline: string | null
   status: OpportunityStatus
 }
 

@@ -29,10 +29,13 @@ import type {
   AdminOpportunity,
   AuditAction,
   AuditLogEntry,
+  EventInput,
+  EventScheduleItem,
   EventStatus,
   MemberRole,
   MemberStatus,
   OccupationArea,
+  OpportunityInput,
   OpportunityStatus,
   OpportunityType,
   SocialLink,
@@ -88,6 +91,12 @@ interface AdminStore {
 
   approveCompany: (id: string) => void
   rejectCompany: (id: string) => void
+
+  createEvent: (input: EventInput) => void
+  updateEvent: (id: string, input: EventInput) => void
+
+  createOpportunity: (input: OpportunityInput) => void
+  updateOpportunity: (id: string, input: OpportunityInput) => void
 }
 
 // TEMP-QA-BYPASS-START: visual QA fixtures only, removed before finishing the task.
@@ -296,6 +305,9 @@ interface EventRow {
   location: string | null
   capacity: number | null
   status: EventStatus
+  is_public: boolean
+  banner_url: string | null
+  schedule_items: EventScheduleItem[] | null
   event_registrations: { count: number }[] | null
 }
 
@@ -309,6 +321,9 @@ function mapEvent(row: EventRow): AdminEvent {
     capacity: row.capacity,
     registrationsCount: row.event_registrations?.[0]?.count ?? 0,
     status: row.status,
+    isPublic: row.is_public,
+    bannerUrl: row.banner_url,
+    scheduleItems: row.schedule_items ?? [],
   }
 }
 
@@ -317,6 +332,7 @@ interface OpportunityRow {
   title: string
   description: string | null
   opportunity_type: OpportunityType
+  external_url: string
   deadline: string | null
   status: OpportunityStatus
 }
@@ -327,6 +343,7 @@ function mapOpportunity(row: OpportunityRow): AdminOpportunity {
     title: row.title,
     description: row.description ?? "",
     type: row.opportunity_type,
+    externalUrl: row.external_url,
     deadline: row.deadline,
     // opportunities.tags não existe no schema atual — reservado para fase futura.
     tags: [],
@@ -432,7 +449,7 @@ export function AdminProvider({
     const { data, error: err } = await supabase
       .from("events")
       .select(
-        "id, title, description, starts_at, location, capacity, status, event_registrations(count)"
+        "id, title, description, starts_at, location, capacity, status, is_public, banner_url, schedule_items, event_registrations(count)"
       )
       .order("starts_at", { ascending: false })
     if (err) {
@@ -446,7 +463,7 @@ export function AdminProvider({
     const supabase = getSupabaseBrowserClient()
     const { data, error: err } = await supabase
       .from("opportunities")
-      .select("id, title, description, opportunity_type, deadline, status")
+      .select("id, title, description, opportunity_type, external_url, deadline, status")
       .order("created_at", { ascending: false })
     if (err) {
       setError(`Não foi possível carregar as oportunidades: ${err.message}`)
@@ -617,6 +634,122 @@ export function AdminProvider({
     [setCompanyReviewStatus]
   )
 
+  /**
+   * event_type e format são NOT NULL sem default no banco (schema aplicado
+   * fora do escopo deste form). Como o formulário não expõe esses campos,
+   * gravamos valores neutros fixos para satisfazer a constraint.
+   */
+  const EVENT_DEFAULT_TYPE = "comunidade"
+  const EVENT_DEFAULT_FORMAT = "presencial"
+
+  const createEvent = useCallback(
+    (input: EventInput) => {
+      void (async () => {
+        const supabase = getSupabaseBrowserClient()
+        const { error: err } = await supabase.from("events").insert({
+          title: input.title,
+          description: input.description || null,
+          starts_at: input.startsAt,
+          location: input.location || null,
+          capacity: input.capacity,
+          status: input.status,
+          is_public: input.isPublic,
+          banner_url: input.bannerUrl,
+          schedule_items: input.scheduleItems,
+          event_type: EVENT_DEFAULT_TYPE,
+          format: EVENT_DEFAULT_FORMAT,
+          created_by: currentUser.id,
+          updated_by: currentUser.id,
+        })
+        if (err) {
+          setError(`Não foi possível criar o evento: ${err.message}`)
+          return
+        }
+        await fetchEvents()
+      })()
+    },
+    [fetchEvents, currentUser.id]
+  )
+
+  const updateEvent = useCallback(
+    (id: string, input: EventInput) => {
+      void (async () => {
+        const supabase = getSupabaseBrowserClient()
+        const { error: err } = await supabase
+          .from("events")
+          .update({
+            title: input.title,
+            description: input.description || null,
+            starts_at: input.startsAt,
+            location: input.location || null,
+            capacity: input.capacity,
+            status: input.status,
+            is_public: input.isPublic,
+            banner_url: input.bannerUrl,
+            schedule_items: input.scheduleItems,
+            updated_by: currentUser.id,
+          })
+          .eq("id", id)
+        if (err) {
+          setError(`Não foi possível salvar o evento: ${err.message}`)
+          return
+        }
+        await fetchEvents()
+      })()
+    },
+    [fetchEvents, currentUser.id]
+  )
+
+  const createOpportunity = useCallback(
+    (input: OpportunityInput) => {
+      void (async () => {
+        const supabase = getSupabaseBrowserClient()
+        const { error: err } = await supabase.from("opportunities").insert({
+          title: input.title,
+          description: input.description || null,
+          opportunity_type: input.type,
+          external_url: input.externalUrl,
+          deadline: input.deadline,
+          status: input.status,
+          created_by: currentUser.id,
+          updated_by: currentUser.id,
+        })
+        if (err) {
+          setError(`Não foi possível criar a oportunidade: ${err.message}`)
+          return
+        }
+        await fetchOpportunities()
+      })()
+    },
+    [fetchOpportunities, currentUser.id]
+  )
+
+  const updateOpportunity = useCallback(
+    (id: string, input: OpportunityInput) => {
+      void (async () => {
+        const supabase = getSupabaseBrowserClient()
+        const { error: err } = await supabase
+          .from("opportunities")
+          .update({
+            title: input.title,
+            description: input.description || null,
+            opportunity_type: input.type,
+            external_url: input.externalUrl,
+            deadline: input.deadline,
+            status: input.status,
+            updated_by: currentUser.id,
+          })
+          .eq("id", id)
+        if (err) {
+          setError(`Não foi possível salvar a oportunidade: ${err.message}`)
+          return
+        }
+        await fetchOpportunities()
+      })()
+    },
+    [fetchOpportunities, currentUser.id]
+  )
+
   const createInterest = useCallback(
     (input: InterestInput) => {
       void (async () => {
@@ -714,6 +847,10 @@ export function AdminProvider({
       toggleInterest,
       approveCompany,
       rejectCompany,
+      createEvent,
+      updateEvent,
+      createOpportunity,
+      updateOpportunity,
     }),
     [
       currentUser,
@@ -736,6 +873,10 @@ export function AdminProvider({
       toggleInterest,
       approveCompany,
       rejectCompany,
+      createEvent,
+      updateEvent,
+      createOpportunity,
+      updateOpportunity,
     ]
   )
 

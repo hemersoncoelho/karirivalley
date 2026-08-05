@@ -128,13 +128,14 @@ export default async function PublicAgendaPage() {
                 }}
               >
                 {event.banner_url && (
-                  <div style={{ position: "relative", width: "100%", height: 180, marginBottom: 16, borderRadius: 10, overflow: "hidden", background: "var(--nb-cream)" }}>
+                  <div style={{ width: "100%", maxHeight: 480, marginBottom: 18, borderRadius: 14, overflow: "hidden", background: "var(--nb-cream)" }}>
                     <Image
                       src={event.banner_url}
                       alt={event.title}
-                      fill
+                      width={0}
+                      height={0}
                       sizes="(max-width: 640px) 100vw, 700px"
-                      style={{ objectFit: "contain" }}
+                      style={{ width: "100%", height: "auto", display: "block" }}
                     />
                   </div>
                 )}

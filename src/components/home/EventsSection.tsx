@@ -163,14 +163,19 @@ export default function EventsSection({ events }: EventsSectionProps) {
                 }}
               >
                 {event.banner_url && (
-                  <div style={{ position: "relative", width: "100%", height: 150, background: isDark ? "rgba(255,255,255,.04)" : "var(--nb-cream)" }}>
-                    <Image
-                      src={event.banner_url}
-                      alt={event.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 33vw"
-                      style={{ objectFit: "contain" }}
-                    />
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 5", background: isDark ? "rgba(255,255,255,.04)" : "var(--nb-cream)" }}>
+                    <div style={{
+                      position: "absolute", inset: 12, borderRadius: 10, overflow: "hidden",
+                      border: isDark ? "1px solid rgba(255,255,255,.08)" : "2px solid var(--nb-ink)",
+                    }}>
+                      <Image
+                        src={event.banner_url}
+                        alt={event.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                        style={{ objectFit: "contain" }}
+                      />
+                    </div>
                   </div>
                 )}
                 <div style={{ padding: 24 }}>

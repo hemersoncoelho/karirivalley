@@ -9,15 +9,19 @@ interface ShareButtonProps {
   text?: string
   /** id do elemento âncora na página, usado para linkar direto ao item compartilhado. */
   anchorId?: string
+  /** Caminho dedicado do item (ex. `/agenda/meu-evento`), com preview de link correto. Tem prioridade sobre `anchorId`. */
+  path?: string
   className?: string
   style?: React.CSSProperties
 }
 
-export function ShareButton({ title, text, anchorId, className, style }: ShareButtonProps) {
+export function ShareButton({ title, text, anchorId, path, className, style }: ShareButtonProps) {
   const [copied, setCopied] = useState(false)
 
   async function handleShare() {
-    const url = `${window.location.origin}${window.location.pathname}${anchorId ? `#${anchorId}` : ""}`
+    const url = path
+      ? `${window.location.origin}${path}`
+      : `${window.location.origin}${window.location.pathname}${anchorId ? `#${anchorId}` : ""}`
 
     if (navigator.share) {
       try {

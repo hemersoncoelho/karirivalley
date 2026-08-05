@@ -2,6 +2,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 
 export interface EventRecord {
   id: string
+  slug: string
   title: string
   description: string | null
   starts_at: string
@@ -11,7 +12,7 @@ export interface EventRecord {
   is_public: boolean
 }
 
-const EVENT_COLUMNS = "id, title, description, starts_at, location, meeting_url, banner_url, is_public"
+const EVENT_COLUMNS = "id, slug, title, description, starts_at, location, meeting_url, banner_url, is_public"
 
 /**
  * Próximos eventos publicados (starts_at >= agora), ordenados por data.
@@ -54,4 +55,22 @@ export async function fetchPublicUpcomingEvents(limit?: number): Promise<EventRe
   const { data, error } = await query
   if (error) throw new Error(`Não foi possível carregar os eventos: ${error.message}`)
   return (data ?? []) as EventRecord[]
+}
+
+/**
+ * Um evento público publicado, pelo slug — usado na página de detalhe
+ * individual (link compartilhável com preview correto).
+ */
+export async function fetchPublicEventBySlug(slug: string): Promise<EventRecord | null> {
+  const supabase = await getSupabaseServerClient()
+  const { data, error } = await supabase
+    .from("events")
+    .select(EVENT_COLUMNS)
+    .eq("slug", slug)
+    .eq("status", "published")
+    .eq("is_public", true)
+    .maybeSingle()
+
+  if (error) throw new Error(`Não foi possível carregar o evento: ${error.message}`)
+  return data as EventRecord | null
 }

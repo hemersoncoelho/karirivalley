@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { SearchX, Briefcase, ExternalLink } from "lucide-react";
 
 import { fetchPublicOpportunities } from "@/lib/members/opportunities";
@@ -153,12 +154,14 @@ export default async function PublicOportunidadesPage() {
                   <ShareButton
                     title={opp.title}
                     text={opp.description ?? undefined}
-                    anchorId={`oportunidade-${opp.id}`}
+                    path={`/oportunidades/publicas/${opp.slug}`}
                     style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-label-accent)", flexShrink: 0 }}
                   />
                 </div>
                 <h3 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 8 }}>
-                  {opp.title}
+                  <Link href={`/oportunidades/publicas/${opp.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
+                    {opp.title}
+                  </Link>
                 </h3>
                 {opp.description && (
                   <LinkifiedText

@@ -2,6 +2,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 
 export interface OpportunityRecord {
   id: string
+  slug: string
   title: string
   description: string | null
   opportunity_type: string
@@ -12,7 +13,7 @@ export interface OpportunityRecord {
 }
 
 const OPPORTUNITY_COLUMNS =
-  "id, title, description, opportunity_type, external_url, deadline, banner_url, is_public"
+  "id, slug, title, description, opportunity_type, external_url, deadline, banner_url, is_public"
 
 /**
  * Oportunidades publicadas, ordenadas por prazo (as sem prazo aparecem por
@@ -51,4 +52,22 @@ export async function fetchPublicOpportunities(limit?: number): Promise<Opportun
   const { data, error } = await query
   if (error) throw new Error(`Não foi possível carregar as oportunidades: ${error.message}`)
   return (data ?? []) as OpportunityRecord[]
+}
+
+/**
+ * Uma oportunidade pública publicada, pelo slug — usado na página de
+ * detalhe individual (link compartilhável com preview correto).
+ */
+export async function fetchPublicOpportunityBySlug(slug: string): Promise<OpportunityRecord | null> {
+  const supabase = await getSupabaseServerClient()
+  const { data, error } = await supabase
+    .from("opportunities")
+    .select(OPPORTUNITY_COLUMNS)
+    .eq("slug", slug)
+    .eq("status", "published")
+    .eq("is_public", true)
+    .maybeSingle()
+
+  if (error) throw new Error(`Não foi possível carregar a oportunidade: ${error.message}`)
+  return data as OpportunityRecord | null
 }

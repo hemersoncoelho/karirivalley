@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { CalendarX2, Calendar, MapPin, ExternalLink } from "lucide-react";
 
 import { fetchPublicUpcomingEvents } from "@/lib/members/events";
@@ -146,12 +147,14 @@ export default async function PublicAgendaPage() {
                   <ShareButton
                     title={event.title}
                     text={event.description ?? undefined}
-                    anchorId={`evento-${event.id}`}
+                    path={`/agenda/${event.slug}`}
                     style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-label-accent)", flexShrink: 0 }}
                   />
                 </div>
                 <h3 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 8 }}>
-                  {event.title}
+                  <Link href={`/agenda/${event.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
+                    {event.title}
+                  </Link>
                 </h3>
                 {event.description && (
                   <LinkifiedText

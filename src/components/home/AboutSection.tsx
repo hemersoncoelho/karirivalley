@@ -28,7 +28,7 @@ export default function AboutSection() {
       style={{ background: "var(--nb-page-bg)", padding: "96px 0 110px" }}
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
-        <SectionIndex index="02" label="O ecossistema" />
+        <SectionIndex index="01" label="O ecossistema" />
 
         <div className="mt-12 grid grid-cols-1 items-start gap-14 lg:grid-cols-[5fr_6fr]">
           <div>

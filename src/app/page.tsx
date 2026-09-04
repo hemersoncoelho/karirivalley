@@ -1,8 +1,11 @@
 import HeroSection from "@/components/hero/HeroSection";
 import AboutSection from "@/components/home/AboutSection";
+import FeaturedMembersSection from "@/components/home/FeaturedMembersSection";
 import StatsSection from "@/components/home/StatsSection";
 import EventsSection from "@/components/home/EventsSection";
 import OpportunitiesSection from "@/components/home/OpportunitiesSection";
+import CompaniesShowcaseSection from "@/components/home/CompaniesShowcaseSection";
+import InterstitialBand from "@/components/home/InterstitialBand";
 import FinalCtaSection from "@/components/home/FinalCtaSection";
 import { fetchPublicUpcomingEvents, type EventRecord } from "@/lib/members/events";
 import { fetchPublicOpportunities, type OpportunityRecord } from "@/lib/members/opportunities";
@@ -33,9 +36,12 @@ export default async function HomePage() {
     <main>
       <HeroSection />
       <AboutSection />
+      <FeaturedMembersSection />
       <EventsSection events={events} />
       <OpportunitiesSection opportunities={opportunities} />
+      <CompaniesShowcaseSection />
       <StatsSection />
+      <InterstitialBand lema="Conectar quem faz — Cariri, Ceará" />
       <FinalCtaSection />
     </main>
   );

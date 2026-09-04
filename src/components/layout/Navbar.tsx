@@ -47,9 +47,14 @@ export default function Navbar() {
         transition: "padding .3s ease, border-color .3s ease, background .2s ease",
       }}
     >
-      {/* Wordmark tipográfico */}
+      {/* Wordmark tipográfico + elemento de marca */}
       <Link href="/" className="flex items-center gap-3 flex-shrink-0 no-underline">
-        <DiamondMark size={11} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-element.png"
+          alt=""
+          style={{ height: 26, width: "auto" }}
+        />
         <span
           style={{
             fontFamily: "var(--font-fraunces)",

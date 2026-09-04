@@ -284,7 +284,7 @@ h1, h2, h3, h4 {
   --nb-btn-ghost-bg:       transparent;
   --nb-btn-ghost-border:   1px solid var(--nb-line);
 
-  --nb-card-bg:            transparent;
+  --nb-card-bg:            var(--nb-cream);
   --nb-card-blur:          none;
   --nb-card-border:        1px solid var(--nb-line);
   --nb-card-shadow:        none;
@@ -316,7 +316,7 @@ h1, h2, h3, h4 {
   --nb-btn-ghost-bg:       transparent;
   --nb-btn-ghost-border:   1px solid var(--nb-line-soft);
 
-  --nb-card-bg:            transparent;
+  --nb-card-bg:            rgba(244, 237, 223, .04);
   --nb-card-blur:          none;
   --nb-card-border:        1px solid var(--nb-line-soft);
   --nb-card-shadow:        none;

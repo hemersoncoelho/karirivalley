@@ -43,10 +43,6 @@ export default function PixelField() {
     let phase = new Float32Array(0);
     let kind: Uint8Array = new Uint8Array(0); // 0 base · 1 gold · 2 terra · 3 teal · 4 forest
 
-    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-    const edgeNoise = (x: number) =>
-      clamp01(0.5 + 0.3 * Math.sin(x * 7.3 + 2.1) + 0.22 * Math.sin(x * 17.7 + 0.8));
-
     const build = () => {
       const section = canvas.parentElement;
       if (!section) return;
@@ -73,19 +69,12 @@ export default function PixelField() {
           const ny = r / rows;
 
           // ── Ilha de papel central (contraste do manifesto) ──
-          // elipse centrada no texto; borda com dithering orgânico
-          const dx = (nx - 0.5) / 0.36;
-          const dy = (ny - 0.46) / 0.32;
+          // elipse ampla e de borda dura: sem anel de dithering
+          const dx = (nx - 0.5) / 0.42;
+          const dy = (ny - 0.46) / 0.4;
           const d = Math.hypot(dx, dy);
 
-          let t = 1;
-          if (d < 0.96) {
-            t = 0; // dentro da ilha: papel puro
-          } else if (d < 1.14) {
-            // faixa estreita de dithering colada na borda da ilha
-            const keep = clamp01(1.14 - d) / 0.18;
-            t = Math.random() < keep * (0.5 + 0.5 * edgeNoise(nx * 2 + ny)) ? 1 : 0;
-          }
+          const t = d < 1 ? 0 : 1;
 
           target[i] = t;
           values[i] = t ? 0.4 + Math.random() * 0.6 : 0;

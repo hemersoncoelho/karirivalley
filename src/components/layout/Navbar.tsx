@@ -42,9 +42,11 @@ export default function Navbar() {
       style={{
         paddingTop: stuck ? 10 : 18,
         paddingBottom: stuck ? 10 : 18,
-        background: "var(--nb-navbar-bg)",
+        background: `color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "85%" : "62%"}, transparent)`,
+        backdropFilter: "blur(14px) saturate(150%)",
+        WebkitBackdropFilter: "blur(14px) saturate(150%)",
         borderBottom: `1px solid ${stuck ? "var(--nb-line)" : "transparent"}`,
-        transition: "padding .3s ease, border-color .3s ease, background .2s ease",
+        transition: "padding .3s ease, border-color .3s ease, background .3s ease",
       }}
     >
       {/* Wordmark tipográfico + elemento de marca */}
@@ -150,7 +152,11 @@ export default function Navbar() {
       {open && (
         <div
           className="absolute top-full left-0 right-0 flex flex-col md:hidden"
-          style={{ background: "var(--nb-navbar-bg)", borderBottom: "1px solid var(--nb-line)", padding: "20px 24px 28px" }}
+          style={{
+            background: "var(--nb-navbar-bg)",
+            borderBottom: "1px solid var(--nb-line)",
+            padding: "20px 24px 28px",
+          }}
         >
           {NAV_LINKS.map(link => (
             <Link

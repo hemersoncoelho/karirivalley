@@ -3,103 +3,118 @@
 import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 import type React from "react";
-import { useState } from "react";
-import EcosystemNetwork from "./ecosystem/EcosystemNetwork";
+import { SectionIndex, DiamondMark } from "@/components/ui/editorial";
+
+const ACTORS = [
+  { n: "01", label: "Startups e empreendedores", role: "quem constrói produto" },
+  { n: "02", label: "Talentos e profissionais", role: "quem executa e ensina" },
+  { n: "03", label: "Empresas e investidores", role: "quem fomenta" },
+  { n: "04", label: "Universidades e poder público", role: "quem forma e articula" },
+] as const;
 
 export default function AboutSection() {
   const { ref, inView } = useInView();
-  const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
 
   const fadeUp = (delay: number): React.CSSProperties => ({
     opacity: inView ? 1 : 0,
-    transform: inView ? "translateY(0)" : "translateY(28px)",
-    transition: `opacity .75s ease ${delay}s, transform .75s ease ${delay}s`,
-  });
-
-  const fadeRight = (delay: number): React.CSSProperties => ({
-    opacity: inView ? 1 : 0,
-    transform: inView ? "translateX(0)" : "translateX(36px)",
-    transition: `opacity .8s ease ${delay}s, transform .8s ease ${delay}s`,
+    transform: inView ? "translateY(0)" : "translateY(24px)",
+    transition: `opacity .7s ease ${delay}s, transform .7s ease ${delay}s`,
   });
 
   return (
-    <section id="ecossistema" className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)", padding: "88px 0 110px", borderTop: "3px solid var(--nb-navbar-border)" }}>
+    <section
+      id="ecossistema"
+      className="relative overflow-hidden"
+      style={{ background: "var(--nb-page-bg)", padding: "96px 0 110px" }}
+    >
+      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
+        <SectionIndex index="02" label="O ecossistema" />
 
-      <div className="kv-aurora absolute pointer-events-none" style={{
-        width: "50vw", height: "50vw", maxWidth: 700, maxHeight: 700,
-        top: "-20%", right: "-10%",
-        background: "radial-gradient(circle, rgba(35,157,140,.18) 0%, rgba(35,157,140,.05) 55%, transparent 72%)",
-        animationDuration: "28s", animationDelay: "-6s",
-      }} />
-      <div className="kv-aurora absolute pointer-events-none" style={{
-        width: "35vw", height: "35vw", maxWidth: 500, maxHeight: 500,
-        bottom: "5%", left: "-8%",
-        background: "radial-gradient(circle, rgba(232,178,60,.2) 0%, rgba(232,178,60,.05) 55%, transparent 72%)",
-        animationDuration: "22s", animationDelay: "-14s", animationDirection: "reverse",
-      }} />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.6 }} />
-
-      <div ref={ref} className="relative max-w-[1300px] mx-auto px-6 lg:px-16" style={{ zIndex: 10 }}>
-
-        <div className="flex items-center gap-3 mb-16" style={fadeUp(0)}>
-          <div style={{ width: 32, height: 2, background: "var(--nb-turquoise)" }} />
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--nb-turquoise)", fontFamily: "var(--font-geo)" }}>
-            O Ecossistema
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-[45fr_55fr] gap-16 lg:gap-14 items-center">
-
+        <div className="mt-12 grid grid-cols-1 items-start gap-14 lg:grid-cols-[5fr_6fr]">
           <div>
-            <h2 style={{
-              fontFamily: "var(--font-fraunces), Georgia, serif",
-              fontSize: "clamp(34px, 4vw, 54px)",
-              fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: "-1px",
-              color: "var(--nb-heading)",
-              marginBottom: 24,
-              ...fadeUp(0.1),
-            }}>
+            <h2
+              className="kv-display"
+              style={{
+                fontSize: "clamp(34px, 3.8vw, 56px)",
+                color: "var(--nb-heading)",
+                marginBottom: 28,
+                ...fadeUp(0.05),
+              }}
+            >
               Um ecossistema formado por{" "}
-              <span style={{ color: "var(--nb-turquoise)", fontStyle: "italic" }}>quem constrói</span>
-              {" "}o Cariri
+              <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>
+                quem constrói
+              </em>{" "}
+              o Cariri
             </h2>
 
-            <p style={{
-              fontSize: "clamp(15px, 1.5vw, 17px)",
-              lineHeight: 1.78,
-              color: "var(--nb-body)",
-              marginBottom: 32,
-              maxWidth: 480,
-              ...fadeUp(0.2),
-            }}>
-              A Kariri Valley é um mapa vivo do ecossistema de inovação do Cariri, CE.
-              Da ideia ao investimento, do laboratório à política pública — reunimos
-              todos os agentes que fazem o futuro da região acontecer, para que possam
-              se encontrar, colaborar e crescer juntos.
+            <p
+              style={{
+                fontSize: "clamp(15px, 1.4vw, 17px)",
+                lineHeight: 1.75,
+                color: "var(--nb-body)",
+                maxWidth: 460,
+                marginBottom: 34,
+                ...fadeUp(0.15),
+              }}
+            >
+              A Kariri Valley é um mapa vivo da inovação do Cariri, CE. Da ideia ao
+              investimento, do laboratório à política pública — os agentes se
+              encontram, colaboram e crescem juntos.
             </p>
 
-            <div style={fadeUp(0.3)}>
-              <Link href="/sobre" style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                fontSize: 14, fontWeight: 700, color: "var(--nb-forest)", textDecoration: "none",
-                borderBottom: "2px solid var(--nb-forest)", paddingBottom: 3, fontFamily: "var(--font-geo)",
-              }}>
-                Conheça nossa história
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M3 7h8M8 3.5L11.5 7 8 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+            <div style={fadeUp(0.25)}>
+              <Link
+                href="/sobre"
+                className="kv-kicker"
+                style={{
+                  color: "var(--nb-ink)",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>
+                  Ler o manifesto completo
+                </span>
+                <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
               </Link>
             </div>
           </div>
 
-          <div className="flex items-center justify-center mt-2 lg:mt-0" style={fadeRight(0.35)}>
-            <EcosystemNetwork inView={inView} activeId={activeGroupId} onActiveChange={setActiveGroupId} />
+          {/* Lista-índice dos atores — a estrutura fala, não o parágrafo */}
+          <div style={fadeUp(0.2)}>
+            {ACTORS.map((a, i) => (
+              <div
+                key={a.n}
+                className="group"
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: 18,
+                  padding: "22px 4px",
+                  borderTop: "1px solid var(--nb-line)",
+                  borderBottom: i === ACTORS.length - 1 ? "1px solid var(--nb-line)" : "none",
+                }}
+              >
+                <span className="kv-index-num" style={{ fontSize: 13, color: "var(--nb-terracotta)" }}>
+                  {a.n}
+                </span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ margin: 0, fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
+                    {a.label}
+                  </p>
+                  <p className="kv-meta" style={{ margin: "4px 0 0", color: "var(--nb-body)" }}>
+                    {a.role}
+                  </p>
+                </div>
+                <DiamondMark outline size={8} color="var(--nb-body)" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </section>
   );
 }
-

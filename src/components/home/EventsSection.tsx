@@ -3,19 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
-import { useNbTheme } from "@/hooks/useNbTheme";
-import { CalendarX2, ArrowRight, ExternalLink, Globe, Calendar, MapPin } from "lucide-react";
 import type React from "react";
+import { SectionIndex, MetaDot } from "@/components/ui/editorial";
 import type { EventRecord } from "@/lib/members/events";
 
-function formatEventDate(value: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
+function formatEventDateShort(value: string): { day: string; month: string; rest: string } {
+  const d = new Date(value);
+  const day = new Intl.DateTimeFormat("pt-BR", { day: "2-digit" }).format(d);
+  const month = new Intl.DateTimeFormat("pt-BR", { month: "short" }).format(d).replace(".", "").toUpperCase();
+  const rest = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(d);
+  return { day, month, rest };
 }
 
 interface EventsSectionProps {
@@ -23,8 +20,6 @@ interface EventsSectionProps {
 }
 
 export default function EventsSection({ events }: EventsSectionProps) {
-  const { theme } = useNbTheme();
-  const isDark = theme === "dark";
   const { ref, inView } = useInView();
 
   const fadeUp = (delay: number): React.CSSProperties => ({
@@ -34,214 +29,119 @@ export default function EventsSection({ events }: EventsSectionProps) {
   });
 
   return (
-    <section className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)", padding: "110px 0 100px", borderTop: "3px solid var(--nb-navbar-border)" }}>
+    <section
+      className="relative overflow-hidden"
+      style={{ background: "var(--nb-page-bg)", padding: "96px 0 104px" }}
+    >
+      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
+        <SectionIndex
+          index="03"
+          label="Agenda"
+          title="o que acontece no vale"
+        />
 
-      <div className="kv-aurora absolute pointer-events-none" style={{
-        width: "35vw", height: "35vw", maxWidth: 480, maxHeight: 480,
-        top: "-10%", right: "-5%",
-        background: "radial-gradient(circle, rgba(35,157,140,.16) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
-        animationDuration: "26s", animationDelay: "-10s",
-      }} />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
-
-      <div ref={ref} className="relative max-w-[1300px] mx-auto px-6 lg:px-16" style={{ zIndex: 10 }}>
-
-        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
-          <div style={fadeUp(0)}>
-            <div className="flex items-center gap-3 mb-5">
-              <div style={{ width: 32, height: 2, background: "var(--nb-turquoise)" }} />
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--nb-turquoise)", fontFamily: "var(--font-geo)" }}>
-                Agenda
-              </span>
-            </div>
-            <h2 style={{
-              fontFamily: "var(--font-fraunces), Georgia, serif",
-              fontSize: "clamp(28px, 3.2vw, 44px)",
-              fontWeight: 700, lineHeight: 1.15, letterSpacing: "-0.7px",
-              color: "var(--nb-heading)", margin: 0,
-            }}>
-              Próximos{" "}
-              <span style={{ color: "var(--nb-turquoise)", fontStyle: "italic" }}>Eventos</span>
-            </h2>
-          </div>
-          <Link href="/agenda" style={{
-            display: "inline-flex", alignItems: "center", gap: 6,
-            fontSize: 13, fontWeight: 700, color: isDark ? "rgba(244,237,223,.5)" : "var(--nb-forest)", fontFamily: "var(--font-geo)",
-            textDecoration: "none",
-            ...fadeUp(0.05),
-          }}>
-            Ver todos <ArrowRight size={14} strokeWidth={2} />
+        <div className="mt-12 flex items-end justify-between gap-4">
+          <h2
+            className="kv-display"
+            style={{ fontSize: "clamp(30px, 3.4vw, 50px)", color: "var(--nb-heading)", margin: 0, ...fadeUp(0) }}
+          >
+            Próximos <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>encontros</em>
+          </h2>
+          <Link
+            href="/agenda"
+            className="kv-kicker"
+            style={{ color: "var(--nb-ink)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, ...fadeUp(0.05) }}
+          >
+            <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Agenda completa</span>
+            <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
           </Link>
         </div>
 
         {events.length === 0 ? (
-          /* Empty state */
-          <div style={{
-            background: isDark ? "rgba(255,255,255,.028)" : "var(--nb-cream)",
-            border: isDark ? "1px solid rgba(255,255,255,.07)" : "3px dashed var(--nb-ink)",
-            borderRadius: isDark ? 20 : 18,
-            padding: "64px 32px",
-            textAlign: "center",
-            backdropFilter: isDark ? "blur(12px)" : "none",
-            WebkitBackdropFilter: isDark ? "blur(12px)" : "none",
-            ...fadeUp(0.15),
-          }}>
-            <div style={{
-              width: 72, height: 72,
-              background: isDark ? "rgba(35,157,140,.1)" : "var(--nb-turquoise)",
-              border: isDark ? "1px solid rgba(35,157,140,.22)" : "2px solid var(--nb-ink)",
-              borderRadius: isDark ? 18 : 16,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 24px",
-            }}>
-              <CalendarX2 size={28} strokeWidth={2} color={isDark ? "var(--nb-turquoise)" : "var(--nb-sand)"} />
-            </div>
-
-            <h3 style={{
-              fontFamily: "var(--font-fraunces), Georgia, serif",
-              fontSize: "clamp(18px, 2vw, 22px)",
-              fontWeight: 700, color: "var(--nb-heading)", marginBottom: 12,
-            }}>
-              Nenhum evento publicado ainda
+          <div
+            style={{
+              marginTop: 32,
+              border: "1px dashed var(--nb-line)",
+              padding: "56px 32px",
+              textAlign: "center",
+              ...fadeUp(0.15),
+            }}
+          >
+            <MetaDot role="event" style={{ width: 8, height: 8, marginBottom: 14 }} />
+            <h3 className="kv-display" style={{ fontSize: 24, color: "var(--nb-heading)", marginBottom: 10 }}>
+              A agenda está entre edições
             </h3>
-            <p style={{
-              fontSize: "clamp(14px, 1.4vw, 15px)",
-              color: "var(--nb-body)",
-              lineHeight: 1.7, maxWidth: 420,
-              margin: "0 auto 32px",
-            }}>
+            <p className="kv-meta" style={{ color: "var(--nb-body)", maxWidth: 420, margin: "0 auto 26px", textTransform: "none", letterSpacing: ".04em" }}>
               Em breve, novos encontros da comunidade serão divulgados por aqui.
-              Fique de olho nas nossas redes para não perder nada.
             </p>
-
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              <a
-                href="https://instagram.com/karirivalley"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kv-press"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 7,
-                  padding: "10px 20px", borderRadius: isDark ? 999 : 10,
-                  fontSize: 13, fontWeight: 700, color: isDark ? "var(--kv-cream)" : "var(--nb-ink)", fontFamily: "var(--font-geo)",
-                  background: isDark ? "rgba(255,255,255,.06)" : "var(--nb-sand)",
-                  border: isDark ? "1px solid rgba(255,255,255,.12)" : "2px solid var(--nb-ink)",
-                  textDecoration: "none",
-                }}
-              >
-                <ExternalLink size={15} strokeWidth={2} />
-                Redes Sociais
-              </a>
-              <Link href="/como-participar" className="kv-press" style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                padding: "10px 20px", borderRadius: isDark ? 999 : 10,
-                fontSize: 13, fontWeight: 700, color: isDark ? "var(--nb-turquoise)" : "var(--nb-sand)", fontFamily: "var(--font-geo)",
-                background: isDark ? "rgba(35,157,140,.1)" : "var(--nb-turquoise)",
-                border: isDark ? "1px solid rgba(35,157,140,.25)" : "2px solid var(--nb-ink)",
-                boxShadow: isDark ? "none" : "var(--shadow-nb-sm)",
-                textDecoration: "none",
-              }}>
-                <Globe size={15} strokeWidth={2} />
-                Acompanhar a comunidade
-              </Link>
-            </div>
+            <Link
+              href="https://instagram.com/karirivalley"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="kv-kicker"
+              style={{ color: "var(--nb-ink)", textDecoration: "none" }}
+            >
+              <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Acompanhe nas redes</span>
+              <span aria-hidden="true" style={{ fontSize: 9, marginLeft: 6 }}>▸</span>
+            </Link>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {events.map((event, i) => (
-              <div
-                key={event.id}
-                style={{
-                  background: isDark ? "rgba(255,255,255,.03)" : "var(--nb-card-bg)",
-                  backdropFilter: isDark ? "blur(12px)" : "var(--nb-card-blur)",
-                  WebkitBackdropFilter: isDark ? "blur(12px)" : "var(--nb-card-blur)",
-                  border: isDark ? "1px solid rgba(255,255,255,.08)" : "var(--nb-card-border)",
-                  borderRadius: 16,
-                  overflow: "hidden",
-                  boxShadow: isDark ? "none" : "var(--nb-card-shadow)",
-                  ...fadeUp(0.1 + i * 0.06),
-                }}
-              >
-                {event.banner_url && (
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 5", background: isDark ? "rgba(255,255,255,.04)" : "var(--nb-cream)" }}>
-                    <div style={{
-                      position: "absolute", inset: 12, borderRadius: 10, overflow: "hidden",
-                      border: isDark ? "1px solid rgba(255,255,255,.08)" : "2px solid var(--nb-ink)",
-                    }}>
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {events.map((event, i) => {
+              const d = formatEventDateShort(event.starts_at);
+              return (
+                <Link
+                  key={event.id}
+                  href={`/agenda/${event.slug}`}
+                  className="group"
+                  style={{
+                    textDecoration: "none",
+                    display: "block",
+                    borderTop: "1px solid var(--nb-line)",
+                    paddingTop: 18,
+                    ...fadeUp(0.1 + i * 0.07),
+                  }}
+                >
+                  {event.banner_url && (
+                    <div className="kv-photo" style={{ border: "1px solid var(--nb-line-soft)", marginBottom: 16 }}>
                       <Image
                         src={event.banner_url}
                         alt={event.title}
-                        fill
+                        width={0}
+                        height={0}
                         sizes="(max-width: 640px) 100vw, 33vw"
-                        style={{ objectFit: "contain" }}
+                        style={{ width: "100%", height: "auto", aspectRatio: "4 / 3", objectFit: "cover", display: "block" }}
                       />
                     </div>
-                  </div>
-                )}
-                <div style={{ padding: 24 }}>
-                  <p style={{
-                    fontSize: 12, fontWeight: 700, letterSpacing: ".3px",
-                    color: "var(--nb-turquoise)", textTransform: "capitalize", marginBottom: 8,
-                    display: "flex", alignItems: "center", gap: 6,
-                  }}>
-                    <Calendar size={13} strokeWidth={2} />
-                    {formatEventDate(event.starts_at)}
+                  )}
+                  <p className="kv-meta" style={{ display: "flex", alignItems: "baseline", gap: 8, margin: 0, color: "var(--nb-body)" }}>
+                    <MetaDot role="event" />
+                    <span style={{ color: "var(--nb-turquoise)", fontWeight: 700 }}>
+                      {d.day} {d.month}
+                    </span>
+                    <span>· {d.rest}</span>
                   </p>
-                  <h3 style={{
-                    fontFamily: "var(--font-fraunces), Georgia, serif",
-                    fontSize: 18, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 8,
-                  }}>
+                  <h3
+                    style={{
+                      margin: "10px 0 6px",
+                      fontFamily: "var(--font-fraunces), Georgia, serif",
+                      fontSize: 21,
+                      lineHeight: 1.25,
+                      color: "var(--nb-heading)",
+                    }}
+                  >
                     {event.title}
                   </h3>
-                  {event.description && (
-                    <p style={{
-                      fontSize: 13.5, lineHeight: 1.6, color: "var(--nb-body)",
-                      marginBottom: 10,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}>
-                      {event.description}
-                    </p>
-                  )}
                   {event.location && (
-                    <p style={{
-                      fontSize: 12.5, color: isDark ? "rgba(244,237,223,.5)" : "rgba(22,20,15,.55)",
-                      display: "flex", alignItems: "center", gap: 6,
-                    }}>
-                      <MapPin size={12} strokeWidth={2} />
+                    <p className="kv-meta" style={{ margin: 0, color: "var(--nb-body)" }}>
                       {event.location}
                     </p>
                   )}
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
-
-        {/* Categorias de evento — decorativo, reforça o que está por vir */}
-        <div className="grid sm:grid-cols-3 gap-4 mt-5">
-          {[
-            { label: "Workshops e trilhas práticas", icon: Globe },
-            { label: "Encontros, talks e painéis", icon: CalendarX2 },
-            { label: "Hackathons e desafios", icon: ExternalLink },
-          ].map((c, i) => (
-            <div
-              key={c.label}
-              className="flex items-center gap-3"
-              style={{
-                background: isDark ? "rgba(255,255,255,.03)" : "var(--nb-cream)",
-                border: isDark ? "1px solid rgba(255,255,255,.08)" : "2px solid rgba(22,20,15,.25)",
-                borderRadius: 12, padding: "16px 18px",
-                ...fadeUp(0.2 + i * 0.06),
-              }}
-            >
-              <c.icon size={16} strokeWidth={2} color={isDark ? "rgba(244,237,223,.4)" : "rgba(22,20,15,.4)"} />
-              <span style={{ fontSize: 13, fontWeight: 600, color: isDark ? "rgba(244,237,223,.55)" : "rgba(22,20,15,.55)" }}>{c.label}</span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );

@@ -1,25 +1,38 @@
 import HeroSection from "@/components/hero/HeroSection";
 import AboutSection from "@/components/home/AboutSection";
-import AudienceSection from "@/components/home/AudienceSection";
-import BenefitsSection from "@/components/home/BenefitsSection";
 import StatsSection from "@/components/home/StatsSection";
 import EventsSection from "@/components/home/EventsSection";
 import OpportunitiesSection from "@/components/home/OpportunitiesSection";
 import FinalCtaSection from "@/components/home/FinalCtaSection";
-import { fetchPublicUpcomingEvents } from "@/lib/members/events";
+import { fetchPublicUpcomingEvents, type EventRecord } from "@/lib/members/events";
+import { fetchPublicOpportunities, type OpportunityRecord } from "@/lib/members/opportunities";
+
+/**
+ * A LP deve renderizar mesmo sem Supabase configurado (ou com o banco
+ * inacessível) — conteúdo dinâmico vira lista vazia, nunca um 500.
+ */
+async function safe<T>(fetcher: () => Promise<T[]>): Promise<T[]> {
+  try {
+    return await fetcher();
+  } catch (error) {
+    console.error("[home] falha ao carregar conteúdo dinâmico:", error);
+    return [];
+  }
+}
 
 export default async function HomePage() {
-  const events = await fetchPublicUpcomingEvents(3);
+  const [events, opportunities] = await Promise.all([
+    safe<EventRecord>(() => fetchPublicUpcomingEvents(3)),
+    safe<OpportunityRecord>(() => fetchPublicOpportunities(6)),
+  ]);
 
   return (
     <main>
       <HeroSection />
       <AboutSection />
-      <AudienceSection />
-      <BenefitsSection />
-      <StatsSection />
       <EventsSection events={events} />
-      <OpportunitiesSection />
+      <OpportunitiesSection opportunities={opportunities} />
+      <StatsSection />
       <FinalCtaSection />
     </main>
   );

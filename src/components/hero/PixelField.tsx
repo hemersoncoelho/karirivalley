@@ -79,12 +79,12 @@ export default function PixelField() {
           const d = Math.hypot(dx, dy);
 
           let t = 1;
-          if (d < 0.94) {
+          if (d < 0.96) {
             t = 0; // dentro da ilha: papel puro
-          } else if (d < 1.3) {
-            // anel de transição: densidade cai com o ruído da borda
-            const keep = clamp01(1.3 - d) * (0.45 + 0.55 * edgeNoise(nx * 2 + ny));
-            t = Math.random() < keep ? 1 : 0;
+          } else if (d < 1.14) {
+            // faixa estreita de dithering colada na borda da ilha
+            const keep = clamp01(1.14 - d) / 0.18;
+            t = Math.random() < keep * (0.5 + 0.5 * edgeNoise(nx * 2 + ny)) ? 1 : 0;
           }
 
           target[i] = t;

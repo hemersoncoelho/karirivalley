@@ -20,8 +20,8 @@ export default async function EventosPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[#F4EDDF]">Eventos</h1>
-      <p className="mt-1 text-sm text-[#F4EDDF]/50">Próximos encontros da comunidade Kariri Valley.</p>
+      <h1 className="text-xl font-semibold text-[var(--kv-cream)]">Eventos</h1>
+      <p className="mt-1 text-sm text-[var(--kv-cream)]/50">Próximos encontros da comunidade Kariri Valley.</p>
 
       <div className="mt-6">
         {events.length === 0 ? (
@@ -39,25 +39,25 @@ export default async function EventosPage() {
                 className="rounded-xl border border-white/8 bg-white/[0.03] p-5 scroll-mt-24"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <p className="text-xs font-medium text-[#239D8C] capitalize">{formatEventDate(event.starts_at)}</p>
+                  <p className="text-xs font-medium text-[var(--kv-teal)] capitalize">{formatEventDate(event.starts_at)}</p>
                   <ShareButton
                     title={event.title}
                     text={event.description ?? undefined}
                     anchorId={`evento-${event.id}`}
-                    className="shrink-0 text-xs font-medium text-[#F4EDDF]/50 hover:text-[#F4EDDF]"
+                    className="shrink-0 text-xs font-medium text-[var(--kv-cream)]/50 hover:text-[var(--kv-cream)]"
                   />
                 </div>
-                <p className="mt-1.5 text-base font-semibold text-[#F4EDDF]">{event.title}</p>
+                <p className="mt-1.5 text-base font-semibold text-[var(--kv-cream)]">{event.title}</p>
                 {event.description && (
-                  <LinkifiedText text={event.description} className="mt-1.5 text-sm leading-relaxed text-[#F4EDDF]/55" />
+                  <LinkifiedText text={event.description} className="mt-1.5 text-sm leading-relaxed text-[var(--kv-cream)]/55" />
                 )}
-                {event.location && <p className="mt-2 text-xs text-[#F4EDDF]/40">{event.location}</p>}
+                {event.location && <p className="mt-2 text-xs text-[var(--kv-cream)]/40">{event.location}</p>}
                 {event.meeting_url && (
                   <a
                     href={event.meeting_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-block text-xs font-medium text-[#E9B23C] underline underline-offset-4"
+                    className="mt-3 inline-block text-xs font-medium text-[var(--kv-gold)] underline underline-offset-4"
                   >
                     Mais informações
                   </a>

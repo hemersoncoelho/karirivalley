@@ -27,10 +27,10 @@ export function MemberStatusNotice({ status }: MemberStatusNoticeProps) {
   const copy = COPY[status]
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6" style={{ background: "#2C2221" }}>
+    <div className="flex min-h-screen items-center justify-center px-6" style={{ background: "var(--kv-dark)" }}>
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-        <h1 className="text-xl font-semibold text-[#F4EDDF]">{copy.title}</h1>
-        <p className="mt-3 text-sm leading-relaxed text-[#F4EDDF]/60">{copy.body}</p>
+        <h1 className="text-xl font-semibold text-[var(--kv-cream)]">{copy.title}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-[var(--kv-cream)]/60">{copy.body}</p>
         <div className="mt-6">
           <LogoutButton />
         </div>

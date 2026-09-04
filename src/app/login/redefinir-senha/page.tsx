@@ -80,25 +80,25 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "#2C2221" }}>
+    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "var(--kv-dark)" }}>
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold tracking-[2.5px] text-[#E9B23C] uppercase">Kariri Valley</p>
-          <h1 className="mt-3 text-2xl font-semibold text-[#F4EDDF]">Definir nova senha</h1>
+          <p className="text-xs font-semibold tracking-[2.5px] text-[var(--kv-gold)] uppercase">Kariri Valley</p>
+          <h1 className="mt-3 text-2xl font-semibold text-[var(--kv-cream)]">Definir nova senha</h1>
         </div>
 
         {status === "loading" && (
-          <p className="text-center text-sm text-[#F4EDDF]/40">Verificando seu link…</p>
+          <p className="text-center text-sm text-[var(--kv-cream)]/40">Verificando seu link…</p>
         )}
 
         {status === "invalid" && (
           <div className="space-y-4 text-center">
-            <p className="text-sm leading-relaxed text-[#F4EDDF]/60">
+            <p className="text-sm leading-relaxed text-[var(--kv-cream)]/60">
               Este link de recuperação é inválido ou expirou. Solicite um novo link para redefinir sua senha.
             </p>
             <a
               href="/login/esqueci-senha"
-              className="text-sm text-[#E9B23C] underline underline-offset-4"
+              className="text-sm text-[var(--kv-gold)] underline underline-offset-4"
             >
               Pedir novo link
             </a>
@@ -107,13 +107,13 @@ export default function ResetPasswordPage() {
 
         {status === "done" && (
           <div className="space-y-4 text-center">
-            <p className="text-sm leading-relaxed text-[#F4EDDF]/60">
+            <p className="text-sm leading-relaxed text-[var(--kv-cream)]/60">
               Senha atualizada com sucesso. Entre com sua nova senha para continuar.
             </p>
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="rounded-xl bg-[#E9B23C] px-7 py-3 text-sm font-semibold text-[#2C2221] transition hover:bg-[#f0c05a]"
+              className="rounded-xl bg-[var(--kv-gold)] px-7 py-3 text-sm font-semibold text-[var(--kv-dark)] transition hover:bg-[var(--kv-gold-bright)]"
             >
               Ir para o login
             </button>

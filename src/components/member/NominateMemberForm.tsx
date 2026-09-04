@@ -66,13 +66,13 @@ export function NominateMemberForm({ nominatorId }: NominateMemberFormProps) {
 
   if (success) {
     return (
-      <div className="rounded-2xl border border-[#239D8C]/30 bg-[#239D8C]/10 p-6 text-center">
+      <div className="rounded-2xl border border-[var(--kv-teal)]/30 bg-[var(--kv-teal)]/10 p-6 text-center">
         <p className="text-sm font-semibold text-[#5FD0C2]">Indicação enviada com sucesso!</p>
-        <p className="mt-1 text-sm text-[#F4EDDF]/60">Nossa equipe vai analisar e entrar em contato por e-mail.</p>
+        <p className="mt-1 text-sm text-[var(--kv-cream)]/60">Nossa equipe vai analisar e entrar em contato por e-mail.</p>
         <button
           type="button"
           onClick={() => router.push("/dashboard")}
-          className="mt-4 rounded-xl border border-white/15 px-5 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5"
+          className="mt-4 rounded-xl border border-white/15 px-5 py-2 text-sm font-medium text-[var(--kv-cream)]/80 hover:bg-white/5"
         >
           Voltar ao dashboard
         </button>

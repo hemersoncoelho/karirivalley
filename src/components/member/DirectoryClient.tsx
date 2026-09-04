@@ -56,7 +56,7 @@ export function DirectoryClient({ members }: DirectoryClientProps) {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <Search size={16} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#F4EDDF]/35" />
+        <Search size={16} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[var(--kv-cream)]/35" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -108,7 +108,7 @@ export function DirectoryClient({ members }: DirectoryClientProps) {
         </SelectInput>
       </div>
 
-      <p className="text-xs text-[#F4EDDF]/40">
+      <p className="text-xs text-[var(--kv-cream)]/40">
         {filtered.length} {filtered.length === 1 ? "membro encontrado" : "membros encontrados"}
       </p>
 
@@ -120,7 +120,7 @@ export function DirectoryClient({ members }: DirectoryClientProps) {
             <button
               type="button"
               onClick={clearFilters}
-              className="rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5"
+              className="rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[var(--kv-cream)]/80 hover:bg-white/5"
             >
               Limpar filtros
             </button>

@@ -10,7 +10,7 @@ interface StepSuccessProps {
 export function StepSuccess({ title, message }: StepSuccessProps) {
   return (
     <div className="space-y-5 py-4 text-center">
-      <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#239D8C]/20">
+      <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[var(--kv-teal)]/20">
         <svg
           className="size-8 text-[#5FD0C2]"
           viewBox="0 0 24 24"
@@ -25,13 +25,13 @@ export function StepSuccess({ title, message }: StepSuccessProps) {
         </svg>
       </div>
 
-      <h2 className="text-2xl font-semibold text-[#F4EDDF]">{title}</h2>
-      <p className="mx-auto max-w-md text-sm leading-relaxed text-[#F4EDDF]/60">{message}</p>
+      <h2 className="text-2xl font-semibold text-[var(--kv-cream)]">{title}</h2>
+      <p className="mx-auto max-w-md text-sm leading-relaxed text-[var(--kv-cream)]/60">{message}</p>
 
       <div className="pt-2">
         <Link
           href="/"
-          className="inline-block rounded-xl bg-[#E9B23C] px-7 py-3 text-sm font-semibold text-[#2C2221] transition hover:bg-[#f0c05a]"
+          className="inline-block rounded-xl bg-[var(--kv-gold)] px-7 py-3 text-sm font-semibold text-[var(--kv-dark)] transition hover:bg-[var(--kv-gold-bright)]"
         >
           Voltar para a página inicial
         </Link>

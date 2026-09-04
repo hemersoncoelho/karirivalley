@@ -11,7 +11,7 @@ export default async function ProfilePreviewPage() {
 
   return (
     <div>
-      <p className="mb-6 rounded-xl border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-4 py-3 text-center text-sm text-[#E9B23C]">
+      <p className="mb-6 rounded-xl border border-[var(--kv-gold)]/25 bg-[var(--kv-gold)]/10 px-4 py-3 text-center text-sm text-[var(--kv-gold)]">
         Prévia do seu perfil na comunidade.
       </p>
       <MemberProfileView member={publicView} showBackLink={false} isOwnProfile />

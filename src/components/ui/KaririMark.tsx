@@ -7,9 +7,9 @@ interface KaririMarkProps {
 export function KaririMark({ className, size = 18 }: KaririMarkProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" fill="none" className={className} aria-hidden="true">
-      <path d="M32 4 L60 32 L32 60 L4 32 Z" stroke="#E9B23C" strokeWidth="5" strokeLinejoin="round" />
+      <path d="M32 4 L60 32 L32 60 L4 32 Z" stroke="var(--kv-gold)" strokeWidth="5" strokeLinejoin="round" />
       <path d="M32 17 L47 32 L32 47 L17 32 Z" stroke="#E0715A" strokeWidth="4" strokeLinejoin="round" />
-      <path d="M32 26 L38 32 L32 38 L26 32 Z" fill="#239D8C" />
+      <path d="M32 26 L38 32 L32 38 L26 32 Z" fill="var(--kv-teal)" />
     </svg>
   )
 }

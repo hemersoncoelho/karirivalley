@@ -98,19 +98,19 @@ export function StepAccount() {
   if (awaitingConfirmation) {
     return (
       <div className="space-y-4 text-center">
-        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#239D8C]/20 text-2xl">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-[var(--kv-teal)]/20 text-2xl">
           ✉️
         </div>
-        <h2 className="text-xl font-semibold text-[#F4EDDF]">Confira seu e-mail</h2>
-        <p className="text-sm leading-relaxed text-[#F4EDDF]/60">
+        <h2 className="text-xl font-semibold text-[var(--kv-cream)]">Confira seu e-mail</h2>
+        <p className="text-sm leading-relaxed text-[var(--kv-cream)]/60">
           Enviamos um link de confirmação para{" "}
-          <strong className="text-[#E9B23C]">{getValues("email")}</strong>. Abra a mensagem e
+          <strong className="text-[var(--kv-gold)]">{getValues("email")}</strong>. Abra a mensagem e
           clique no link para continuar seu cadastro daqui mesmo.
         </p>
         <button
           type="button"
           onClick={() => setAwaitingConfirmation(false)}
-          className="text-sm text-[#F4EDDF]/50 underline underline-offset-4 hover:text-[#F4EDDF]"
+          className="text-sm text-[var(--kv-cream)]/50 underline underline-offset-4 hover:text-[var(--kv-cream)]"
         >
           Usar outro e-mail
         </button>
@@ -161,7 +161,7 @@ export function StepAccount() {
           label={
             <>
               Li e aceito os{" "}
-              <a href="/termos" target="_blank" className="text-[#E9B23C] underline underline-offset-2">
+              <a href="/termos" target="_blank" className="text-[var(--kv-gold)] underline underline-offset-2">
                 termos de uso
               </a>
             </>
@@ -174,7 +174,7 @@ export function StepAccount() {
           label={
             <>
               Li e aceito a{" "}
-              <a href="/privacidade" target="_blank" className="text-[#E9B23C] underline underline-offset-2">
+              <a href="/privacidade" target="_blank" className="text-[var(--kv-gold)] underline underline-offset-2">
                 política de privacidade
               </a>
             </>

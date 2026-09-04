@@ -45,32 +45,32 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "#2C2221" }}>
+    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "var(--kv-dark)" }}>
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold tracking-[2.5px] text-[#E9B23C] uppercase">Kariri Valley</p>
-          <h1 className="mt-3 text-2xl font-semibold text-[#F4EDDF]">Recuperar senha</h1>
+          <p className="text-xs font-semibold tracking-[2.5px] text-[var(--kv-gold)] uppercase">Kariri Valley</p>
+          <h1 className="mt-3 text-2xl font-semibold text-[var(--kv-cream)]">Recuperar senha</h1>
         </div>
 
         {sentTo ? (
           <div className="space-y-4 text-center">
-            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#239D8C]/20 text-2xl">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-[var(--kv-teal)]/20 text-2xl">
               ✉️
             </div>
-            <p className="text-sm leading-relaxed text-[#F4EDDF]/60">
-              Se existir uma conta para <strong className="text-[#E9B23C]">{sentTo}</strong>, enviamos um link para
+            <p className="text-sm leading-relaxed text-[var(--kv-cream)]/60">
+              Se existir uma conta para <strong className="text-[var(--kv-gold)]">{sentTo}</strong>, enviamos um link para
               redefinir a senha. Confira sua caixa de entrada.
             </p>
             <Link
               href="/login"
-              className="text-sm text-[#F4EDDF]/50 underline underline-offset-4 hover:text-[#F4EDDF]"
+              className="text-sm text-[var(--kv-cream)]/50 underline underline-offset-4 hover:text-[var(--kv-cream)]"
             >
               Voltar para o login
             </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-            <p className="text-sm text-[#F4EDDF]/60">
+            <p className="text-sm text-[var(--kv-cream)]/60">
               Informe o e-mail usado no cadastro. Vamos enviar um link para você criar uma nova senha.
             </p>
 
@@ -88,8 +88,8 @@ export default function ForgotPasswordPage() {
 
             <StepButtons submitting={isSubmitting} submitLabel="Enviar link de recuperação" />
 
-            <p className="text-center text-sm text-[#F4EDDF]/50">
-              <Link href="/login" className="text-[#E9B23C] underline underline-offset-4">
+            <p className="text-center text-sm text-[var(--kv-cream)]/50">
+              <Link href="/login" className="text-[var(--kv-gold)] underline underline-offset-4">
                 Voltar para o login
               </Link>
             </p>

@@ -41,17 +41,17 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
           />
         ) : (
           <div className="flex size-22 items-center justify-center rounded-full border border-white/10 bg-white/5">
-            <UserCircle2 size={40} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
+            <UserCircle2 size={40} strokeWidth={1.4} className="text-[var(--kv-cream)]/40" />
           </div>
         )}
         <div>
-          <h1 className="text-xl font-semibold text-[#F4EDDF]">{member.name}</h1>
+          <h1 className="text-xl font-semibold text-[var(--kv-cream)]">{member.name}</h1>
           {(member.position || member.company) && (
-            <p className="mt-1 text-sm text-[#F4EDDF]/60">
+            <p className="mt-1 text-sm text-[var(--kv-cream)]/60">
               {[member.position, member.company].filter(Boolean).join(" · ")}
             </p>
           )}
-          <p className="mt-1 text-sm text-[#F4EDDF]/45">
+          <p className="mt-1 text-sm text-[var(--kv-cream)]/45">
             {[member.city, memberSince && `Membro desde ${memberSince}`].filter(Boolean).join(" · ")}
           </p>
           {member.social_links.length > 0 && (
@@ -64,7 +64,7 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 items-center justify-center rounded-full border border-white/12 text-[#F4EDDF]/70 transition hover:border-white/25 hover:text-[#F4EDDF]"
+                    className="flex size-8 items-center justify-center rounded-full border border-white/12 text-[var(--kv-cream)]/70 transition hover:border-white/25 hover:text-[var(--kv-cream)]"
                   >
                     <Icon size={14} />
                   </a>
@@ -77,17 +77,17 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
 
       {member.bio && (
         <section>
-          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Sobre</h2>
-          <p className="mt-2 text-sm leading-relaxed text-[#F4EDDF]/60">{member.bio}</p>
+          <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">Sobre</h2>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--kv-cream)]/60">{member.bio}</p>
         </section>
       )}
 
       {member.occupation_areas.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Áreas de atuação</h2>
+          <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">Áreas de atuação</h2>
           <div className="mt-2 flex flex-wrap gap-2">
             {member.occupation_areas.map((area) => (
-              <span key={area} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[#F4EDDF]/65">
+              <span key={area} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-[var(--kv-cream)]/65">
                 {OCCUPATION_LABELS[area] ?? area}
               </span>
             ))}
@@ -98,9 +98,9 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
       {member.company_name && (member.company_review_status === "approved" || isOwnProfile) && (
         <section>
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Empresa</h2>
+            <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">Empresa</h2>
             {isOwnProfile && member.company_review_status === "pending" && (
-              <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+              <span className="rounded-full border border-[var(--kv-gold)]/25 bg-[var(--kv-gold)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--kv-gold)]">
                 Em análise pelo admin
               </span>
             )}
@@ -121,26 +121,26 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
               />
             )}
             <div>
-              <p className="flex flex-wrap items-center gap-2 text-sm text-[#F4EDDF]/60">
+              <p className="flex flex-wrap items-center gap-2 text-sm text-[var(--kv-cream)]/60">
                 {member.company_name}
                 {member.company_stage && (
-                  <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+                  <span className="rounded-full border border-[var(--kv-gold)]/25 bg-[var(--kv-gold)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--kv-gold)]">
                     {STARTUP_STAGE_LABELS[member.company_stage] ?? member.company_stage}
                   </span>
                 )}
                 {member.company_sector && (
-                  <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-[#F4EDDF]/70">
+                  <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-[var(--kv-cream)]/70">
                     {COMPANY_SECTOR_LABELS[member.company_sector] ?? member.company_sector}
                   </span>
                 )}
                 {member.company_mrr != null && (
-                  <span className="rounded-full border border-[#239D8C]/25 bg-[#239D8C]/10 px-2.5 py-0.5 text-xs font-medium text-[#5FD0C2]">
+                  <span className="rounded-full border border-[var(--kv-teal)]/25 bg-[var(--kv-teal)]/10 px-2.5 py-0.5 text-xs font-medium text-[#5FD0C2]">
                     MRR {formatCurrencyBRL(member.company_mrr)}
                   </span>
                 )}
               </p>
               {member.company_problem && (
-                <p className="mt-1 text-sm text-[#F4EDDF]/50">{member.company_problem}</p>
+                <p className="mt-1 text-sm text-[var(--kv-cream)]/50">{member.company_problem}</p>
               )}
             </div>
           </div>
@@ -149,12 +149,12 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
 
       {member.interest_slugs.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Interesses</h2>
+          <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">Interesses</h2>
           <div className="mt-2 flex flex-wrap gap-2">
             {member.interest_slugs.map((slug) => (
               <span
                 key={slug}
-                className="rounded-full border border-[#239D8C]/25 bg-[#239D8C]/10 px-3 py-1 text-xs text-[#5FD0C2]"
+                className="rounded-full border border-[var(--kv-teal)]/25 bg-[var(--kv-teal)]/10 px-3 py-1 text-xs text-[#5FD0C2]"
               >
                 {slug.replace(/-/g, " ")}
               </span>
@@ -167,8 +167,8 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
         <div className="grid gap-6 sm:grid-cols-2">
           {member.need_titles.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold text-[#F4EDDF]/85">O que busca</h2>
-              <ul className="mt-2 space-y-1.5 text-sm text-[#F4EDDF]/60">
+              <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">O que busca</h2>
+              <ul className="mt-2 space-y-1.5 text-sm text-[var(--kv-cream)]/60">
                 {member.need_titles.map((title) => (
                   <li key={title}>• {title}</li>
                 ))}
@@ -177,8 +177,8 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
           )}
           {member.offer_titles.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold text-[#F4EDDF]/85">O que oferece</h2>
-              <ul className="mt-2 space-y-1.5 text-sm text-[#F4EDDF]/60">
+              <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">O que oferece</h2>
+              <ul className="mt-2 space-y-1.5 text-sm text-[var(--kv-cream)]/60">
                 {member.offer_titles.map((title) => (
                   <li key={title}>• {title}</li>
                 ))}
@@ -190,8 +190,8 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
 
       {(member.email || member.phone) && (
         <section>
-          <h2 className="text-sm font-semibold text-[#F4EDDF]/85">Contato</h2>
-          <div className="mt-2 space-y-1.5 text-sm text-[#F4EDDF]/60">
+          <h2 className="text-sm font-semibold text-[var(--kv-cream)]/85">Contato</h2>
+          <div className="mt-2 space-y-1.5 text-sm text-[var(--kv-cream)]/60">
             {member.email && (
               <p className="flex items-center gap-2">
                 <Mail size={14} /> {member.email}
@@ -208,7 +208,7 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
 
       <div className="flex items-center justify-between border-t border-white/8 pt-6">
         {showBackLink ? (
-          <Link href="/comunidade" className="inline-flex items-center gap-2 text-sm text-[#F4EDDF]/50 hover:text-[#F4EDDF]">
+          <Link href="/comunidade" className="inline-flex items-center gap-2 text-sm text-[var(--kv-cream)]/50 hover:text-[var(--kv-cream)]">
             <ArrowLeft size={14} /> Voltar ao diretório
           </Link>
         ) : (
@@ -218,7 +218,7 @@ export function MemberProfileView({ member, showBackLink = true, isOwnProfile = 
           type="button"
           disabled
           title="Em breve"
-          className="cursor-not-allowed rounded-xl border border-white/10 px-4 py-2 text-xs font-medium text-[#F4EDDF]/35"
+          className="cursor-not-allowed rounded-xl border border-white/10 px-4 py-2 text-xs font-medium text-[var(--kv-cream)]/35"
         >
           Solicitar conexão (em breve)
         </button>

@@ -7,8 +7,8 @@ export default async function VitrinePage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[#F4EDDF]">Vitrine de Empresas</h1>
-      <p className="mt-1 text-sm text-[#F4EDDF]/50">Conheça as startups e empresas do ecossistema Kariri Valley.</p>
+      <h1 className="text-xl font-semibold text-[var(--kv-cream)]">Vitrine de Empresas</h1>
+      <p className="mt-1 text-sm text-[var(--kv-cream)]/50">Conheça as startups e empresas do ecossistema Kariri Valley.</p>
       <div className="mt-6">
         <CompaniesClient companies={companies} />
       </div>

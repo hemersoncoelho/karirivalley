@@ -6,8 +6,8 @@ export default async function ComunidadePage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[#F4EDDF]">Comunidade Kariri Valley</h1>
-      <p className="mt-1 text-sm text-[#F4EDDF]/50">Conheça as pessoas que fazem o ecossistema.</p>
+      <h1 className="text-xl font-semibold text-[var(--kv-cream)]">Comunidade Kariri Valley</h1>
+      <p className="mt-1 text-sm text-[var(--kv-cream)]/50">Conheça as pessoas que fazem o ecossistema.</p>
       <div className="mt-6">
         <DirectoryClient members={members} />
       </div>

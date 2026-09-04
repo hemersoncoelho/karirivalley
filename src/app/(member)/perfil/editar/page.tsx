@@ -10,7 +10,7 @@ export default async function ProfileEditPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-xl font-semibold text-[#F4EDDF]">Meu perfil</h1>
+      <h1 className="mb-6 text-xl font-semibold text-[var(--kv-cream)]">Meu perfil</h1>
       <ProfileEditForm member={member} bundle={bundle} />
     </div>
   )

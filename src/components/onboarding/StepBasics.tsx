@@ -85,21 +85,21 @@ export function StepBasics({ defaultValues, initialPhotoUrl, onSubmit, onBack }:
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="group relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-dashed border-white/20 bg-white/[0.04] transition hover:border-[#E9B23C]/60"
+          className="group relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-dashed border-white/20 bg-white/[0.04] transition hover:border-[var(--kv-gold)]/60"
           aria-label="Enviar foto de perfil"
         >
           {photoPreview ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={photoPreview} alt="Prévia da foto" className="size-full object-cover" />
           ) : (
-            <span className="flex size-full items-center justify-center text-2xl text-[#F4EDDF]/40">
+            <span className="flex size-full items-center justify-center text-2xl text-[var(--kv-cream)]/40">
               📷
             </span>
           )}
         </button>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-[#F4EDDF]/90">Foto de perfil</p>
-          <p className="text-xs text-[#F4EDDF]/45">JPG, PNG ou WebP · máx. 2MB · opcional</p>
+          <p className="text-sm font-medium text-[var(--kv-cream)]/90">Foto de perfil</p>
+          <p className="text-xs text-[var(--kv-cream)]/45">JPG, PNG ou WebP · máx. 2MB · opcional</p>
           {photoError && <p className="text-xs text-[#E0715A]" role="alert">{photoError}</p>}
         </div>
         <input

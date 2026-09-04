@@ -105,11 +105,11 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "#2C2221" }}>
+    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "var(--kv-dark)" }}>
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold tracking-[2.5px] text-[#E9B23C] uppercase">Kariri Valley</p>
-          <h1 className="mt-3 text-2xl font-semibold text-[#F4EDDF]">Entrar na comunidade</h1>
+          <p className="text-xs font-semibold tracking-[2.5px] text-[var(--kv-gold)] uppercase">Kariri Valley</p>
+          <h1 className="mt-3 text-2xl font-semibold text-[var(--kv-cream)]">Entrar na comunidade</h1>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
@@ -134,13 +134,13 @@ export default function LoginPage() {
           </Field>
 
           <p className="text-right text-sm">
-            <Link href="/login/esqueci-senha" className="text-[#F4EDDF]/50 underline underline-offset-4 hover:text-[#F4EDDF]">
+            <Link href="/login/esqueci-senha" className="text-[var(--kv-cream)]/50 underline underline-offset-4 hover:text-[var(--kv-cream)]">
               Esqueci minha senha
             </Link>
           </p>
 
           {notice && (
-            <p className="rounded-xl border border-[#E9B23C]/30 bg-[#E9B23C]/10 px-4 py-3 text-sm text-[#E9B23C]">
+            <p className="rounded-xl border border-[var(--kv-gold)]/30 bg-[var(--kv-gold)]/10 px-4 py-3 text-sm text-[var(--kv-gold)]">
               {notice}
             </p>
           )}
@@ -149,9 +149,9 @@ export default function LoginPage() {
           <StepButtons submitting={isSubmitting} submitLabel="Entrar" />
         </form>
 
-        <p className="mt-6 text-center text-sm text-[#F4EDDF]/50">
+        <p className="mt-6 text-center text-sm text-[var(--kv-cream)]/50">
           Não é membro ainda?{" "}
-          <Link href="/como-participar" className="text-[#E9B23C] underline underline-offset-4">
+          <Link href="/como-participar" className="text-[var(--kv-gold)] underline underline-offset-4">
             Solicitar acesso
           </Link>
         </p>

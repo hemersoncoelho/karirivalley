@@ -64,12 +64,12 @@ function ProfileSection({ step, title, description, hidden, children }: ProfileS
   return (
     <section role="tabpanel" hidden={hidden} className="space-y-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
       <div className="flex items-start gap-3">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-[#E9B23C]/30 bg-[#E9B23C]/10 text-xs font-bold text-[#E9B23C]">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-[var(--kv-gold)]/30 bg-[var(--kv-gold)]/10 text-xs font-bold text-[var(--kv-gold)]">
           {step}
         </span>
         <div>
-          <h2 className="text-base font-semibold text-[#F4EDDF]">{title}</h2>
-          <p className="mt-0.5 text-xs text-[#F4EDDF]/45">{description}</p>
+          <h2 className="text-base font-semibold text-[var(--kv-cream)]">{title}</h2>
+          <p className="mt-0.5 text-xs text-[var(--kv-cream)]/45">{description}</p>
         </div>
       </div>
       {children}
@@ -262,8 +262,8 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
           onClick={() => setActiveTab("personal")}
           className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
             activeTab === "personal"
-              ? "bg-[#E9B23C] text-[#2C2221]"
-              : "text-[#F4EDDF]/70 hover:bg-white/5 hover:text-[#F4EDDF]"
+              ? "bg-[var(--kv-gold)] text-[var(--kv-dark)]"
+              : "text-[var(--kv-cream)]/70 hover:bg-white/5 hover:text-[var(--kv-cream)]"
           }`}
         >
           1. Dados pessoais
@@ -275,15 +275,15 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
           onClick={() => setActiveTab("company")}
           className={`relative flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition ${
             activeTab === "company"
-              ? "bg-[#E9B23C] text-[#2C2221]"
-              : "text-[#F4EDDF]/70 hover:bg-white/5 hover:text-[#F4EDDF]"
+              ? "bg-[var(--kv-gold)] text-[var(--kv-dark)]"
+              : "text-[var(--kv-cream)]/70 hover:bg-white/5 hover:text-[var(--kv-cream)]"
           }`}
         >
           2. Empresa
           {(companyReviewStatus === "pending" || companyReviewStatus === "rejected") && (
             <span
               className={`absolute top-1.5 right-1.5 size-2 rounded-full ${
-                companyReviewStatus === "pending" ? "bg-[#E9B23C]" : "bg-[#E0715A]"
+                companyReviewStatus === "pending" ? "bg-[var(--kv-gold)]" : "bg-[#E0715A]"
               }`}
             />
           )}
@@ -307,10 +307,10 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
             />
           ) : (
             <div className="flex size-20 items-center justify-center rounded-full border border-white/10 bg-white/5">
-              <UserCircle2 size={36} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
+              <UserCircle2 size={36} strokeWidth={1.4} className="text-[var(--kv-cream)]/40" />
             </div>
           )}
-          <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
+          <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[var(--kv-cream)]/80 hover:bg-white/5">
             Alterar foto
             <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhotoChange} />
           </label>
@@ -343,7 +343,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </section>
 
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">Redes sociais</h3>
+          <h3 className="text-sm font-semibold text-[var(--kv-cream)]/85">Redes sociais</h3>
           {SOCIAL_FIELDS.map((field) => (
             <Field key={field.platform} label={field.label} htmlFor={field.platform} optional>
               <TextInput
@@ -357,7 +357,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">Interesses</h3>
+          <h3 className="text-sm font-semibold text-[var(--kv-cream)]/85">Interesses</h3>
           <div className="flex flex-wrap gap-2">
             {interests.map((interest) => (
               <Chip
@@ -372,7 +372,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">O que você busca</h3>
+          <h3 className="text-sm font-semibold text-[var(--kv-cream)]/85">O que você busca</h3>
           <div className="flex flex-wrap gap-2">
             {NEED_OPTIONS.map((option) => (
               <Chip
@@ -387,7 +387,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">O que você oferece</h3>
+          <h3 className="text-sm font-semibold text-[var(--kv-cream)]/85">O que você oferece</h3>
           <div className="flex flex-wrap gap-2">
             {OFFER_OPTIONS.map((option) => (
               <Chip
@@ -402,7 +402,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-[#F4EDDF]/85">Contato e visibilidade</h3>
+          <h3 className="text-sm font-semibold text-[var(--kv-cream)]/85">Contato e visibilidade</h3>
           <ToggleRow
             label="Perfil público no diretório"
             description="Se desativado, só membros aprovados veem seu perfil"
@@ -445,7 +445,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
             <>
               <div className="flex flex-wrap items-center gap-2">
                 {companyReviewStatus === "pending" && (
-                  <span className="rounded-full border border-[#E9B23C]/25 bg-[#E9B23C]/10 px-2.5 py-0.5 text-xs font-medium text-[#E9B23C]">
+                  <span className="rounded-full border border-[var(--kv-gold)]/25 bg-[var(--kv-gold)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--kv-gold)]">
                     Em análise pelo admin
                   </span>
                 )}
@@ -466,10 +466,10 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
                   />
                 ) : (
                   <div className="flex size-16 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                    <Rocket size={26} strokeWidth={1.4} className="text-[#F4EDDF]/40" />
+                    <Rocket size={26} strokeWidth={1.4} className="text-[var(--kv-cream)]/40" />
                   </div>
                 )}
-                <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[#F4EDDF]/80 hover:bg-white/5">
+                <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-sm font-medium text-[var(--kv-cream)]/80 hover:bg-white/5">
                   Logo da empresa
                   <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleLogoChange} />
                 </label>
@@ -565,7 +565,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
       </ProfileSection>
 
       {success && (
-        <p className="rounded-xl border border-[#239D8C]/30 bg-[#239D8C]/10 px-4 py-3 text-sm text-[#5FD0C2]">
+        <p className="rounded-xl border border-[var(--kv-teal)]/30 bg-[var(--kv-teal)]/10 px-4 py-3 text-sm text-[#5FD0C2]">
           Perfil atualizado com sucesso ✓
         </p>
       )}
@@ -574,7 +574,7 @@ export function ProfileEditForm({ member, bundle }: ProfileEditFormProps) {
       <button
         type="submit"
         disabled={saving}
-        className="w-full rounded-xl bg-[#E9B23C] px-6 py-3 text-sm font-semibold text-[#2C2221] transition hover:bg-[#f0c05a] disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-xl bg-[var(--kv-gold)] px-6 py-3 text-sm font-semibold text-[var(--kv-dark)] transition hover:bg-[var(--kv-gold-bright)] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {saving ? "Salvando…" : "Salvar alterações"}
       </button>

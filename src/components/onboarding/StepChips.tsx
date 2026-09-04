@@ -72,7 +72,7 @@ export function StepChips({
       </div>
 
       {selected.length > 0 && (
-        <p className="text-xs text-[#F4EDDF]/45">
+        <p className="text-xs text-[var(--kv-cream)]/45">
           {selected.length} {selected.length === 1 ? "opção selecionada" : "opções selecionadas"}
         </p>
       )}

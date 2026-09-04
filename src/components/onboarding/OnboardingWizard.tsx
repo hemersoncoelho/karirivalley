@@ -151,7 +151,7 @@ export function OnboardingWizard() {
   if (!ready) {
     return (
       <div className="flex justify-center py-16">
-        <p className="text-sm text-[#F4EDDF]/40">Carregando…</p>
+        <p className="text-sm text-[var(--kv-cream)]/40">Carregando…</p>
       </div>
     )
   }
@@ -167,17 +167,17 @@ export function OnboardingWizard() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-center text-2xl font-semibold text-[#F4EDDF]">
+      <h1 className="text-center text-2xl font-semibold text-[var(--kv-cream)]">
         {STEP_TITLES[step - 1]}
       </h1>
 
       {userId && (
-        <p className="text-center text-xs text-[#F4EDDF]/40">
-          Continuando como <strong className="text-[#F4EDDF]/70">{email}</strong> —{" "}
+        <p className="text-center text-xs text-[var(--kv-cream)]/40">
+          Continuando como <strong className="text-[var(--kv-cream)]/70">{email}</strong> —{" "}
           <button
             type="button"
             onClick={handleSignOut}
-            className="underline underline-offset-2 hover:text-[#F4EDDF]"
+            className="underline underline-offset-2 hover:text-[var(--kv-cream)]"
           >
             não é você? Sair
           </button>
@@ -185,7 +185,7 @@ export function OnboardingWizard() {
       )}
 
       <div>
-        <div className="mb-3 text-xs text-[#F4EDDF]/45">
+        <div className="mb-3 text-xs text-[var(--kv-cream)]/45">
           Passo {step} de {TOTAL_STEPS}
         </div>
         <div className="flex gap-1.5">
@@ -193,7 +193,7 @@ export function OnboardingWizard() {
             <div
               key={title}
               className="h-1 flex-1 rounded-full"
-              style={{ background: i < step ? "#E9B23C" : "rgba(255,255,255,.1)" }}
+              style={{ background: i < step ? "var(--kv-gold)" : "rgba(255,255,255,.1)" }}
             />
           ))}
         </div>

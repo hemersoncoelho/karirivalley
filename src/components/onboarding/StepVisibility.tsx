@@ -60,18 +60,18 @@ export function StepVisibility({ initial, hasWhatsapp, onBack, onSubmit }: StepV
             className={cn(
               "rounded-2xl border p-4 text-left transition",
               values.isPublic === isPublic
-                ? "border-[#E9B23C] bg-[#E9B23C]/10"
+                ? "border-[var(--kv-gold)] bg-[var(--kv-gold)]/10"
                 : "border-white/10 bg-white/[0.03] hover:border-white/25"
             )}
           >
-            <p className="text-sm font-semibold text-[#F4EDDF]">{title}</p>
-            <p className="mt-1 text-xs text-[#F4EDDF]/50">{description}</p>
+            <p className="text-sm font-semibold text-[var(--kv-cream)]">{title}</p>
+            <p className="mt-1 text-xs text-[var(--kv-cream)]/50">{description}</p>
           </button>
         ))}
       </div>
 
       <div className="space-y-2.5">
-        <p className="text-sm font-medium text-[#F4EDDF]/80">O que mostrar no seu perfil</p>
+        <p className="text-sm font-medium text-[var(--kv-cream)]/80">O que mostrar no seu perfil</p>
         <ToggleRow
           label="Mostrar e-mail"
           description="Privado por padrão"
@@ -98,8 +98,8 @@ export function StepVisibility({ initial, hasWhatsapp, onBack, onSubmit }: StepV
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm font-medium text-[#F4EDDF]/80">
-          Redes sociais <span className="font-normal text-[#F4EDDF]/40">— deixe em branco para não mostrar</span>
+        <p className="text-sm font-medium text-[var(--kv-cream)]/80">
+          Redes sociais <span className="font-normal text-[var(--kv-cream)]/40">— deixe em branco para não mostrar</span>
         </p>
         <Field label="LinkedIn" htmlFor="linkedin" optional>
           <TextInput

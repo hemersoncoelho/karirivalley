@@ -7,8 +7,8 @@ export default async function IndicarMembroPage() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="text-xl font-semibold text-[#F4EDDF]">Indicar novo membro</h1>
-      <p className="mt-1 text-sm text-[#F4EDDF]/50">
+      <h1 className="text-xl font-semibold text-[var(--kv-cream)]">Indicar novo membro</h1>
+      <p className="mt-1 text-sm text-[var(--kv-cream)]/50">
         Conte um pouco sobre quem você quer indicar. Nossa equipe vai analisar a solicitação.
       </p>
       <div className="mt-6">

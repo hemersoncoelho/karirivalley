@@ -67,14 +67,35 @@ export default function HeroSection() {
             display: phase === "video" ? "block" : "none",
           }}
         />
-        {/* Escurecimento para leitura — mais denso no vídeo, respira na foto */}
+        {/* Escurecimento para leitura — denso nas bordas, respira no centro */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to bottom, rgba(6,13,8,.72), rgba(6,13,8,.5) 45%, rgba(6,13,8,.66))",
-            opacity: phase === "video" ? 1 : 0.82,
+              "linear-gradient(to bottom, rgba(6,13,8,.8), rgba(6,13,8,.45) 45%, rgba(6,13,8,.72))",
+            opacity: phase === "video" ? 1 : 0.9,
+            transition: "opacity 1.8s ease",
+          }}
+        />
+        {/* Vignette radial atrás do manifesto — âncora de contraste do texto */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse 62% 58% at 50% 46%, rgba(6,13,8,.62), transparent 72%)",
+          }}
+        />
+        {/* Trama halftone — a página imprime sobre a mídia */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "radial-gradient(rgba(6,13,8,.9) 1px, transparent 1.15px)",
+            backgroundSize: "5px 5px",
+            opacity: phase === "video" ? 0.55 : 0.4,
             transition: "opacity 1.8s ease",
           }}
         />
@@ -96,10 +117,14 @@ export default function HeroSection() {
 
         <h1
           className="kv-display mt-6"
-          style={{ fontSize: "clamp(46px, 6.4vw, 100px)", color: "var(--nb-sand)", maxWidth: 980 }}
+          style={{
+            fontSize: "clamp(46px, 6.4vw, 100px)",
+            color: "var(--nb-sand)",
+            maxWidth: 980,
+          }}
         >
           O vale que{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>
+          <em style={{ fontStyle: "italic", fontWeight: 400 }}>
             constrói
           </em>{" "}
           o futuro do sertão.
@@ -117,19 +142,10 @@ export default function HeroSection() {
         </div>
 
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <EditorialButton
-            href="/como-participar"
-            size="lg"
-            style={{ background: "var(--nb-mustard)", color: "var(--nb-ink)" }}
-          >
+          <EditorialButton href="/como-participar" size="lg">
             Fazer parte
           </EditorialButton>
-          <EditorialButton
-            href="/sobre"
-            variant="ghost"
-            size="lg"
-            style={{ color: "var(--nb-sand)", border: "1px solid rgba(244,238,225,.55)" }}
-          >
+          <EditorialButton href="/sobre" variant="ghost" size="lg">
             Conhecer o manifesto
           </EditorialButton>
         </div>

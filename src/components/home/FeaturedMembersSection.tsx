@@ -11,10 +11,10 @@ import { SectionIndex } from "@/components/ui/editorial";
  * destaques). Arquétipo: cards de retrato fechados com chip de área.
  */
 const MEMBERS = [
-  { name: "Maria Lima", role: "Fundadora", city: "Crato", photo: "/media/comunidade-5.webp", tag: "Startups" },
-  { name: "Pedro Costa", role: "Investidor-anjo", city: "Juazeiro do Norte", photo: "/media/comunidade-4.webp", tag: "Investimento" },
-  { name: "Ana Ferreira", role: "Pesquisadora · UFCA", city: "Barbalha", photo: "/media/comunidade-6.webp", tag: "Educação" },
-  { name: "Rafael Bezerra", role: "Dev sênior · remoto", city: "Lavras da Mangabeira", photo: "/media/comunidade-7.webp", tag: "Dev" },
+  { name: "Maria Lima", role: "Fundadora", city: "Crato", photo: "/media/faces/face-1.jpg", tag: "Startups" },
+  { name: "Pedro Costa", role: "Investidor-anjo", city: "Juazeiro do Norte", photo: "/media/faces/face-2.jpg", tag: "Investimento" },
+  { name: "Ana Ferreira", role: "Pesquisadora · UFCA", city: "Barbalha", photo: "/media/faces/face-3.jpg", tag: "Educação" },
+  { name: "Rafael Bezerra", role: "Dev sênior · remoto", city: "Lavras da Mangabeira", photo: "/media/faces/face-4.jpg", tag: "Dev" },
 ] as const;
 
 export default function FeaturedMembersSection() {

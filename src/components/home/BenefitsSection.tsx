@@ -3,7 +3,7 @@
 import { useInView } from "@/hooks/useInView";
 import type React from "react";
 import { SectionIndex } from "@/components/ui/editorial";
-import { Search, CalendarDays, Briefcase, Users, ShieldCheck, MapPin, Rocket, Sparkles } from "lucide-react";
+import { Search, ShieldCheck, MapPin, Rocket, Sparkles } from "lucide-react";
 
 /**
  * "O que o vale devolve" — recriação da BenefitsSection.
@@ -12,17 +12,17 @@ import { Search, CalendarDays, Briefcase, Users, ShieldCheck, MapPin, Rocket, Sp
  */
 const BENEFITS = [
   {
-    icon: Users,
+    icon: "/media/icone-talentos.png",
     title: "Rede verificada",
     desc: "Perfis reais, aprovados um a um, com o que cada membro busca e oferece. Sem ruído, sem portas fechadas.",
   },
   {
-    icon: CalendarDays,
+    icon: "/media/icone-universidade.png",
     title: "Vale em movimento",
     desc: "Encontros, talks e workshops constantes — a agenda que mantém o ecossistema vivo e visível.",
   },
   {
-    icon: Briefcase,
+    icon: "/media/icone-empresa.png",
     title: "Oportunidades em primeira mão",
     desc: "Editais, vagas, mentorias e investimento circulam aqui antes de qualquer canal aberto.",
   },
@@ -66,18 +66,18 @@ export default function BenefitsSection() {
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
           {BENEFITS.map((b, i) => {
-            const Icon = b.icon;
             return (
               <div key={b.title} style={{ ...fadeUp(0.1 + i * 0.07), display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <span
                   style={{
-                    width: 56, height: 56, borderRadius: 16,
+                    width: 72, height: 72, borderRadius: 20,
                     background: "rgba(30,77,58,.08)",
                     display: "inline-flex", alignItems: "center", justifyContent: "center",
                     marginBottom: 20,
                   }}
                 >
-                  <Icon size={24} strokeWidth={1.75} color="var(--nb-forest)" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={b.icon} alt="" aria-hidden="true" style={{ width: 44, height: 44, objectFit: "contain" }} />
                 </span>
                 <h3 style={{ margin: "0 0 10px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
                   {b.title}

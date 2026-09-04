@@ -42,9 +42,25 @@ export default function Footer() {
   if (hasOwnLayout) return null;
 
   return (
-    <footer style={{ background: "var(--nb-forest-dark)", borderTop: "1px solid var(--nb-ink)" }}>
+    <footer style={{ background: "var(--nb-forest-dark)", borderTop: "1px solid var(--nb-ink)", position: "relative", overflow: "hidden" }}>
+      {/* Chapada do Cariri na base do fechamento */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/deco-layer-13.png"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(1300px, 112vw)",
+          opacity: 0.35,
+          pointerEvents: "none",
+        }}
+      />
       {/* Banda de display — o nome como manchete de fechamento */}
-      <div className="mx-auto max-w-[1240px] px-6 md:px-[52px] pt-16 pb-8">
+      <div className="mx-auto max-w-[1240px] px-6 md:px-[52px] pt-16 pb-8" style={{ position: "relative" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap" }}>
           <DiamondMark size={12} />
           <span

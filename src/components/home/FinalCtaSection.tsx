@@ -19,6 +19,39 @@ export default function FinalCtaSection() {
       className="relative overflow-hidden"
       style={{ background: "var(--nb-forest-dark)", padding: "120px 0 110px" }}
     >
+      {/* Chapada ao fundo do fechamento */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/deco-layer-13.png"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: -10,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(1100px, 105vw)",
+          opacity: 0.55,
+          pointerEvents: "none",
+        }}
+      />
+      {/* Bromélia emergindo na lateral */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/deco-layer-4.png"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          right: -30,
+          top: "50%",
+          transform: "translateY(-50%) rotate(-10deg)",
+          width: 210,
+          opacity: 0.55,
+          pointerEvents: "none",
+        }}
+      />
+
       <div ref={ref} className="relative mx-auto max-w-[900px] px-6 text-center">
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 22, ...fadeUp(0) }}>
           <DiamondMark size={11} />

@@ -65,6 +65,42 @@ export default function HeroSection() {
 
       <PixelField />
 
+      {/* Chapada do Cariri ancorando a base da hero */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/deco-layer-13.png"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 44,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(1200px, 110vw)",
+          zIndex: 2,
+          opacity: dark ? 0.5 : 0.9,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Bromélia decomposta atrás do manifesto */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/deco-layer-4.png"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "14%",
+          left: "-40px",
+          width: 240,
+          zIndex: 2,
+          opacity: dark ? 0.35 : 0.95,
+          transform: "rotate(12deg)",
+          pointerEvents: "none",
+        }}
+      />
+
       {/* ── Manifesto central ── */}
       <div
         className="relative flex flex-1 flex-col items-center justify-center px-6 pb-14 pt-32 text-center"

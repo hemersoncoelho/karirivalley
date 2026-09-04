@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, Fraunces } from "next/font/google";
+import { Space_Grotesk, Inter, Fraunces, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -24,6 +24,13 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["400", "700"],
   style: ["normal", "italic"],
+  display: "swap",
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -66,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${fraunces.variable} h-full antialiased scroll-smooth`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${fraunces.variable} ${spaceMono.variable} h-full antialiased scroll-smooth`}
       suppressHydrationWarning
     >
       <head>

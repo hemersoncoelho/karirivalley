@@ -2,19 +2,38 @@
 
 import { useInView } from "@/hooks/useInView";
 import type React from "react";
-import { SectionIndex, MetaDot } from "@/components/ui/editorial";
+import { SectionIndex } from "@/components/ui/editorial";
+import { Search, CalendarDays, Briefcase, Users, ShieldCheck, MapPin, Rocket, Sparkles } from "lucide-react";
 
 /**
- * "O que o vale devolve" — recriação da antiga BenefitsSection.
- * Arquétipo: split assimétrico — benefícios em lista-índice à esquerda,
- * halftone-earth (o mapa vivo) como figura-âncora à direita com legenda.
+ * "O que o vale devolve" — recriação da BenefitsSection.
+ * Arquétipo Tana "Built for real work": 3 colunas centradas com ícones
+ * definidos + faixa de capacidades em chips.
  */
 const BENEFITS = [
-  { t: "Diretório vivo", d: "perfis reais, verificados, com o que cada um busca e oferece." },
-  { t: "Agenda ativa", d: "encontros, talks e workshops que mantêm o vale em movimento." },
-  { t: "Oportunidades primeiro", d: "editais, vagas e programas chegam aos membros antes." },
-  { t: "Vitrine do território", d: "sua empresa e seu trabalho visíveis para quem decide." },
-  { t: "Rede sem intermediário", d: "conexão direta entre quem faz — sem portas fechadas." },
+  {
+    icon: Users,
+    title: "Rede verificada",
+    desc: "Perfis reais, aprovados um a um, com o que cada membro busca e oferece. Sem ruído, sem portas fechadas.",
+  },
+  {
+    icon: CalendarDays,
+    title: "Vale em movimento",
+    desc: "Encontros, talks e workshops constantes — a agenda que mantém o ecossistema vivo e visível.",
+  },
+  {
+    icon: Briefcase,
+    title: "Oportunidades em primeira mão",
+    desc: "Editais, vagas, mentorias e investimento circulam aqui antes de qualquer canal aberto.",
+  },
+] as const;
+
+const CAPABILITIES = [
+  { icon: ShieldCheck, label: "Aprovação manual" },
+  { icon: MapPin, label: "12 cidades do Cariri" },
+  { icon: Rocket, label: "Perfis de empresa com MRR" },
+  { icon: Sparkles, label: "Indicação entre membros" },
+  { icon: Search, label: "Busca por interesse" },
 ] as const;
 
 export default function BenefitsSection() {
@@ -29,66 +48,73 @@ export default function BenefitsSection() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "var(--nb-sand-2)", borderTop: "1px solid var(--nb-line)", padding: "96px 0 104px" }}
+      style={{ background: "var(--nb-page-bg)", padding: "0 0 112px" }}
     >
-      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
-        <SectionIndex index="03" label="Benefícios" title="o que o vale devolve" accentColor="#8A5C13" />
+      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 text-center lg:px-16">
+        <SectionIndex index="03" label="Benefícios" title="o que o vale devolve" />
 
-        <div className="mt-12 grid grid-cols-1 items-start gap-14 lg:grid-cols-[6fr_5fr]">
-          <div>
-            <h2
-              className="kv-display"
-              style={{ fontSize: "clamp(30px, 3.4vw, 50px)", color: "var(--nb-heading)", margin: "0 0 36px", ...fadeUp(0) }}
-            >
-              Pertencer tem{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>retorno</em>.
-            </h2>
+        <h2
+          className="kv-display mt-10"
+          style={{ fontSize: "clamp(30px, 3.4vw, 48px)", color: "var(--nb-heading)", margin: "40px auto 14px", maxWidth: 640, ...fadeUp(0) }}
+        >
+          Feito para o trabalho{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400 }}>real</em> de empreender
+        </h2>
+        <p style={{ fontSize: 16, color: "var(--nb-body)", margin: "0 auto 56px", maxWidth: 480, ...fadeUp(0.05) }}>
+          A plataforma cuida da estrutura. Você cuida do que só você pode fazer.
+        </p>
 
-            {BENEFITS.map((b, i) => (
-              <div
-                key={b.t}
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+          {BENEFITS.map((b, i) => {
+            const Icon = b.icon;
+            return (
+              <div key={b.title} style={{ ...fadeUp(0.1 + i * 0.07), display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <span
+                  style={{
+                    width: 56, height: 56, borderRadius: 16,
+                    background: "rgba(30,77,58,.08)",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                    marginBottom: 20,
+                  }}
+                >
+                  <Icon size={24} strokeWidth={1.75} color="var(--nb-forest)" />
+                </span>
+                <h3 style={{ margin: "0 0 10px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
+                  {b.title}
+                </h3>
+                <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.7, color: "var(--nb-body)", maxWidth: 320 }}>
+                  {b.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Faixa de capacidades — chips definidos */}
+        <div
+          className="mx-auto mt-16 flex flex-wrap items-center justify-center gap-3"
+          style={{ ...fadeUp(0.3), maxWidth: 880 }}
+        >
+          {CAPABILITIES.map(c => {
+            const Icon = c.icon;
+            return (
+              <span
+                key={c.label}
+                className="kv-kicker"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "40px 1fr",
-                  gap: 14,
-                  alignItems: "baseline",
-                  borderTop: "1px solid var(--nb-line)",
-                  borderBottom: i === BENEFITS.length - 1 ? "1px solid var(--nb-line)" : "none",
-                  padding: "17px 0",
-                  ...fadeUp(0.08 + i * 0.05),
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "9px 16px", borderRadius: 999,
+                  background: "var(--nb-cream)",
+                  border: "1px solid rgba(22,20,15,.1)",
+                  color: "var(--nb-body-strong)",
+                  fontSize: 11,
                 }}
               >
-                <MetaDot role="highlight" style={{ width: 7, height: 7, justifySelf: "start" }} />
-                <div>
-                  <h3 style={{ margin: 0, fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, color: "var(--nb-heading)" }}>
-                    {b.t}
-                  </h3>
-                  <p className="kv-meta" style={{ margin: "4px 0 0", color: "var(--nb-body)", textTransform: "none", letterSpacing: ".03em" }}>
-                    {b.d}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Figura-âncora: a comunidade em um encontro — o retorno é ela */}
-          <figure style={{ margin: 0, position: "sticky", top: 110, ...fadeUp(0.2) }}>
-            <div className="kv-photo" style={{ border: "1px solid var(--nb-line)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/media/comunidade-2.jpg"
-                alt="A comunidade reunida em um encontro do Kariri Valley"
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-            </div>
-            <figcaption
-              className="kv-meta"
-              style={{ display: "flex", gap: 10, alignItems: "baseline", marginTop: 10, color: "var(--nb-body)" }}
-            >
-              <span style={{ color: "var(--nb-label-accent)" }}>FIG. 03</span>
-              <span>O retorno tem rosto — a comunidade em um dos encontros.</span>
-            </figcaption>
-          </figure>
+                <Icon size={13} strokeWidth={2} color="var(--nb-forest)" />
+                {c.label}
+              </span>
+            );
+          })}
         </div>
       </div>
     </section>

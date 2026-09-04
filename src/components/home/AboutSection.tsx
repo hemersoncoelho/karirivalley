@@ -3,14 +3,91 @@
 import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 import type React from "react";
-import { SectionIndex, DiamondMark } from "@/components/ui/editorial";
+import { SectionIndex } from "@/components/ui/editorial";
 
 const ACTORS = [
-  { n: "01", label: "Startups e empreendedores", role: "quem constrói produto" },
-  { n: "02", label: "Talentos e profissionais", role: "quem executa e ensina" },
-  { n: "03", label: "Empresas e investidores", role: "quem fomenta" },
-  { n: "04", label: "Universidades e poder público", role: "quem forma e articula" },
+  { icon: "🚀", label: "Startups", role: "quem constrói produto" },
+  { icon: "💻", label: "Talentos", role: "quem executa e ensina" },
+  { icon: "🏦", label: "Empresas", role: "quem fomenta" },
+  { icon: "🎓", label: "Universidades", role: "quem forma e articula" },
 ] as const;
+
+/** Mockup da aplicação — a "vitrine viva" do diretório, estilo app nativo. */
+function AppMockup() {
+  const rows = [
+    { initials: "ML", name: "Maria Lima", tag: "Startups", city: "Crato", bg: "#1E4D3A" },
+    { initials: "PC", name: "Pedro Costa", tag: "Investimento", city: "Juazeiro", bg: "#C25A2E" },
+    { initials: "AF", name: "Ana Ferreira", tag: "Educação", city: "Barbalha", bg: "#239D8C" },
+    { initials: "RB", name: "Rafael Bezerra", tag: "Dev · Remoto", city: "Lavras", bg: "#0F3B36" },
+  ];
+  return (
+    <div
+      style={{
+        background: "var(--nb-cream)",
+        border: "1px solid rgba(22,20,15,.08)",
+        borderRadius: 20,
+        boxShadow: "0 2px 4px rgba(22,20,15,.04), 0 24px 48px rgba(22,20,15,.08)",
+        overflow: "hidden",
+        width: "100%",
+      }}
+    >
+      {/* Barra da janela */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "12px 16px",
+          borderBottom: "1px solid rgba(22,20,15,.07)",
+        }}
+      >
+        <div style={{ display: "flex", gap: 6 }}>
+          {["#E0715A", "#E9B23C", "#239D8C"].map(c => (
+            <span key={c} style={{ width: 10, height: 10, borderRadius: 999, background: c, opacity: 0.85 }} />
+          ))}
+        </div>
+        <span className="kv-kicker" style={{ fontSize: 10, color: "var(--nb-body)" }}>kariri valley · diretório</span>
+        <span style={{ width: 34 }} />
+      </div>
+
+      {rows.map((m, i) => (
+        <div
+          key={m.initials}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "13px 16px",
+            borderBottom: i < rows.length - 1 ? "1px solid rgba(22,20,15,.06)" : "none",
+          }}
+        >
+          <span
+            style={{
+              width: 36, height: 36, borderRadius: 999, background: m.bg,
+              color: "var(--nb-sand)", display: "inline-flex", alignItems: "center",
+              justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0,
+            }}
+          >
+            {m.initials}
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "var(--nb-heading)" }}>{m.name}</p>
+            <p style={{ margin: 0, fontSize: 12, color: "var(--nb-body)" }}>{m.city}</p>
+          </div>
+          <span
+            className="kv-kicker"
+            style={{
+              fontSize: 10, padding: "4px 10px", borderRadius: 999,
+              background: "rgba(30,77,58,.08)", color: "var(--nb-forest)",
+            }}
+          >
+            {m.tag}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function AboutSection() {
   const { ref, inView } = useInView();
@@ -25,19 +102,19 @@ export default function AboutSection() {
     <section
       id="ecossistema"
       className="relative overflow-hidden"
-      style={{ background: "var(--nb-page-bg)", padding: "96px 0 110px" }}
+      style={{ background: "var(--nb-page-bg)", padding: "104px 0 112px" }}
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex index="01" label="O ecossistema" />
 
-        <div className="mt-12 grid grid-cols-1 items-start gap-14 lg:grid-cols-[6fr_5fr]">
+        <div className="mt-10 grid grid-cols-1 items-center gap-16 lg:grid-cols-[6fr_5fr]">
           <div>
             <h2
               className="kv-display"
               style={{
-                fontSize: "clamp(34px, 3.8vw, 56px)",
+                fontSize: "clamp(34px, 3.8vw, 54px)",
                 color: "var(--nb-heading)",
-                marginBottom: 28,
+                marginBottom: 22,
                 ...fadeUp(0.05),
               }}
             >
@@ -53,17 +130,42 @@ export default function AboutSection() {
                 fontSize: "clamp(15px, 1.4vw, 17px)",
                 lineHeight: 1.75,
                 color: "var(--nb-body)",
-                maxWidth: 460,
-                marginBottom: 34,
+                maxWidth: 470,
+                marginBottom: 36,
                 ...fadeUp(0.15),
               }}
             >
-              A Kariri Valley é um mapa vivo da inovação do Cariri, CE. Da ideia ao
-              investimento, do laboratório à política pública — os agentes se
-              encontram, colaboram e crescem juntos.
+              Um mapa vivo da inovação do Cariri, CE. Da ideia ao investimento,
+              do laboratório à política pública — os agentes se encontram,
+              colaboram e crescem juntos.
             </p>
 
-            <div style={fadeUp(0.25)}>
+            {/* Atores como chips definidos, não linhas soltas */}
+            <div className="grid grid-cols-2 gap-3" style={fadeUp(0.25)}>
+              {ACTORS.map(a => (
+                <div
+                  key={a.label}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    background: "var(--nb-cream)",
+                    border: "1px solid rgba(22,20,15,.08)",
+                    borderRadius: 14,
+                    padding: "14px 16px",
+                    boxShadow: "0 1px 2px rgba(22,20,15,.04)",
+                  }}
+                >
+                  <span style={{ fontSize: 22, lineHeight: 1 }}>{a.icon}</span>
+                  <div>
+                    <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "var(--nb-heading)" }}>{a.label}</p>
+                    <p style={{ margin: 0, fontSize: 12, color: "var(--nb-body)" }}>{a.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 32, ...fadeUp(0.3) }}>
               <Link
                 href="/sobre"
                 className="kv-kicker"
@@ -83,55 +185,9 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Figura lateral: a conversa que fundou o vale */}
-          <figure style={{ margin: 0, ...fadeUp(0.2) }}>
-            <div className="kv-photo" style={{ border: "1px solid var(--nb-line)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/media/comunidade-1.jpg"
-                alt="Talk da comunidade no estúdio Lumiere"
-                style={{ width: "100%", height: "auto", display: "block", aspectRatio: "4 / 3", objectFit: "cover" }}
-              />
-            </div>
-            <figcaption
-              className="kv-meta"
-              style={{ display: "flex", gap: 10, alignItems: "baseline", marginTop: 10, color: "var(--nb-body)" }}
-            >
-              <span style={{ color: "var(--nb-label-accent)" }}>FIG. 01</span>
-              <span>Talk no estúdio Lumiere — onde a ideia virou vale.</span>
-            </figcaption>
-          </figure>
-        </div>
-
-        {/* Lista-índice dos atores, em duas colunas — a estrutura fala */}
-        <div className="mt-16 grid grid-cols-1 gap-x-14 sm:grid-cols-2" style={fadeUp(0.25)}>
-          {ACTORS.map((a, i) => (
-            <div
-              key={a.n}
-              className="group"
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: 18,
-                padding: "22px 4px",
-                borderTop: "1px solid var(--nb-line)",
-                borderBottom: i >= ACTORS.length - 2 ? "1px solid var(--nb-line)" : "none",
-              }}
-            >
-              <span className="kv-index-num" style={{ fontSize: 13, color: "var(--nb-terracotta)" }}>
-                {a.n}
-              </span>
-              <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
-                  {a.label}
-                </p>
-                <p className="kv-meta" style={{ margin: "4px 0 0", color: "var(--nb-body)" }}>
-                  {a.role}
-                </p>
-              </div>
-              <DiamondMark outline size={8} color="var(--nb-body)" />
-            </div>
-          ))}
+          <div style={fadeUp(0.2)}>
+            <AppMockup />
+          </div>
         </div>
       </div>
     </section>

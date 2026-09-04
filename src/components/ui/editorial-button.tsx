@@ -11,22 +11,22 @@ const BASE: CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   gap: 8,
-  borderRadius: 2,
+  borderRadius: 999,
   fontFamily: "var(--font-geo)",
-  fontSize: 13,
-  fontWeight: 700,
-  letterSpacing: ".08em",
-  textTransform: "uppercase",
+  fontSize: 14,
+  fontWeight: 600,
+  letterSpacing: "0",
+  textTransform: "none",
   textDecoration: "none",
   cursor: "pointer",
   whiteSpace: "nowrap",
-  transition: "transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease",
+  transition: "transform .15s ease, box-shadow .2s ease, background .15s ease, color .15s ease",
 };
 
 const SIZES: Record<"sm" | "md" | "lg", CSSProperties> = {
-  sm: { height: 34, padding: "0 14px" },
-  md: { height: 42, padding: "0 20px" },
-  lg: { height: 50, padding: "0 26px", fontSize: 14 },
+  sm: { height: 36, padding: "0 16px", fontSize: 13 },
+  md: { height: 44, padding: "0 22px" },
+  lg: { height: 52, padding: "0 28px", fontSize: 15 },
 };
 
 type EditorialButtonProps = {
@@ -62,17 +62,20 @@ export function EditorialButton({
           background: "var(--nb-btn-primary-bg)",
           color: "var(--nb-btn-primary-fg)",
           border: "none",
+          boxShadow: "0 1px 2px rgba(22,20,15,.15)",
         }
       : variant === "invert"
         ? {
             background: "var(--nb-heading)",
             color: "var(--nb-page-bg)",
             border: "none",
+            boxShadow: "0 1px 2px rgba(22,20,15,.15)",
           }
         : {
-            background: "transparent",
+            background: "var(--nb-card-bg)",
             color: "var(--nb-btn-ghost-fg)",
-            border: "1px solid var(--nb-line)",
+            border: "1px solid rgba(22,20,15,.12)",
+            boxShadow: "0 1px 2px rgba(22,20,15,.06)",
           };
 
   const merged: CSSProperties = {

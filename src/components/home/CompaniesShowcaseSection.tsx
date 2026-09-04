@@ -7,7 +7,8 @@ import { SectionIndex, MetaDot } from "@/components/ui/editorial";
 
 /**
  * Vitrine do vale — empresas da comunidade (mockado; estrutura espelha
- * CompanyRecord: logo, nome, estágio, setor).
+ * CompanyRecord: logo, nome, estágio, setor). Cards fechados, cada empresa
+ * um "app card" com seu símbolo halftone.
  */
 const COMPANIES = [
   { name: "Lumiere", sector: "Educação criativa", stage: "Tração", logo: "/media/halftone-innovation.avif" },
@@ -28,45 +29,69 @@ export default function CompaniesShowcaseSection() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "var(--nb-page-bg)", padding: "0 0 110px" }}
+      style={{ background: "var(--nb-page-bg)", padding: "0 0 112px" }}
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
-        <SectionIndex index="08" label="Vitrine do vale" title="empresas da comunidade" />
+        <SectionIndex index="07" label="Vitrine do vale" title="empresas da comunidade" />
 
-        <div className="mt-12 grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4" style={{ background: "var(--nb-line)", border: "1px solid var(--nb-line)", ...fadeUp(0.05) }}>
-          {COMPANIES.map((c) => (
+        <h2
+          className="kv-display mt-10"
+          style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px", maxWidth: 680, ...fadeUp(0) }}
+        >
+          Empresas que{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>nasceram</em> aqui
+        </h2>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {COMPANIES.map((c, i) => (
             <div
               key={c.name}
-              style={{ background: "var(--nb-cream)", padding: "26px 24px 24px", transition: "background .2s" }}
-              className="group hover:!bg-[var(--nb-sand-2)]"
+              style={{
+                background: "var(--nb-cream)",
+                border: "1px solid rgba(22,20,15,.08)",
+                borderRadius: 20,
+                padding: "24px 22px 22px",
+                boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
+                transition: "transform .25s ease, box-shadow .25s ease",
+                ...fadeUp(0.06 + i * 0.05),
+              }}
             >
-              <div style={{ height: 92, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>
+              <div
+                style={{
+                  height: 84, borderRadius: 14, background: "var(--nb-sand-2)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  marginBottom: 16, overflow: "hidden",
+                }}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={c.logo}
                   alt={`Símbolo da ${c.name}`}
-                  style={{ maxWidth: "72%", maxHeight: "100%", objectFit: "contain", filter: "grayscale(1) contrast(1.1)" }}
+                  style={{ maxWidth: "68%", maxHeight: "80%", objectFit: "contain" }}
                 />
               </div>
-              <hr style={{ border: 0, borderTop: "1px solid var(--nb-line-soft)", margin: "0 0 16px" }} />
-              <p style={{ margin: "0 0 4px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, color: "var(--nb-heading)" }}>
+              <p style={{ margin: "0 0 3px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, color: "var(--nb-heading)" }}>
                 {c.name}
               </p>
-              <p className="kv-meta" style={{ margin: 0, color: "var(--nb-body)" }}>
+              <p style={{ margin: "0 0 14px", fontSize: 12.5, color: "var(--nb-body)" }}>
                 {c.sector}
               </p>
-              <p
-                className="kv-meta"
-                style={{ marginTop: 12, display: "inline-flex", alignItems: "center", gap: 7, color: "var(--nb-ink)", border: "1px solid var(--nb-line)", borderRadius: 999, padding: "3px 10px" }}
+              <span
+                className="kv-kicker"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 7,
+                  fontSize: 10, padding: "4px 11px", borderRadius: 999,
+                  background: "rgba(194,90,46,.09)", color: "var(--nb-terracotta)",
+                }}
               >
-                <MetaDot role="opportunity" />
+                <MetaDot role="opportunity" style={{ width: 5, height: 5 }} />
                 {c.stage}
-              </p>
+              </span>
             </div>
           ))}
         </div>
 
-        <div className="mt-8" style={fadeUp(0.2)}>
+        <div className="mt-8" style={fadeUp(0.25)}>
           <Link
             href="/como-participar"
             className="kv-kicker"

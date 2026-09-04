@@ -194,7 +194,14 @@ export default function PixelField() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 1,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
     />
   );
 }

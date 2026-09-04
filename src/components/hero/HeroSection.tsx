@@ -37,11 +37,11 @@ export default function HeroSection() {
       className="relative flex min-h-screen flex-col overflow-hidden"
       style={{ background: dark ? "var(--kv-dark)" : "var(--nb-page-bg)" }}
     >
-      {/* ── Vídeo da marca como textura de fundo — lavado, em loop ── */}
+      {/* ── Vídeo da marca como textura de fundo — lavado e desfocado, em loop ── */}
       <div
         aria-hidden="true"
         className="absolute inset-0"
-        style={{ zIndex: 1, pointerEvents: "none" }}
+        style={{ zIndex: 0, pointerEvents: "none", overflow: "hidden" }}
       >
         <video
           ref={videoRef}
@@ -56,7 +56,8 @@ export default function HeroSection() {
             objectFit: "cover",
             display: "block",
             opacity: dark ? 0.35 : 0.5,
-            filter: dark ? "brightness(.8)" : "contrast(1.02) brightness(1.06)",
+            filter: dark ? "brightness(.8) blur(18px)" : "contrast(1.02) brightness(1.06) blur(18px)",
+            transform: "scale(1.08)", // esconde as bordas escurecidas do blur
             mixBlendMode: dark ? "screen" : "multiply",
           }}
         />

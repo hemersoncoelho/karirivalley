@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Ticker } from "@/components/ui/editorial";
 import { EditorialButton } from "@/components/ui/editorial-button";
+import PixelField from "./PixelField";
+import { useNbTheme } from "@/hooks/useNbTheme";
 
 const COMPANIES_TICKER = [
   "Lumiere", "Inove Base", "Casa do Código CE", "Vale Tech", "Sertão Labs",
@@ -10,132 +12,87 @@ const COMPANIES_TICKER = [
 ];
 
 /**
- * Hero em camadas: o vídeo da marca roda como fundo escurecido com o
- * manifesto já centralizado sobre ele; ao terminar, dissolve para a
- * fotografia da comunidade no mesmo enquadramento. prefers-reduced-motion
- * pula direto para a foto.
+ * Hero-capa: campo de pixels interativo (halftone vivo) no lugar de foto/vídeo
+ * de fundo. O vídeo da marca sobrevive como "selo" discreto em moldura no
+ * canto da composição.
  */
 export default function HeroSection() {
-  const [phase, setPhase] = useState<"video" | "photo">("video");
+  const { theme } = useNbTheme();
+  const dark = theme === "dark";
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPhase("photo");
-    const t = setTimeout(() => setReady(true), 150);
+    const t = setTimeout(() => setReady(true), 120);
     return () => clearTimeout(t);
   }, []);
+
+  const fg = dark ? "var(--nb-sand)" : "var(--nb-ink)";
+  const body = dark ? "rgba(244,238,225,.72)" : "rgba(22,20,15,.62)";
+  const hair = dark ? "rgba(244,238,225,.35)" : "rgba(22,20,15,.85)";
 
   return (
     <section
       id="hero"
       className="relative flex min-h-screen flex-col overflow-hidden"
-      style={{ background: "var(--kv-dark)" }}
+      style={{ background: dark ? "var(--kv-dark)" : "var(--nb-page-bg)" }}
     >
-      {/* ── Camada de fundo: vídeo → foto (mesmo enquadramento, crossfade) ── */}
-      <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        {/* Foto: estado final, sempre por baixo */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/media/comunidade-2.jpg"
-          alt=""
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: phase === "photo" ? 1 : 0,
-            transform: phase === "photo" ? "scale(1)" : "scale(1.06)",
-            transition: "opacity 1.8s ease, transform 2.6s cubic-bezier(.16,1,.3,1)",
-          }}
-        />
-        {/* Vídeo: some suavemente no fim, revelando a foto */}
+      <PixelField />
+
+      {/* ── Selo de vídeo em moldura, canto direito ── */}
+      <div
+        aria-hidden="true"
+        className="absolute hidden lg:block"
+        style={{
+          right: "4.5%",
+          bottom: "18%",
+          zIndex: 5,
+          border: `1px solid ${hair}`,
+          padding: 5,
+          background: dark ? "rgba(6,13,8,.5)" : "rgba(251,248,239,.65)",
+          backdropFilter: "blur(2px)",
+        }}
+      >
         <video
+          ref={videoRef}
           src="/media/logo-anim.mp4"
           muted
           playsInline
           autoPlay
-          onEnded={() => setPhase("photo")}
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: phase === "video" ? 1 : 0,
-            transition: "opacity 1.8s ease .15s",
-            display: phase === "video" ? "block" : "none",
-          }}
-        />
-        {/* Escurecimento para leitura — denso nas bordas, respira no centro */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to bottom, rgba(6,13,8,.8), rgba(6,13,8,.45) 45%, rgba(6,13,8,.72))",
-            opacity: phase === "video" ? 1 : 0.9,
-            transition: "opacity 1.8s ease",
-          }}
-        />
-        {/* Vignette radial atrás do manifesto — âncora de contraste do texto */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(ellipse 62% 58% at 50% 46%, rgba(6,13,8,.62), transparent 72%)",
-          }}
-        />
-        {/* Trama halftone — a página imprime sobre a mídia */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(rgba(6,13,8,.9) 1px, transparent 1.15px)",
-            backgroundSize: "5px 5px",
-            opacity: phase === "video" ? 0.55 : 0.4,
-            transition: "opacity 1.8s ease",
-          }}
+          loop
+          style={{ width: 178, height: "auto", display: "block", filter: dark ? "none" : "contrast(1.04)" }}
         />
       </div>
 
-      {/* ── Manifesto centralizado sobre a mídia, visível desde o vídeo ── */}
+      {/* ── Manifesto central ── */}
       <div
-        className="relative flex flex-1 flex-col items-center justify-center px-6 pb-16 pt-36 text-center"
+        className="relative flex flex-1 flex-col items-center justify-center px-6 pb-14 pt-32 text-center"
         style={{
           zIndex: 10,
           opacity: ready ? 1 : 0,
           transform: ready ? "translateY(0)" : "translateY(20px)",
-          transition: "opacity 1.1s ease, transform 1.3s cubic-bezier(.16,1,.3,1)",
+          transition: "opacity .9s ease, transform 1.1s cubic-bezier(.16,1,.3,1)",
         }}
       >
-        <p className="kv-kicker" style={{ color: "var(--nb-mustard)" }}>
+        <p className="kv-kicker" style={{ color: dark ? "var(--nb-mustard)" : "#8A5C13" }}>
           ◆ Kariri — Ceará — Brasil · Ed. contínua
         </p>
 
         <h1
           className="kv-display mt-6"
-          style={{
-            fontSize: "clamp(46px, 6.4vw, 100px)",
-            color: "var(--nb-sand)",
-            maxWidth: 980,
-          }}
+          style={{ fontSize: "clamp(46px, 6.4vw, 100px)", color: fg, maxWidth: 980 }}
         >
           O vale que{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400 }}>
-            constrói
-          </em>{" "}
-          o futuro do sertão.
+          <em style={{ fontStyle: "italic", fontWeight: 400 }}>constrói</em> o
+          futuro do sertão.
         </h1>
 
         <div
           className="mt-9 flex max-w-[560px] items-start gap-4 text-left"
-          style={{ borderTop: "1px solid rgba(244,238,225,.35)", paddingTop: 16 }}
+          style={{ borderTop: `1px solid ${hair}`, paddingTop: 16 }}
         >
-          <span className="kv-index-num" style={{ fontSize: 13, color: "var(--nb-mustard)" }}>01</span>
-          <p style={{ fontSize: "clamp(15px, 1.4vw, 16px)", lineHeight: 1.7, color: "rgba(244,238,225,.82)" }}>
+          <span className="kv-index-num" style={{ fontSize: 13, color: dark ? "var(--nb-mustard)" : "var(--nb-terracotta)" }}>01</span>
+          <p style={{ fontSize: "clamp(15px, 1.4vw, 16px)", lineHeight: 1.7, color: body }}>
             Um mapa vivo de quem faz inovação no Cariri — e uma publicação
             viva do que está sendo construído aqui.
           </p>
@@ -152,12 +109,18 @@ export default function HeroSection() {
       </div>
 
       {/* ── Rodapé do hero: ticker de empresas do vale ── */}
-      <div style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(244,238,225,.3)" }}>
-        <div className="py-3" style={{ background: "rgba(6,13,8,.55)", backdropFilter: "blur(6px)" }}>
+      <div style={{ position: "relative", zIndex: 10, borderTop: `1px solid ${hair}` }}>
+        <div
+          className="py-3"
+          style={{
+            background: dark ? "rgba(6,13,8,.6)" : "rgba(251,248,239,.72)",
+            backdropFilter: "blur(6px)",
+          }}
+        >
           <Ticker
             items={COMPANIES_TICKER}
-            itemStyle={{ color: "var(--nb-sand)" }}
-            style={{ ["--nb-heading" as string]: "var(--nb-sand)" }}
+            itemStyle={{ color: dark ? "var(--nb-sand)" : "var(--nb-ink)" }}
+            style={{ ["--nb-heading" as string]: dark ? "var(--nb-sand)" : "var(--nb-ink)" }}
           />
         </div>
       </div>

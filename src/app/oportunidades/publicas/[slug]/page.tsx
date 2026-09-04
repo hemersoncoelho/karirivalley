@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
 
 import { fetchPublicOpportunityBySlug } from "@/lib/members/opportunities";
 import { LinkifiedText } from "@/components/ui/linkified-text";
 import { ShareButton } from "@/components/ui/share-button";
+import { MetaDot } from "@/components/ui/editorial";
 
 interface OpportunityDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -24,9 +24,10 @@ const TYPE_LABELS: Record<string, string> = {
   evento_parceiro: "Evento parceiro",
 };
 
-function formatDeadline(value: string | null): string | null {
-  if (!value) return null;
-  return `Prazo: ${new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value))}`;
+function formatDeadline(value: string): string {
+  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(
+    new Date(value),
+  );
 }
 
 export async function generateMetadata({ params }: OpportunityDetailPageProps): Promise<Metadata> {
@@ -60,55 +61,35 @@ export default async function OpportunityDetailPage({ params }: OpportunityDetai
   if (!opp) notFound();
 
   return (
-    <main className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)" }}>
-      <div
-        className="kv-aurora absolute pointer-events-none"
-        style={{
-          width: "38vw", height: "38vw", maxWidth: 520, maxHeight: 520,
-          top: "-12%", left: "-6%",
-          background: "radial-gradient(circle, rgba(232,178,60,.18) 0%, rgba(232,178,60,.04) 55%, transparent 72%)",
-          animationDuration: "28s", animationDelay: "-15s",
-        }}
-      />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
-
-      <section className="relative max-w-[720px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, padding: "140px 24px 120px" }}>
+    <main style={{ background: "var(--nb-page-bg)" }}>
+      <article className="mx-auto max-w-[820px] px-6 lg:px-16" style={{ paddingTop: 130, paddingBottom: 110 }}>
         <Link
           href="/oportunidades/publicas"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold mb-8"
-          style={{ color: "var(--nb-label-accent)" }}
-        >
-          <ArrowLeft size={14} strokeWidth={2} />
-          Voltar para oportunidades
-        </Link>
-
-        <div
-          className="p-6 sm:p-8"
+          className="kv-kicker"
           style={{
-            background: "var(--nb-card-bg)",
-            backdropFilter: "var(--nb-card-blur)",
-            WebkitBackdropFilter: "var(--nb-card-blur)",
-            border: "var(--nb-card-border)",
-            borderRadius: 14,
-            boxShadow: "var(--nb-card-shadow)",
+            color: "var(--nb-body)",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 30,
           }}
         >
-          {opp.banner_url && (
-            <div style={{ width: "100%", maxHeight: 560, marginBottom: 24, borderRadius: 14, overflow: "hidden", background: "var(--nb-cream)" }}>
-              <Image
-                src={opp.banner_url}
-                alt={opp.title}
-                width={0}
-                height={0}
-                sizes="(max-width: 640px) 100vw, 720px"
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-            </div>
-          )}
+          <span aria-hidden="true" style={{ fontSize: 9 }}>◂</span>
+          Oportunidades
+        </Link>
 
-          <div className="flex items-start justify-between gap-3">
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--nb-terracotta)", marginBottom: 8 }}>
+        {/* Cabeçalho de matéria */}
+        <header style={{ borderTop: "1px solid var(--nb-line)", paddingTop: 22 }}>
+          <div className="flex items-start justify-between gap-4">
+            <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-terracotta)", fontWeight: 700 }}>
+              <MetaDot role="opportunity" />
               {TYPE_LABELS[opp.opportunity_type] ?? opp.opportunity_type}
+              {opp.deadline && (
+                <span style={{ color: "var(--nb-body)", fontWeight: 400 }}>
+                  · até {formatDeadline(opp.deadline)}
+                </span>
+              )}
             </p>
             <ShareButton
               title={opp.title}
@@ -118,19 +99,33 @@ export default async function OpportunityDetailPage({ params }: OpportunityDetai
             />
           </div>
 
-          <h1 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: "clamp(24px, 3vw, 32px)", fontWeight: 700, color: "var(--nb-heading)", marginBottom: 14 }}>
+          <h1
+            className="kv-display"
+            style={{ fontSize: "clamp(34px, 4.4vw, 56px)", color: "var(--nb-heading)", margin: "18px 0 0" }}
+          >
             {opp.title}
           </h1>
+        </header>
 
+        {opp.banner_url && (
+          <div className="kv-photo" style={{ border: "1px solid var(--nb-line)", marginTop: 28 }}>
+            <Image
+              src={opp.banner_url}
+              alt={opp.title}
+              width={0}
+              height={0}
+              sizes="(max-width: 640px) 100vw, 760px"
+              style={{ width: "100%", height: "auto", maxHeight: 520, objectFit: "cover", display: "block" }}
+            />
+          </div>
+        )}
+
+        <div style={{ borderTop: "1px solid var(--nb-line)", marginTop: 28, paddingTop: 24 }}>
           {opp.description && (
             <LinkifiedText
               text={opp.description}
-              style={{ fontSize: 15, lineHeight: 1.75, color: "var(--nb-body)", marginBottom: 16 }}
+              style={{ fontSize: "clamp(15px, 1.5vw, 17px)", lineHeight: 1.8, color: "var(--nb-body)" }}
             />
-          )}
-
-          {opp.deadline && (
-            <p style={{ fontSize: 14, color: "var(--nb-body)", marginBottom: 8 }}>{formatDeadline(opp.deadline)}</p>
           )}
 
           {opp.external_url && (
@@ -138,15 +133,22 @@ export default async function OpportunityDetailPage({ params }: OpportunityDetai
               href={opp.external_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: "var(--nb-label-accent)" }}
+              className="kv-kicker"
+              style={{
+                marginTop: 26,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                color: "var(--nb-ink)",
+                textDecoration: "none",
+              }}
             >
-              Saiba mais
-              <ExternalLink size={13} strokeWidth={2} />
+              <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Saiba mais</span>
+              <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
             </a>
           )}
         </div>
-      </section>
+      </article>
     </main>
   );
 }

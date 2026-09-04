@@ -10,7 +10,10 @@ import { fetchPublicOpportunities, type OpportunityRecord } from "@/lib/members/
 /**
  * A LP deve renderizar mesmo sem Supabase configurado (ou com o banco
  * inacessível) — conteúdo dinâmico vira lista vazia, nunca um 500.
+ * Regenerada a cada 5 minutos para manter agenda/oportunidades frescas.
  */
+export const revalidate = 300;
+
 async function safe<T>(fetcher: () => Promise<T[]>): Promise<T[]> {
   try {
     return await fetcher();

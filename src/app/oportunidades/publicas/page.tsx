@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SearchX, Briefcase, ExternalLink } from "lucide-react";
+import { SearchX } from "lucide-react";
 
 import { fetchPublicOpportunities } from "@/lib/members/opportunities";
 import { LinkifiedText } from "@/components/ui/linkified-text";
 import { ShareButton } from "@/components/ui/share-button";
+import { SectionIndex, MetaDot } from "@/components/ui/editorial";
 
 export const metadata: Metadata = {
   title: "Oportunidades — Kariri Valley",
@@ -25,131 +26,75 @@ const TYPE_LABELS: Record<string, string> = {
   evento_parceiro: "Evento parceiro",
 };
 
-function formatDeadline(value: string | null): string | null {
-  if (!value) return null;
-  return `Prazo: ${new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(value))}`;
+function formatDeadline(value: string): string {
+  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(
+    new Date(value),
+  );
 }
 
 export default async function PublicOportunidadesPage() {
   const opportunities = await fetchPublicOpportunities();
 
   return (
-    <main className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)" }}>
-      <div
-        className="kv-aurora absolute pointer-events-none"
-        style={{
-          width: "38vw", height: "38vw", maxWidth: 520, maxHeight: 520,
-          top: "-12%", left: "-6%",
-          background: "radial-gradient(circle, rgba(232,178,60,.18) 0%, rgba(232,178,60,.04) 55%, transparent 72%)",
-          animationDuration: "28s", animationDelay: "-15s",
-        }}
-      />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
-
-      <section className="relative max-w-[820px] mx-auto px-6 lg:px-16 text-center" style={{ zIndex: 10, padding: "160px 24px 56px" }}>
-        <span
-          className="inline-flex items-center gap-2 px-[18px] py-[7px] text-[11px] font-bold tracking-[2px] uppercase mb-7"
-          style={{ background: "var(--nb-mustard)", border: "2px solid var(--nb-ink)", borderRadius: 999, color: "var(--nb-ink)", fontFamily: "var(--font-geo)" }}
-        >
-          <Briefcase size={12} strokeWidth={2.2} />
-          Oportunidades
-        </span>
-
+    <main style={{ background: "var(--nb-page-bg)" }}>
+      {/* Header editorial */}
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 150 }}>
+        <SectionIndex index="—" label="Oportunidades" accentColor="#8A5C13" />
         <h1
-          style={{
-            fontFamily: "var(--font-fraunces), Georgia, serif",
-            fontSize: "clamp(32px, 4.4vw, 52px)",
-            fontWeight: 700,
-            lineHeight: 1.14,
-            letterSpacing: "-1px",
-            color: "var(--nb-heading)",
-            marginBottom: 16,
-          }}
+          className="kv-display"
+          style={{ fontSize: "clamp(42px, 5.6vw, 80px)", color: "var(--nb-heading)", margin: "28px 0 0" }}
         >
-          Oportunidades da{" "}
-          <span style={{ color: "var(--nb-terracotta)", fontStyle: "italic" }}>Kariri Valley</span>
+          O que está{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>aberto</em> agora
         </h1>
-
-        <p
-          className="mx-auto"
-          style={{
-            fontSize: "clamp(15px, 1.6vw, 18px)",
-            lineHeight: 1.7,
-            color: "var(--nb-body)",
-            maxWidth: 560,
-          }}
+        <div
+          className="flex flex-wrap items-end justify-between gap-4"
+          style={{ borderTop: "1px solid var(--nb-line)", marginTop: 32, paddingTop: 20 }}
         >
-          Editais, vagas, aceleração, mentoria e outras chamadas abertas ao ecossistema
-          de inovação do Cariri.
-        </p>
+          <p style={{ fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.7, color: "var(--nb-body)", maxWidth: 560, margin: 0 }}>
+            Editais, vagas, aceleração, mentoria e outras chamadas abertas ao ecossistema
+            de inovação do Cariri.
+          </p>
+          <p className="kv-meta" style={{ color: "var(--nb-body)", margin: 0 }}>
+            {opportunities.length} {opportunities.length === 1 ? "chamada ativa" : "chamadas ativas"}
+          </p>
+        </div>
       </section>
 
-      <section className="relative max-w-[900px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, paddingBottom: 120 }}>
+      {/* Lista-índice com banner */}
+      <section className="mx-auto max-w-[900px] px-6 lg:px-16" style={{ paddingTop: 48, paddingBottom: 120 }}>
         {opportunities.length === 0 ? (
-          <div
-            className="text-center"
-            style={{
-              background: "var(--nb-cream)",
-              border: "3px dashed var(--nb-ink)",
-              borderRadius: 18,
-              padding: "64px 32px",
-            }}
-          >
-            <div
-              className="flex items-center justify-center mx-auto"
-              style={{
-                width: 72, height: 72,
-                background: "var(--nb-mustard)",
-                border: "2px solid var(--nb-ink)",
-                borderRadius: 16,
-                marginBottom: 24,
-              }}
-            >
-              <SearchX size={28} strokeWidth={2} color="var(--nb-ink)" />
-            </div>
-            <h2 style={{
-              fontFamily: "var(--font-fraunces), Georgia, serif",
-              fontSize: "clamp(18px, 2vw, 22px)",
-              fontWeight: 700, color: "var(--nb-heading)", marginBottom: 12,
-            }}>
-              Nenhuma oportunidade publicada no momento
+          <div className="text-center" style={{ border: "1px dashed var(--nb-line)", padding: "64px 32px" }}>
+            <SearchX size={26} strokeWidth={1.8} color="var(--nb-body)" style={{ marginBottom: 18 }} />
+            <h2 className="kv-display" style={{ fontSize: 26, color: "var(--nb-heading)", marginBottom: 10 }}>
+              Nenhuma chamada aberta no momento
             </h2>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--nb-body)", maxWidth: 420, margin: "0 auto" }}>
+            <p className="kv-meta" style={{ color: "var(--nb-body)", maxWidth: 420, margin: "0 auto", textTransform: "none", letterSpacing: ".04em" }}>
               Em breve, editais, vagas, programas e mentorias estarão disponíveis aqui.
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {opportunities.map((opp) => (
-              <div
+          <div className="flex flex-col">
+            {opportunities.map((opp, i) => (
+              <article
                 key={opp.id}
                 id={`oportunidade-${opp.id}`}
-                className="p-6"
                 style={{
-                  background: "var(--nb-card-bg)",
-                  backdropFilter: "var(--nb-card-blur)",
-                  WebkitBackdropFilter: "var(--nb-card-blur)",
-                  border: "var(--nb-card-border)",
-                  borderRadius: 14,
-                  boxShadow: "var(--nb-card-shadow)",
+                  borderTop: "1px solid var(--nb-line)",
+                  borderBottom: i === opportunities.length - 1 ? "1px solid var(--nb-line)" : "none",
+                  padding: "34px 0",
                   scrollMarginTop: 100,
                 }}
               >
-                {opp.banner_url && (
-                  <div style={{ width: "100%", maxHeight: 480, marginBottom: 18, borderRadius: 14, overflow: "hidden", background: "var(--nb-cream)" }}>
-                    <Image
-                      src={opp.banner_url}
-                      alt={opp.title}
-                      width={0}
-                      height={0}
-                      sizes="(max-width: 640px) 100vw, 700px"
-                      style={{ width: "100%", height: "auto", display: "block" }}
-                    />
-                  </div>
-                )}
-                <div className="flex items-start justify-between gap-3">
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-terracotta)", marginBottom: 8 }}>
+                <div className="flex items-start justify-between gap-4">
+                  <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-terracotta)", fontWeight: 700 }}>
+                    <span className="kv-index-num">{String(i + 1).padStart(2, "0")}</span>
                     {TYPE_LABELS[opp.opportunity_type] ?? opp.opportunity_type}
+                    {opp.deadline && (
+                      <span style={{ color: "var(--nb-body)", fontWeight: 400 }}>
+                        · até {formatDeadline(opp.deadline)}
+                      </span>
+                    )}
                   </p>
                   <ShareButton
                     title={opp.title}
@@ -158,33 +103,62 @@ export default async function PublicOportunidadesPage() {
                     style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-label-accent)", flexShrink: 0 }}
                   />
                 </div>
-                <h3 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 8 }}>
+
+                {opp.banner_url && (
+                  <div className="kv-photo" style={{ border: "1px solid var(--nb-line-soft)", marginTop: 18 }}>
+                    <Image
+                      src={opp.banner_url}
+                      alt={opp.title}
+                      width={0}
+                      height={0}
+                      sizes="(max-width: 640px) 100vw, 820px"
+                      style={{ width: "100%", height: "auto", maxHeight: 440, objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                )}
+
+                <h2
+                  style={{
+                    fontFamily: "var(--font-fraunces), Georgia, serif",
+                    fontSize: "clamp(24px, 2.6vw, 32px)",
+                    fontWeight: 400,
+                    color: "var(--nb-heading)",
+                    margin: "16px 0 10px",
+                    lineHeight: 1.2,
+                  }}
+                >
                   <Link href={`/oportunidades/publicas/${opp.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
                     {opp.title}
                   </Link>
-                </h3>
+                </h2>
+
                 {opp.description && (
                   <LinkifiedText
                     text={opp.description}
-                    style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", marginBottom: 10 }}
+                    style={{ fontSize: 15, lineHeight: 1.7, color: "var(--nb-body)" }}
                   />
                 )}
-                {opp.deadline && (
-                  <p style={{ fontSize: 13, color: "var(--nb-body)" }}>{formatDeadline(opp.deadline)}</p>
-                )}
+
                 {opp.external_url && (
                   <a
                     href={opp.external_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold"
-                    style={{ color: "var(--nb-label-accent)" }}
+                    className="kv-kicker"
+                    style={{
+                      marginTop: 14,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      color: "var(--nb-ink)",
+                      textDecoration: "none",
+                    }}
                   >
-                    Saiba mais
-                    <ExternalLink size={13} strokeWidth={2} />
+                    <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Saiba mais</span>
+                    <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
                   </a>
                 )}
-              </div>
+              </article>
             ))}
           </div>
         )}

@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, MapPin, ExternalLink } from "lucide-react";
 
 import { fetchPublicEventBySlug } from "@/lib/members/events";
 import { LinkifiedText } from "@/components/ui/linkified-text";
 import { ShareButton } from "@/components/ui/share-button";
+import { MetaDot } from "@/components/ui/editorial";
 
 interface EventDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -53,55 +53,29 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   if (!event) notFound();
 
   return (
-    <main className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)" }}>
-      <div
-        className="kv-aurora absolute pointer-events-none"
-        style={{
-          width: "40vw", height: "40vw", maxWidth: 560, maxHeight: 560,
-          top: "-14%", right: "-6%",
-          background: "radial-gradient(circle, rgba(35,157,140,.16) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
-          animationDuration: "26s", animationDelay: "-10s",
-        }}
-      />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
-
-      <section className="relative max-w-[720px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, padding: "140px 24px 120px" }}>
+    <main style={{ background: "var(--nb-page-bg)" }}>
+      <article className="mx-auto max-w-[820px] px-6 lg:px-16" style={{ paddingTop: 130, paddingBottom: 110 }}>
         <Link
           href="/agenda"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold mb-8"
-          style={{ color: "var(--nb-label-accent)" }}
-        >
-          <ArrowLeft size={14} strokeWidth={2} />
-          Voltar para a agenda
-        </Link>
-
-        <div
-          className="p-6 sm:p-8"
+          className="kv-kicker"
           style={{
-            background: "var(--nb-card-bg)",
-            backdropFilter: "var(--nb-card-blur)",
-            WebkitBackdropFilter: "var(--nb-card-blur)",
-            border: "var(--nb-card-border)",
-            borderRadius: 14,
-            boxShadow: "var(--nb-card-shadow)",
+            color: "var(--nb-body)",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 30,
           }}
         >
-          {event.banner_url && (
-            <div style={{ width: "100%", maxHeight: 560, marginBottom: 24, borderRadius: 14, overflow: "hidden", background: "var(--nb-cream)" }}>
-              <Image
-                src={event.banner_url}
-                alt={event.title}
-                width={0}
-                height={0}
-                sizes="(max-width: 640px) 100vw, 720px"
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-            </div>
-          )}
+          <span aria-hidden="true" style={{ fontSize: 9 }}>◂</span>
+          Agenda
+        </Link>
 
-          <div className="flex items-start justify-between gap-3">
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--nb-turquoise)", textTransform: "capitalize", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-              <Calendar size={13} strokeWidth={2} />
+        {/* Cabeçalho de matéria */}
+        <header style={{ borderTop: "1px solid var(--nb-line)", paddingTop: 22 }}>
+          <div className="flex items-start justify-between gap-4">
+            <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-turquoise)", fontWeight: 700 }}>
+              <MetaDot role="event" />
               {formatEventDate(event.starts_at)}
             </p>
             <ShareButton
@@ -112,22 +86,47 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
             />
           </div>
 
-          <h1 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: "clamp(24px, 3vw, 32px)", fontWeight: 700, color: "var(--nb-heading)", marginBottom: 14 }}>
+          <h1
+            className="kv-display"
+            style={{ fontSize: "clamp(34px, 4.4vw, 56px)", color: "var(--nb-heading)", margin: "18px 0 0" }}
+          >
             {event.title}
           </h1>
 
+          {event.location && (
+            <p
+              className="kv-meta"
+              style={{
+                margin: "18px 0 0",
+                color: "var(--nb-body)",
+                borderTop: "1px solid var(--nb-line-soft)",
+                paddingTop: 14,
+              }}
+            >
+              ◆ Local — {event.location}
+            </p>
+          )}
+        </header>
+
+        {event.banner_url && (
+          <div className="kv-photo" style={{ border: "1px solid var(--nb-line)", marginTop: 28 }}>
+            <Image
+              src={event.banner_url}
+              alt={event.title}
+              width={0}
+              height={0}
+              sizes="(max-width: 640px) 100vw, 760px"
+              style={{ width: "100%", height: "auto", maxHeight: 520, objectFit: "cover", display: "block" }}
+            />
+          </div>
+        )}
+
+        <div style={{ borderTop: "1px solid var(--nb-line)", marginTop: 28, paddingTop: 24 }}>
           {event.description && (
             <LinkifiedText
               text={event.description}
-              style={{ fontSize: 15, lineHeight: 1.75, color: "var(--nb-body)", marginBottom: 16 }}
+              style={{ fontSize: "clamp(15px, 1.5vw, 17px)", lineHeight: 1.8, color: "var(--nb-body)" }}
             />
-          )}
-
-          {event.location && (
-            <p style={{ fontSize: 14, color: "var(--nb-body)", display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-              <MapPin size={14} strokeWidth={2} />
-              {event.location}
-            </p>
           )}
 
           {event.meeting_url && (
@@ -135,15 +134,22 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
               href={event.meeting_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: "var(--nb-label-accent)" }}
+              className="kv-kicker"
+              style={{
+                marginTop: 26,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                color: "var(--nb-ink)",
+                textDecoration: "none",
+              }}
             >
-              Mais informações
-              <ExternalLink size={13} strokeWidth={2} />
+              <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Mais informações</span>
+              <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
             </a>
           )}
         </div>
-      </section>
+      </article>
     </main>
   );
 }

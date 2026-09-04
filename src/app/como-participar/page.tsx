@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { SectionIndex } from "@/components/ui/editorial";
+import { EditorialButton } from "@/components/ui/editorial-button";
 
 import { STEP_TITLES } from "@/lib/onboarding/options";
 
@@ -21,128 +23,72 @@ const STEP_DESCRIPTIONS: string[] = [
 
 export default function ComoParticiparPage() {
   return (
-    <main className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)" }}>
-      <div
-        className="kv-aurora absolute pointer-events-none"
-        style={{
-          width: "50vw", height: "50vw", maxWidth: 700, maxHeight: 700,
-          top: "-16%", right: "-10%",
-          background: "radial-gradient(circle, rgba(232,178,60,.18) 0%, rgba(232,178,60,.04) 55%, transparent 72%)",
-          animationDuration: "26s", animationDelay: "-8s",
-        }}
-      />
-      <div
-        className="kv-aurora absolute pointer-events-none"
-        style={{
-          width: "38vw", height: "38vw", maxWidth: 520, maxHeight: 520,
-          bottom: "0%", left: "-8%",
-          background: "radial-gradient(circle, rgba(35,157,140,.18) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
-          animationDuration: "22s", animationDelay: "-14s", animationDirection: "reverse",
-        }}
-      />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
-
-      {/* Header */}
-      <section className="relative max-w-[900px] mx-auto px-6 lg:px-16 text-center" style={{ zIndex: 10, padding: "168px 24px 72px" }}>
-        <span
-          className="inline-flex items-center gap-2 px-[18px] py-[7px] text-[11px] font-bold tracking-[2px] uppercase mb-7"
-          style={{ background: "var(--nb-mustard)", border: "2px solid var(--nb-ink)", borderRadius: 999, color: "var(--nb-ink)", fontFamily: "var(--font-geo)" }}
-        >
-          Como Participar
-        </span>
-
+    <main style={{ background: "var(--nb-page-bg)" }}>
+      {/* Header editorial */}
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 150 }}>
+        <SectionIndex index="—" label="Como participar" />
         <h1
-          style={{
-            fontFamily: "var(--font-fraunces), Georgia, serif",
-            fontSize: "clamp(32px, 4.4vw, 56px)",
-            fontWeight: 700,
-            lineHeight: 1.14,
-            letterSpacing: "-1px",
-            color: "var(--nb-heading)",
-            marginBottom: 20,
-          }}
+          className="kv-display"
+          style={{ fontSize: "clamp(42px, 5.6vw, 80px)", color: "var(--nb-heading)", margin: "28px 0 0", maxWidth: 920 }}
         >
-          Como você entra para a{" "}
-          <span style={{ color: "var(--nb-turquoise)", fontStyle: "italic" }}>Kariri Valley</span>
+          Sete etapas até o seu{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>lugar</em> no vale
         </h1>
-
-        <p
-          className="mx-auto"
-          style={{
-            fontSize: "clamp(15px, 1.6vw, 18px)",
-            lineHeight: 1.7,
-            color: "var(--nb-body)",
-            maxWidth: 560,
-            marginBottom: 36,
-          }}
+        <div
+          className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_4fr]"
+          style={{ borderTop: "1px solid var(--nb-line)", marginTop: 32, paddingTop: 24 }}
         >
-          O cadastro é feito em 7 etapas rápidas. Depois de enviado, sua solicitação passa
-          por uma análise manual da nossa equipe — assim mantemos a comunidade coesa e
-          confiável para todo mundo.
-        </p>
-
-        <Link
-          href="/cadastro"
-          className="kv-press inline-flex items-center gap-2 px-9 py-4 text-base font-bold"
-          style={{ background: "var(--nb-btn-primary-bg)", color: "var(--nb-btn-primary-fg)", border: "var(--nb-btn-primary-border)", borderRadius: 10, boxShadow: "var(--shadow-nb)", textDecoration: "none", fontFamily: "var(--font-geo)" }}
-        >
-          Solicitar acesso
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </Link>
+          <p style={{ fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.75, color: "var(--nb-body)", maxWidth: 580, margin: 0 }}>
+            O cadastro é rápido. Depois de enviado, sua solicitação passa por análise
+            manual da equipe — assim a comunidade segue coesa e confiável.
+          </p>
+          <div className="flex flex-wrap items-start gap-3 lg:justify-end">
+            <EditorialButton href="/cadastro">Solicitar acesso</EditorialButton>
+          </div>
+        </div>
       </section>
 
-      {/* Processo de aprovação — RN-001 */}
-      <section className="relative max-w-[1100px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, paddingBottom: 96 }}>
-        <div className="grid sm:grid-cols-3 gap-4">
+      {/* Processo de aprovação */}
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 90 }}>
+        <SectionIndex index="01" label="O processo" />
+        <div className="mt-12 grid gap-10 sm:grid-cols-3">
           {[
             { n: "01", t: "Você se cadastra", d: "Preenche as 7 etapas com seus dados e preferências." },
             { n: "02", t: "Nossa equipe analisa", d: "Toda solicitação passa por aprovação manual antes de virar acesso." },
             { n: "03", t: "Você recebe a resposta", d: "Um e-mail avisa se foi aprovada — com o link para acessar a plataforma." },
           ].map((item) => (
-            <div key={item.n} className="p-8" style={{ background: "var(--nb-card-bg)", backdropFilter: "var(--nb-card-blur)", WebkitBackdropFilter: "var(--nb-card-blur)", border: "var(--nb-card-border)", borderRadius: 14, boxShadow: "var(--nb-card-shadow)" }}>
-              <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "1.5px", color: "var(--nb-label-accent)" }}>{item.n}</span>
-              <h3 style={{ fontSize: 17, fontWeight: 700, color: "var(--nb-heading)", margin: "10px 0 8px" }}>{item.t}</h3>
+            <div key={item.n} style={{ borderTop: "1px solid var(--nb-line)", paddingTop: 18 }}>
+              <span className="kv-index-num" style={{ fontSize: 13, color: "var(--nb-turquoise)" }}>{item.n}</span>
+              <h3 style={{ fontSize: 19, fontFamily: "var(--font-fraunces), Georgia, serif", color: "var(--nb-heading)", margin: "12px 0 8px" }}>{item.t}</h3>
               <p style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", margin: 0 }}>{item.d}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* O que vamos pedir em cada etapa */}
-      <section className="relative max-w-[900px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, paddingBottom: 120 }}>
-        <div className="flex items-center gap-3 mb-10 justify-center">
-          <div style={{ width: 32, height: 2, background: "var(--nb-turquoise)" }} />
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--nb-turquoise)", fontFamily: "var(--font-geo)" }}>
-            O que vamos te pedir
-          </span>
-          <div style={{ width: 32, height: 2, background: "var(--nb-turquoise)" }} />
-        </div>
-
-        <div>
+      {/* O que pedimos em cada etapa — lista-índice */}
+      <section className="mx-auto max-w-[900px] px-6 lg:px-16" style={{ paddingTop: 96, paddingBottom: 120 }}>
+        <SectionIndex index="02" label="O que vamos te pedir" />
+        <div style={{ marginTop: 36 }}>
           {STEP_TITLES.map((title, i) => (
             <div
               key={title}
-              className="flex gap-5"
               style={{
-                padding: "20px 0",
-                borderBottom: i < STEP_TITLES.length - 1 ? "2px solid var(--nb-card-divider)" : "none",
+                display: "grid",
+                gridTemplateColumns: "56px 1fr",
+                gap: 18,
+                alignItems: "baseline",
+                padding: "22px 0",
+                borderTop: "1px solid var(--nb-line)",
+                borderBottom: i === STEP_TITLES.length - 1 ? "1px solid var(--nb-line)" : "none",
               }}
             >
-              <div
-                className="flex items-center justify-center shrink-0"
-                style={{
-                  width: 40, height: 40, borderRadius: 10,
-                  background: "var(--nb-mustard)", border: "2px solid var(--nb-ink)",
-                  fontSize: 14, fontWeight: 800, color: "var(--nb-ink)",
-                }}
-              >
-                {i + 1}
-              </div>
+              <span className="kv-index-num" style={{ fontSize: 20, fontWeight: 700, color: "var(--nb-mustard-dark, var(--nb-label-accent))" }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--nb-heading)", margin: "0 0 4px" }}>{title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--nb-body)", margin: 0 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--nb-heading)", margin: "0 0 4px" }}>{title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", margin: 0 }}>
                   {STEP_DESCRIPTIONS[i]}
                 </p>
               </div>
@@ -150,20 +96,13 @@ export default function ComoParticiparPage() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Link
-            href="/cadastro"
-            className="kv-press inline-flex items-center gap-2 px-9 py-4 text-base font-bold"
-            style={{ background: "var(--nb-btn-primary-bg)", color: "var(--nb-btn-primary-fg)", border: "var(--nb-btn-primary-border)", borderRadius: 10, boxShadow: "var(--shadow-nb)", textDecoration: "none", fontFamily: "var(--font-geo)" }}
-          >
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-6">
+          <EditorialButton href="/cadastro" size="lg">
             Começar meu cadastro
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-          <p className="mt-5" style={{ fontSize: 13, color: "var(--nb-body)" }}>
+          </EditorialButton>
+          <p className="kv-meta" style={{ color: "var(--nb-body)" }}>
             Já tem uma conta?{" "}
-            <Link href="/login" style={{ color: "var(--nb-label-accent)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+            <Link href="/login" style={{ color: "var(--nb-ink)", textDecoration: "underline", textUnderlineOffset: 3 }}>
               Entrar
             </Link>
           </p>

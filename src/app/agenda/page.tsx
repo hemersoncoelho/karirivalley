@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarX2, Calendar, MapPin, ExternalLink } from "lucide-react";
+import { CalendarX2 } from "lucide-react";
 
 import { fetchPublicUpcomingEvents } from "@/lib/members/events";
 import { LinkifiedText } from "@/components/ui/linkified-text";
 import { ShareButton } from "@/components/ui/share-button";
+import { SectionIndex, MetaDot } from "@/components/ui/editorial";
 
 export const metadata: Metadata = {
   title: "Eventos — Kariri Valley",
@@ -27,121 +28,62 @@ export default async function PublicAgendaPage() {
   const events = await fetchPublicUpcomingEvents();
 
   return (
-    <main className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)" }}>
-      <div
-        className="kv-aurora absolute pointer-events-none"
-        style={{
-          width: "40vw", height: "40vw", maxWidth: 560, maxHeight: 560,
-          top: "-14%", right: "-6%",
-          background: "radial-gradient(circle, rgba(35,157,140,.16) 0%, rgba(35,157,140,.04) 55%, transparent 72%)",
-          animationDuration: "26s", animationDelay: "-10s",
-        }}
-      />
-      <div className="absolute inset-0 kv-hero-grid pointer-events-none" style={{ opacity: 0.5 }} />
-
-      <section className="relative max-w-[820px] mx-auto px-6 lg:px-16 text-center" style={{ zIndex: 10, padding: "160px 24px 56px" }}>
-        <span
-          className="inline-flex items-center gap-2 px-[18px] py-[7px] text-[11px] font-bold tracking-[2px] uppercase mb-7"
-          style={{ background: "var(--nb-turquoise)", border: "2px solid var(--nb-ink)", borderRadius: 999, color: "var(--nb-sand)", fontFamily: "var(--font-geo)" }}
-        >
-          <Calendar size={12} strokeWidth={2.2} />
-          Agenda
-        </span>
-
+    <main style={{ background: "var(--nb-page-bg)" }}>
+      {/* Header editorial */}
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 150 }}>
+        <SectionIndex index="—" label="Agenda" />
         <h1
-          style={{
-            fontFamily: "var(--font-fraunces), Georgia, serif",
-            fontSize: "clamp(32px, 4.4vw, 52px)",
-            fontWeight: 700,
-            lineHeight: 1.14,
-            letterSpacing: "-1px",
-            color: "var(--nb-heading)",
-            marginBottom: 16,
-          }}
+          className="kv-display"
+          style={{ fontSize: "clamp(42px, 5.6vw, 80px)", color: "var(--nb-heading)", margin: "28px 0 0" }}
         >
-          Eventos da{" "}
-          <span style={{ color: "var(--nb-turquoise)", fontStyle: "italic" }}>Kariri Valley</span>
+          O que acontece no{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>vale</em>
         </h1>
-
-        <p
-          className="mx-auto"
-          style={{
-            fontSize: "clamp(15px, 1.6vw, 18px)",
-            lineHeight: 1.7,
-            color: "var(--nb-body)",
-            maxWidth: 560,
-          }}
+        <div
+          className="flex flex-wrap items-end justify-between gap-4"
+          style={{ borderTop: "1px solid var(--nb-line)", marginTop: 32, paddingTop: 20 }}
         >
-          Encontros, workshops e talks abertos à comunidade e a quem quer conhecer o
-          ecossistema de inovação do Cariri.
-        </p>
+          <p style={{ fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.7, color: "var(--nb-body)", maxWidth: 560, margin: 0 }}>
+            Encontros, workshops e talks abertos à comunidade e a quem quer conhecer
+            o ecossistema de inovação do Cariri.
+          </p>
+          <p className="kv-meta" style={{ color: "var(--nb-body)", margin: 0 }}>
+            {events.length} {events.length === 1 ? "edição programada" : "edições programadas"}
+          </p>
+        </div>
       </section>
 
-      <section className="relative max-w-[900px] mx-auto px-6 lg:px-16" style={{ zIndex: 10, paddingBottom: 120 }}>
+      {/* Lista editorial */}
+      <section className="mx-auto max-w-[900px] px-6 lg:px-16" style={{ paddingTop: 48, paddingBottom: 120 }}>
         {events.length === 0 ? (
           <div
             className="text-center"
-            style={{
-              background: "var(--nb-cream)",
-              border: "3px dashed var(--nb-ink)",
-              borderRadius: 18,
-              padding: "64px 32px",
-            }}
+            style={{ border: "1px dashed var(--nb-line)", padding: "64px 32px" }}
           >
-            <div
-              className="flex items-center justify-center mx-auto"
-              style={{
-                width: 72, height: 72,
-                background: "var(--nb-turquoise)",
-                border: "2px solid var(--nb-ink)",
-                borderRadius: 16,
-                marginBottom: 24,
-              }}
-            >
-              <CalendarX2 size={28} strokeWidth={2} color="var(--nb-sand)" />
-            </div>
-            <h2 style={{
-              fontFamily: "var(--font-fraunces), Georgia, serif",
-              fontSize: "clamp(18px, 2vw, 22px)",
-              fontWeight: 700, color: "var(--nb-heading)", marginBottom: 12,
-            }}>
-              Nenhum evento publicado ainda
+            <CalendarX2 size={26} strokeWidth={1.8} color="var(--nb-body)" style={{ marginBottom: 18 }} />
+            <h2 className="kv-display" style={{ fontSize: 26, color: "var(--nb-heading)", marginBottom: 10 }}>
+              A agenda está entre edições
             </h2>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--nb-body)", maxWidth: 420, margin: "0 auto" }}>
+            <p className="kv-meta" style={{ color: "var(--nb-body)", maxWidth: 420, margin: "0 auto", textTransform: "none", letterSpacing: ".04em" }}>
               Em breve, novos encontros da comunidade serão divulgados por aqui.
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {events.map((event) => (
-              <div
+          <div className="flex flex-col">
+            {events.map((event, i) => (
+              <article
                 key={event.id}
                 id={`evento-${event.id}`}
-                className="p-6"
                 style={{
-                  background: "var(--nb-card-bg)",
-                  backdropFilter: "var(--nb-card-blur)",
-                  WebkitBackdropFilter: "var(--nb-card-blur)",
-                  border: "var(--nb-card-border)",
-                  borderRadius: 14,
-                  boxShadow: "var(--nb-card-shadow)",
+                  borderTop: "1px solid var(--nb-line)",
+                  borderBottom: i === events.length - 1 ? "1px solid var(--nb-line)" : "none",
+                  padding: "34px 0",
                   scrollMarginTop: 100,
                 }}
               >
-                {event.banner_url && (
-                  <div style={{ width: "100%", maxHeight: 480, marginBottom: 18, borderRadius: 14, overflow: "hidden", background: "var(--nb-cream)" }}>
-                    <Image
-                      src={event.banner_url}
-                      alt={event.title}
-                      width={0}
-                      height={0}
-                      sizes="(max-width: 640px) 100vw, 700px"
-                      style={{ width: "100%", height: "auto", display: "block" }}
-                    />
-                  </div>
-                )}
-                <div className="flex items-start justify-between gap-3">
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-turquoise)", textTransform: "capitalize", marginBottom: 8 }}>
+                <div className="flex items-start justify-between gap-4">
+                  <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-turquoise)", fontWeight: 700 }}>
+                    <MetaDot role="event" />
                     {formatEventDate(event.starts_at)}
                   </p>
                   <ShareButton
@@ -151,36 +93,68 @@ export default async function PublicAgendaPage() {
                     style={{ fontSize: 12, fontWeight: 700, color: "var(--nb-label-accent)", flexShrink: 0 }}
                   />
                 </div>
-                <h3 style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, fontWeight: 700, color: "var(--nb-heading)", marginBottom: 8 }}>
+
+                {event.banner_url && (
+                  <div className="kv-photo" style={{ border: "1px solid var(--nb-line-soft)", marginTop: 18 }}>
+                    <Image
+                      src={event.banner_url}
+                      alt={event.title}
+                      width={0}
+                      height={0}
+                      sizes="(max-width: 640px) 100vw, 820px"
+                      style={{ width: "100%", height: "auto", maxHeight: 440, objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                )}
+
+                <h2
+                  style={{
+                    fontFamily: "var(--font-fraunces), Georgia, serif",
+                    fontSize: "clamp(24px, 2.6vw, 32px)",
+                    fontWeight: 400,
+                    color: "var(--nb-heading)",
+                    margin: "16px 0 10px",
+                    lineHeight: 1.2,
+                  }}
+                >
                   <Link href={`/agenda/${event.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
                     {event.title}
                   </Link>
-                </h3>
+                </h2>
+
                 {event.description && (
                   <LinkifiedText
                     text={event.description}
-                    style={{ fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)", marginBottom: 10 }}
+                    style={{ fontSize: 15, lineHeight: 1.7, color: "var(--nb-body)" }}
                   />
                 )}
+
                 {event.location && (
-                  <p style={{ fontSize: 13, color: "var(--nb-body)", display: "flex", alignItems: "center", gap: 6 }}>
-                    <MapPin size={13} strokeWidth={2} />
-                    {event.location}
+                  <p className="kv-meta" style={{ marginTop: 12, color: "var(--nb-body)" }}>
+                    ◆ {event.location}
                   </p>
                 )}
+
                 {event.meeting_url && (
                   <a
                     href={event.meeting_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold"
-                    style={{ color: "var(--nb-label-accent)" }}
+                    className="kv-kicker"
+                    style={{
+                      marginTop: 14,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      color: "var(--nb-ink)",
+                      textDecoration: "none",
+                    }}
                   >
-                    Mais informações
-                    <ExternalLink size={13} strokeWidth={2} />
+                    <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Mais informações</span>
+                    <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
                   </a>
                 )}
-              </div>
+              </article>
             ))}
           </div>
         )}

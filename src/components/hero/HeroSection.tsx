@@ -68,7 +68,7 @@ export default function HeroSection() {
       {/* Chapada do Cariri ancorando a base da hero */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/media/deco-layer-13.png"
+        src="/media/paisagem-montanha.png"
         alt=""
         aria-hidden="true"
         style={{
@@ -79,24 +79,6 @@ export default function HeroSection() {
           width: "min(1200px, 110vw)",
           zIndex: 2,
           opacity: dark ? 0.5 : 0.9,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Bromélia decomposta atrás do manifesto */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/media/deco-layer-4.png"
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: "14%",
-          left: "-40px",
-          width: 240,
-          zIndex: 2,
-          opacity: dark ? 0.35 : 0.95,
-          transform: "rotate(12deg)",
           pointerEvents: "none",
         }}
       />
@@ -119,7 +101,7 @@ export default function HeroSection() {
           className="kv-display mt-6"
           style={{ fontSize: "clamp(46px, 6.4vw, 100px)", color: fg, maxWidth: 980 }}
         >
-          O vale que{" "}
+          O valle que{" "}
           <em style={{ fontStyle: "italic", fontWeight: 400 }}>constrói</em> <br/>o
           futuro do sertão.
         </h1>

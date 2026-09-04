@@ -29,14 +29,23 @@ const MEMBERS = [
 /** Selo circular giratório com texto no contorno. */
 function RotatingSeal() {
   return (
-    <div aria-hidden="true" className="kv-slow-spin" style={{ animationDuration: "40s", width: 116, height: 116 }}>
-      <svg viewBox="0 0 116 116" width="116" height="116" style={{ display: "block" }}>
+    <div aria-hidden="true" className="kv-slow-spin" style={{ animationDuration: "40s", width: 132, height: 132 }}>
+      <svg viewBox="0 0 132 132" width="132" height="132" style={{ display: "block" }}>
         <defs>
-          <path id="kv-seal-path" d="M 58,58 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0" />
+          <path id="kv-seal-path" d="M 66,66 m -50,0 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0" />
         </defs>
-        <text style={{ fontFamily: "var(--font-space-mono), monospace", fontSize: 10.5, letterSpacing: ".34em", fill: "#C25A2E" }}>
-          <textPath href="#kv-seal-path">PESSOAS · TERRITÓRIO · OPORTUNIDADES ·</textPath>
+        <text style={{ fontFamily: "var(--font-space-mono), monospace", fontSize: 11, letterSpacing: ".42em", fill: "#C25A2E" }}>
+          <textPath href="#kv-seal-path">
+            PESSOAS · TERRITÓRIO · OPORTUNIDADES · FUTURO ·
+          </textPath>
         </text>
+        {/* diamante central do selo */}
+        <rect
+          x="59" y="59" width="14" height="14"
+          fill="none" stroke="#C25A2E" strokeWidth="1.6"
+          transform="rotate(45 66 66)"
+        />
+        <rect x="63.5" y="63.5" width="5" height="5" fill="#C25A2E" transform="rotate(45 66 66)" />
       </svg>
     </div>
   );
@@ -158,7 +167,7 @@ export default function AboutSection() {
           {/* ── Direita: paisagem + selo + pílulas de membros ── */}
           <div style={{ position: "relative", ...fadeUp(0.2) }}>
             {/* selo rotativo */}
-            <div style={{ position: "absolute", top: -30, right: "18%", zIndex: 3 }}>
+            <div style={{ position: "absolute", top: -38, right: "14%", zIndex: 3 }}>
               <RotatingSeal />
             </div>
 
@@ -192,7 +201,7 @@ export default function AboutSection() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/media/paisagem-montanha.png"
+                src="/media/comunidade-3.jpg"
                 alt="Paisagem do Cariri ao entardecer, com chapada e mandacarus"
                 style={{ width: "100%", height: "auto", display: "block" }}
               />

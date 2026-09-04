@@ -46,7 +46,7 @@ export default function Footer() {
       {/* Chapada do Cariri na base do fechamento */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/media/deco-layer-13.png"
+        src="/media/paisagem-montanha.png"
         alt=""
         aria-hidden="true"
         style={{

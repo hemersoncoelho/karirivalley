@@ -37,21 +37,11 @@ export default function HeroSection() {
       className="relative flex min-h-screen flex-col overflow-hidden"
       style={{ background: dark ? "var(--kv-dark)" : "var(--nb-page-bg)" }}
     >
-      <PixelField />
-
-      {/* ── Selo de vídeo em moldura, canto direito ── */}
+      {/* ── Vídeo da marca como textura de fundo — lavado, em loop ── */}
       <div
         aria-hidden="true"
-        className="absolute hidden lg:block"
-        style={{
-          right: "4.5%",
-          bottom: "18%",
-          zIndex: 5,
-          border: `1px solid ${hair}`,
-          padding: 5,
-          background: dark ? "rgba(6,13,8,.5)" : "rgba(251,248,239,.65)",
-          backdropFilter: "blur(2px)",
-        }}
+        className="absolute inset-0"
+        style={{ zIndex: 1, pointerEvents: "none" }}
       >
         <video
           ref={videoRef}
@@ -60,9 +50,19 @@ export default function HeroSection() {
           playsInline
           autoPlay
           loop
-          style={{ width: 178, height: "auto", display: "block", filter: dark ? "none" : "contrast(1.04)" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            opacity: dark ? 0.35 : 0.5,
+            filter: dark ? "brightness(.8)" : "contrast(1.02) brightness(1.06)",
+            mixBlendMode: dark ? "screen" : "multiply",
+          }}
         />
       </div>
+
+      <PixelField />
 
       {/* ── Manifesto central ── */}
       <div

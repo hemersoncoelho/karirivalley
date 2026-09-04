@@ -44,7 +44,7 @@ export default function OpportunitiesSection({ opportunities }: OpportunitiesSec
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex
-          index="04"
+          index="07"
           label="Oportunidades"
           title="editais · vagas · programas"
           accentColor="#8A5C13"

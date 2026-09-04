@@ -30,7 +30,7 @@ export default function AboutSection() {
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex index="01" label="O ecossistema" />
 
-        <div className="mt-12 grid grid-cols-1 items-start gap-14 lg:grid-cols-[5fr_6fr]">
+        <div className="mt-12 grid grid-cols-1 items-start gap-14 lg:grid-cols-[6fr_5fr]">
           <div>
             <h2
               className="kv-display"
@@ -83,36 +83,55 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Lista-índice dos atores — a estrutura fala, não o parágrafo */}
-          <div style={fadeUp(0.2)}>
-            {ACTORS.map((a, i) => (
-              <div
-                key={a.n}
-                className="group"
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: 18,
-                  padding: "22px 4px",
-                  borderTop: "1px solid var(--nb-line)",
-                  borderBottom: i === ACTORS.length - 1 ? "1px solid var(--nb-line)" : "none",
-                }}
-              >
-                <span className="kv-index-num" style={{ fontSize: 13, color: "var(--nb-terracotta)" }}>
-                  {a.n}
-                </span>
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: 0, fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
-                    {a.label}
-                  </p>
-                  <p className="kv-meta" style={{ margin: "4px 0 0", color: "var(--nb-body)" }}>
-                    {a.role}
-                  </p>
-                </div>
-                <DiamondMark outline size={8} color="var(--nb-body)" />
+          {/* Figura lateral: a conversa que fundou o vale */}
+          <figure style={{ margin: 0, ...fadeUp(0.2) }}>
+            <div className="kv-photo" style={{ border: "1px solid var(--nb-line)" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/media/comunidade-1.jpg"
+                alt="Talk da comunidade no estúdio Lumiere"
+                style={{ width: "100%", height: "auto", display: "block", aspectRatio: "4 / 3", objectFit: "cover" }}
+              />
+            </div>
+            <figcaption
+              className="kv-meta"
+              style={{ display: "flex", gap: 10, alignItems: "baseline", marginTop: 10, color: "var(--nb-body)" }}
+            >
+              <span style={{ color: "var(--nb-label-accent)" }}>FIG. 01</span>
+              <span>Talk no estúdio Lumiere — onde a ideia virou vale.</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        {/* Lista-índice dos atores, em duas colunas — a estrutura fala */}
+        <div className="mt-16 grid grid-cols-1 gap-x-14 sm:grid-cols-2" style={fadeUp(0.25)}>
+          {ACTORS.map((a, i) => (
+            <div
+              key={a.n}
+              className="group"
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: 18,
+                padding: "22px 4px",
+                borderTop: "1px solid var(--nb-line)",
+                borderBottom: i >= ACTORS.length - 2 ? "1px solid var(--nb-line)" : "none",
+              }}
+            >
+              <span className="kv-index-num" style={{ fontSize: 13, color: "var(--nb-terracotta)" }}>
+                {a.n}
+              </span>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
+                  {a.label}
+                </p>
+                <p className="kv-meta" style={{ margin: "4px 0 0", color: "var(--nb-body)" }}>
+                  {a.role}
+                </p>
               </div>
-            ))}
-          </div>
+              <DiamondMark outline size={8} color="var(--nb-body)" />
+            </div>
+          ))}
         </div>
       </div>
     </section>

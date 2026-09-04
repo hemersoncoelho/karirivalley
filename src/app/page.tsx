@@ -1,5 +1,7 @@
 import HeroSection from "@/components/hero/HeroSection";
 import AboutSection from "@/components/home/AboutSection";
+import AudienceSection from "@/components/home/AudienceSection";
+import BenefitsSection from "@/components/home/BenefitsSection";
 import FeaturedMembersSection from "@/components/home/FeaturedMembersSection";
 import StatsSection from "@/components/home/StatsSection";
 import EventsSection from "@/components/home/EventsSection";
@@ -36,9 +38,11 @@ export default async function HomePage() {
     <main>
       <HeroSection />
       <AboutSection />
-      <FeaturedMembersSection />
+      <AudienceSection />
+      <BenefitsSection />
       <EventsSection events={events} />
       <OpportunitiesSection opportunities={opportunities} />
+      <FeaturedMembersSection />
       <CompaniesShowcaseSection />
       <StatsSection />
       <InterstitialBand lema="Conectar quem faz — Cariri, Ceará" />

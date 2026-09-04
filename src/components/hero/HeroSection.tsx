@@ -55,7 +55,7 @@ export default function HeroSection() {
             height: "100%",
             objectFit: "cover",
             display: "block",
-            opacity: dark ? 0.18 : 0.3,
+            opacity: dark ? 0.1 : 0.1,
             filter: dark ? "brightness(.8) blur(18px)" : "contrast(1.02) brightness(1.06) blur(18px)",
             transform: "scale(1.08)", // esconde as bordas escurecidas do blur
             mixBlendMode: dark ? "screen" : "multiply",
@@ -76,7 +76,7 @@ export default function HeroSection() {
         }}
       >
         <p className="kv-kicker" style={{ color: dark ? "var(--nb-mustard)" : "#8A5C13" }}>
-          ◆ Kariri — Ceará — Brasil · Ed. contínua
+          ◆ Ecossistema de inovação do Cariri ◆
         </p>
 
         <h1
@@ -84,7 +84,7 @@ export default function HeroSection() {
           style={{ fontSize: "clamp(46px, 6.4vw, 100px)", color: fg, maxWidth: 980 }}
         >
           O vale que{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400 }}>constrói</em> o
+          <em style={{ fontStyle: "italic", fontWeight: 400 }}>constrói</em> <br/>o
           futuro do sertão.
         </h1>
 
@@ -92,10 +92,8 @@ export default function HeroSection() {
           className="mt-9 flex max-w-[560px] items-start gap-4 text-left"
           style={{ borderTop: `1px solid ${hair}`, paddingTop: 16 }}
         >
-          <span className="kv-index-num" style={{ fontSize: 13, color: dark ? "var(--nb-mustard)" : "var(--nb-terracotta)" }}>01</span>
           <p style={{ fontSize: "clamp(15px, 1.4vw, 16px)", lineHeight: 1.7, color: body }}>
-            Um mapa vivo de quem faz inovação no Cariri — e uma publicação
-            viva do que está sendo construído aqui.
+            Um mapa vivo de quem faz inovação no Cariri
           </p>
         </div>
 

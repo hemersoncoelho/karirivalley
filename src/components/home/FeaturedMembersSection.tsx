@@ -32,7 +32,7 @@ export default function FeaturedMembersSection() {
       style={{ background: "var(--nb-page-bg)", padding: "96px 0 104px" }}
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
-        <SectionIndex index="02" label="Quem faz" title="perfis verificados" />
+        <SectionIndex index="05" label="Quem faz" title="perfis verificados" />
 
         <div className="mt-12 flex items-end justify-between gap-4">
           <h2

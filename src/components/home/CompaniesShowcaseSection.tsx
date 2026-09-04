@@ -31,7 +31,7 @@ export default function CompaniesShowcaseSection() {
       style={{ background: "var(--nb-page-bg)", padding: "0 0 110px" }}
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
-        <SectionIndex index="04" label="Vitrine do vale" title="empresas da comunidade" />
+        <SectionIndex index="08" label="Vitrine do vale" title="empresas da comunidade" />
 
         <div className="mt-12 grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4" style={{ background: "var(--nb-line)", border: "1px solid var(--nb-line)", ...fadeUp(0.05) }}>
           {COMPANIES.map((c) => (

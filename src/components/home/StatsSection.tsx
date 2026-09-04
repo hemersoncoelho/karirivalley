@@ -33,7 +33,7 @@ export default function StatsSection() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/media/halftone-tractor.avif"
+          src="/media/halftone-detail.avif"
           alt=""
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -41,7 +41,7 @@ export default function StatsSection() {
 
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex
-          index="06"
+          index="09"
           label="Impacto"
           accentColor="var(--nb-mustard)"
           style={{ borderTopColor: "rgba(244,238,225,.35)" }}

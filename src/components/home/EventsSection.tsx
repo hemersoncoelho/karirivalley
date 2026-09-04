@@ -35,7 +35,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
     >
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex
-          index="03"
+          index="06"
           label="Agenda"
           title="o que acontece no vale"
         />

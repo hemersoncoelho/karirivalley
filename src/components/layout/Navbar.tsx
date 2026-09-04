@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useNbTheme } from "@/hooks/useNbTheme";
+import { DiamondMark } from "@/components/ui/editorial";
 
 const NAV_LINKS = [
   { href: "/sobre",           label: "Sobre"           },
@@ -20,8 +20,8 @@ export default function Navbar() {
   const [stuck, setStuck] = useState(false);
   const [open,  setOpen]  = useState(false);
   const pathname = usePathname();
-  const { theme, mounted } = useNbTheme();
-  const logoSrc = mounted && theme === "dark" ? "/logo.png" : "/logo-light.png";
+  const { mounted } = useNbTheme();
+  void mounted;
 
   useEffect(() => {
     const handler = () => setStuck(window.scrollY > 24);
@@ -40,17 +40,27 @@ export default function Navbar() {
     <nav
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-[52px]"
       style={{
-        paddingTop: stuck ? 12 : 20,
-        paddingBottom: stuck ? 12 : 20,
+        paddingTop: stuck ? 10 : 18,
+        paddingBottom: stuck ? 10 : 18,
         background: "var(--nb-navbar-bg)",
-        borderBottom: `3px solid ${stuck ? "var(--nb-navbar-border)" : "transparent"}`,
-        boxShadow: stuck ? "0 4px 0 0 rgba(22,20,15,0.06)" : "none",
-        transition: "padding .3s ease, border-color .3s ease, box-shadow .3s ease, background .2s ease",
+        borderBottom: `1px solid ${stuck ? "var(--nb-line)" : "transparent"}`,
+        transition: "padding .3s ease, border-color .3s ease, background .2s ease",
       }}
     >
-      {/* Logo */}
-      <Link href="/" className="flex items-center flex-shrink-0 no-underline">
-        <Image src={logoSrc} alt="Kariri Valley" width={502} height={304} style={{ height: 54, width: "auto" }} priority />
+      {/* Wordmark tipográfico */}
+      <Link href="/" className="flex items-center gap-3 flex-shrink-0 no-underline">
+        <DiamondMark size={11} />
+        <span
+          style={{
+            fontFamily: "var(--font-fraunces)",
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: "-.01em",
+            color: "var(--nb-heading)",
+          }}
+        >
+          Kariri Valley
+        </span>
       </Link>
 
       {/* Desktop nav links */}
@@ -59,8 +69,8 @@ export default function Navbar() {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="no-underline transition-colors duration-200"
-              style={{ fontSize: 14, fontWeight: 600, color: "var(--nb-link-fg)", fontFamily: "var(--font-geo)" }}
+              className="kv-kicker no-underline"
+              style={{ color: "var(--nb-link-fg)" }}
               onMouseEnter={e => (e.currentTarget.style.color = "var(--nb-terracotta)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--nb-link-fg)")}
             >
@@ -75,24 +85,31 @@ export default function Navbar() {
         <ThemeToggle />
         <Link
           href="/login"
-          className="inline-block px-[18px] py-2 no-underline"
+          className="kv-kicker inline-flex items-center no-underline"
           style={{
-            fontSize: 13, fontWeight: 600, color: "var(--nb-heading)", fontFamily: "var(--font-geo)",
-            border: "2px solid var(--nb-navbar-border)", borderRadius: 8, background: "transparent",
+            height: 34,
+            padding: "0 14px",
+            color: "var(--nb-btn-ghost-fg)",
+            border: "1px solid var(--nb-line)",
+            borderRadius: 2,
+            background: "transparent",
             transition: "background .2s",
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = "var(--nb-card-divider)")}
+          onMouseEnter={e => (e.currentTarget.style.background = "var(--nb-line-soft)")}
           onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
         >
           Entrar
         </Link>
         <Link
           href="/como-participar"
-          className="kv-press inline-block px-5 py-[9px] no-underline"
+          className="kv-press kv-kicker inline-flex items-center no-underline"
           style={{
-            fontSize: 13, fontWeight: 700, color: "var(--nb-btn-primary-fg)", fontFamily: "var(--font-geo)",
-            background: "var(--nb-btn-primary-bg)", border: "2px solid var(--nb-ink)", borderRadius: 8,
-            boxShadow: "var(--shadow-nb-sm)",
+            height: 34,
+            padding: "0 16px",
+            color: "var(--nb-btn-primary-fg)",
+            background: "var(--nb-btn-primary-bg)",
+            borderRadius: 2,
+            letterSpacing: ".08em",
           }}
         >
           Fazer parte
@@ -105,14 +122,14 @@ export default function Navbar() {
         aria-label={open ? "Fechar menu" : "Abrir menu"}
         aria-expanded={open}
         onClick={() => setOpen(v => !v)}
-        style={{ background: "none", border: "2px solid var(--nb-navbar-border)", borderRadius: 6, cursor: "pointer" }}
+        style={{ background: "none", border: "1px solid var(--nb-line)", borderRadius: 2, cursor: "pointer" }}
       >
         {[0, 1, 2].map(i => (
           <span
             key={i}
             className="block"
             style={{
-              width: 20, height: 2, background: "var(--nb-heading)", borderRadius: 1,
+              width: 20, height: 2, background: "var(--nb-heading)",
               transition: "transform .3s, opacity .3s",
               transform: open
                 ? i === 0 ? "translateY(7px) rotate(45deg)"
@@ -128,15 +145,15 @@ export default function Navbar() {
       {open && (
         <div
           className="absolute top-full left-0 right-0 flex flex-col md:hidden"
-          style={{ background: "var(--nb-navbar-bg)", borderBottom: "3px solid var(--nb-navbar-border)", padding: "20px 24px 28px" }}
+          style={{ background: "var(--nb-navbar-bg)", borderBottom: "1px solid var(--nb-line)", padding: "20px 24px 28px" }}
         >
           {NAV_LINKS.map(link => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="no-underline py-3 border-b"
-              style={{ fontSize: 15, fontWeight: 600, color: "var(--nb-link-fg)", borderColor: "var(--nb-card-divider)", fontFamily: "var(--font-geo)" }}
+              className="kv-kicker no-underline py-3 border-b"
+              style={{ color: "var(--nb-link-fg)", borderColor: "var(--nb-line-soft)" }}
             >
               {link.label}
             </Link>
@@ -144,13 +161,13 @@ export default function Navbar() {
           <div className="flex items-center gap-3 mt-5">
             <ThemeToggle />
             <Link href="/login" onClick={() => setOpen(false)}
-              className="flex-1 text-center py-[10px] no-underline"
-              style={{ fontSize: 13, fontWeight: 600, color: "var(--nb-heading)", border: "2px solid var(--nb-navbar-border)", borderRadius: 8 }}>
+              className="kv-kicker flex-1 text-center flex items-center justify-center py-[10px] no-underline"
+              style={{ color: "var(--nb-btn-ghost-fg)", border: "1px solid var(--nb-line)", borderRadius: 2 }}>
               Entrar
             </Link>
             <Link href="/como-participar" onClick={() => setOpen(false)}
-              className="flex-1 text-center py-[10px] no-underline"
-              style={{ fontSize: 13, fontWeight: 700, color: "var(--nb-btn-primary-fg)", background: "var(--nb-btn-primary-bg)", border: "2px solid var(--nb-ink)", borderRadius: 8, boxShadow: "var(--shadow-nb-sm)" }}>
+              className="kv-kicker flex-1 text-center flex items-center justify-center py-[10px] no-underline"
+              style={{ color: "var(--nb-btn-primary-fg)", background: "var(--nb-btn-primary-bg)", borderRadius: 2 }}>
               Fazer parte
             </Link>
           </div>

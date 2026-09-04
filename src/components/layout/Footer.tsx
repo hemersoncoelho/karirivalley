@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Camera } from "lucide-react";
-import { DiamondDivider } from "@/components/ui/patterns";
+import { DiamondMark } from "@/components/ui/editorial";
 
 const NAV_COLUMN = [
   { href: "/",               label: "Início"           },
@@ -26,6 +25,14 @@ const LINK_STYLE: React.CSSProperties = {
   color: "rgba(244,238,225,.78)",
 };
 
+const COLOPHON: React.CSSProperties = {
+  fontFamily: "var(--font-space-mono), monospace",
+  fontSize: 11,
+  letterSpacing: ".12em",
+  textTransform: "uppercase",
+  color: "rgba(244,238,225,.5)",
+};
+
 export default function Footer() {
   const pathname = usePathname();
 
@@ -35,39 +42,64 @@ export default function Footer() {
   if (hasOwnLayout) return null;
 
   return (
-    <footer style={{ background: "var(--nb-forest-dark)", borderTop: "3px solid var(--nb-ink)" }}>
-      <div className="mx-auto max-w-[1240px] px-6 md:px-[52px] pt-16 pb-10">
-        <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr]">
+    <footer style={{ background: "var(--nb-forest-dark)", borderTop: "1px solid var(--nb-ink)" }}>
+      {/* Banda de display — o nome como manchete de fechamento */}
+      <div className="mx-auto max-w-[1240px] px-6 md:px-[52px] pt-16 pb-8">
+        <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap" }}>
+          <DiamondMark size={12} />
+          <span
+            className="kv-kicker"
+            style={{ color: "var(--nb-mustard)" }}
+          >
+            O mapa vivo da inovação
+          </span>
+        </div>
+        <p
+          className="kv-display"
+          style={{
+            margin: "18px 0 0",
+            fontSize: "clamp(44px, 7.5vw, 96px)",
+            color: "var(--nb-sand)",
+          }}
+        >
+          Kariri <em style={{ fontStyle: "italic" }}>Valley</em>
+        </p>
+      </div>
+
+      <div className="mx-auto max-w-[1240px] px-6 md:px-[52px] pb-10">
+        <div
+          style={{
+            borderTop: "1px solid rgba(244,238,225,.22)",
+            paddingTop: 32,
+            display: "grid",
+            gap: 40,
+            gridTemplateColumns: "1fr",
+            alignItems: "start",
+          }}
+          className="lg:grid-cols-[1.4fr_1fr_1fr]"
+        >
           <div>
-            <Image src="/logo.png" alt="Kariri Valley" width={502} height={304} style={{ height: 52, width: "auto" }} />
-            <p className="mt-5 max-w-[340px]" style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(244,238,225,.68)" }}>
-              Ecossistema de inovação do Cariri. Conectamos pessoas, ideias e oportunidades para transformar
-              nossa região.
+            <p className="kv-meta max-w-[360px]" style={{ color: "rgba(244,238,225,.68)", textTransform: "none", letterSpacing: ".04em", fontSize: 12, lineHeight: 1.8 }}>
+              Ecossistema de inovação do Cariri. Conectamos pessoas, ideias e
+              oportunidades para transformar nossa região.
             </p>
-            <div className="mt-6 flex items-center gap-3">
-              <a
-                href="https://instagram.com/karirivalley"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Kariri Valley no Instagram"
-                className="flex items-center justify-center transition-colors"
-                style={{
-                  width: 40, height: 40, borderRadius: 8,
-                  border: "2px solid rgba(244,238,225,.35)", color: "var(--nb-sand)",
-                }}
-              >
-                <Camera size={18} strokeWidth={2} />
-              </a>
-            </div>
+            <a
+              href="https://instagram.com/karirivalley"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Kariri Valley no Instagram"
+              className="mt-6 inline-flex items-center justify-center transition-colors"
+              style={{
+                width: 38, height: 38, borderRadius: 2,
+                border: "1px solid rgba(244,238,225,.35)", color: "var(--nb-sand)",
+              }}
+            >
+              <Camera size={17} strokeWidth={2} />
+            </a>
           </div>
 
           <nav aria-label="Navegue">
-            <h3
-              className="mb-4"
-              style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--nb-mustard)", fontFamily: "var(--font-geo)" }}
-            >
-              Navegue
-            </h3>
+            <h3 className="kv-kicker mb-4" style={{ color: "var(--nb-mustard)" }}>Navegue</h3>
             <ul className="flex flex-col gap-3 list-none m-0 p-0">
               {NAV_COLUMN.map((link) => (
                 <li key={link.href}>
@@ -80,12 +112,7 @@ export default function Footer() {
           </nav>
 
           <nav aria-label="Comunidade">
-            <h3
-              className="mb-4"
-              style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--nb-mustard)", fontFamily: "var(--font-geo)" }}
-            >
-              Comunidade
-            </h3>
+            <h3 className="kv-kicker mb-4" style={{ color: "var(--nb-mustard)" }}>Comunidade</h3>
             <ul className="flex flex-col gap-3 list-none m-0 p-0">
               {COMMUNITY_COLUMN.map((link) => (
                 <li key={link.href}>
@@ -98,13 +125,12 @@ export default function Footer() {
           </nav>
         </div>
 
-        <DiamondDivider className="my-10 opacity-40" color="var(--nb-sand)" />
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p style={{ fontSize: 13, color: "rgba(244,238,225,.55)" }}>
-            © {new Date().getFullYear()} Kariri Valley. Todos os direitos reservados.
-          </p>
-          <p style={{ fontSize: 13, color: "rgba(244,238,225,.55)" }}>Cariri, Ceará, Brasil</p>
+        <div
+          className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-3"
+          style={{ borderTop: "1px solid rgba(244,238,225,.14)", paddingTop: 18 }}
+        >
+          <p style={COLOPHON}>© {new Date().getFullYear()} Kariri Valley</p>
+          <p style={COLOPHON}>Cariri — Ceará — Brasil</p>
         </div>
       </div>
     </footer>

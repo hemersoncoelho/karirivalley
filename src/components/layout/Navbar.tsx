@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-[52px]"
+      className="sticky top-0 z-50 flex items-center justify-between px-6"
       style={{
         paddingTop: 10,
         paddingBottom: 10,
@@ -52,11 +52,7 @@ export default function Navbar() {
       {/* Wordmark tipográfico + elemento de marca */}
       <Link href="/" className="flex items-center gap-3 flex-shrink-0 no-underline">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-element.png"
-          alt=""
-          style={{ height: 17, width: "auto" }}
-        />
+
         <span
           style={{
             fontFamily: "var(--font-fraunces)",

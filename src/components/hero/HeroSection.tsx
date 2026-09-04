@@ -93,9 +93,12 @@ export default function HeroSection() {
           transition: "opacity .9s ease, transform 1.1s cubic-bezier(.16,1,.3,1)",
         }}
       >
-        <p className="kv-kicker" style={{ color: dark ? "var(--nb-mustard)" : "#8A5C13" }}>
-          ◆ Ecossistema de inovação do Cariri ◆
-        </p>
+        <img
+          src="/logo-element.png"
+          alt=""
+          style={{ height: 26, width: "auto" }}
+        />
+
 
         <h1
           className="kv-display mt-6"

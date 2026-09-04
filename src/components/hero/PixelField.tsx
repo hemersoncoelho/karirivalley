@@ -3,15 +3,16 @@
 import { useEffect, useRef } from "react";
 import { useNbTheme } from "@/hooks/useNbTheme";
 
-const CELL = 13;
-const ERASE_RADIUS = 78;
-const REGEN_CHANCE = 0.004;
+const CELL = 15;
+const ERASE_RADIUS = 85;
+const REGEN_CHANCE = 0.012;
 
 /**
- * Campo de pixels interativo — a trama halftone do sistema como capa viva.
- * Células da paleta da marca formam uma faixa irregular; o cursor "apaga"
- * o impresso revelando o papel, e as células regeneram devagar.
- * reduced-motion: campo estático, sem interação.
+ * Campo de pixels vivo preenchendo a hero inteira. O manifesto vive numa
+ * "ilha de papel" central (exclusão radial com dithering na borda) — é ela
+ * que garante o contraste: trama densa e vibrante ao redor, respiro no meio.
+ * Ondas de brilho mantêm a trama em transformação; o cursor revela o papel
+ * e as células se recompõem. reduced-motion: estático.
  */
 export default function PixelField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -26,7 +27,12 @@ export default function PixelField() {
     const dark = theme === "dark";
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const pal = dark
+      ? { base: "rgba(244,237,223,.92)", forest: "rgba(244,237,223,.55)", gold: "#E9B23C", terra: "#E0715A", teal: "#3FD4BF" }
+      : { base: "#16140F", forest: "#1E4D3A", gold: "#E9B23C", terra: "#C25A2E", teal: "#239D8C" };
+
     let raf = 0;
+    let time = 0;
     let w = 0;
     let h = 0;
     let cols = 0;
@@ -34,38 +40,12 @@ export default function PixelField() {
     let target = new Float32Array(0);
     let values = new Float32Array(0);
     let erased = new Uint8Array(0);
-    let colors: string[] = [];
+    let phase = new Float32Array(0);
+    let kind: Uint8Array = new Uint8Array(0); // 0 base · 1 gold · 2 terra · 3 teal · 4 forest
 
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-    const noise = (x: number) =>
-      clamp01(0.5 + 0.32 * Math.sin(x * 7.3 + 2.1) + 0.22 * Math.sin(x * 17.7 + 0.8));
-
-    const baseColor = () =>
-      dark
-        ? Math.random() < 0.72
-          ? "rgba(244,237,223,.9)"
-          : "#239D8C"
-        : Math.random() < 0.72
-          ? "#16140F"
-          : "#1E4D3A";
-
-    const pickColor = (nx: number, ny: number) => {
-      const warm = Math.hypot(nx - 0.42, ny - 0.26);
-      const cool = Math.hypot(nx - 0.78, ny - 0.52);
-      const r = Math.random();
-      if (warm < 0.24) {
-        if (r < 0.55) return "#E9B23C";
-        if (r < 0.7) return dark ? "#C25A2E" : "#C25A2E";
-        return baseColor();
-      }
-      if (cool < 0.22) {
-        if (r < 0.6) return "#239D8C";
-        return baseColor();
-      }
-      if (r < 0.04) return "#C25A2E";
-      if (r < 0.08) return "#E9B23C";
-      return baseColor();
-    };
+    const edgeNoise = (x: number) =>
+      clamp01(0.5 + 0.3 * Math.sin(x * 7.3 + 2.1) + 0.22 * Math.sin(x * 17.7 + 0.8));
 
     const build = () => {
       const section = canvas.parentElement;
@@ -83,21 +63,46 @@ export default function PixelField() {
       target = new Float32Array(n);
       values = new Float32Array(n);
       erased = new Uint8Array(n);
-      colors = new Array(n);
+      phase = new Float32Array(n);
+      kind = new Uint8Array(n);
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const i = r * cols + c;
           const nx = c / cols;
           const ny = r / rows;
-          const edge = rows * (0.1 + 0.34 * noise(nx));
-          let t = 0;
-          if (r < edge) t = 1;
-          else if (r < edge + 2 && Math.random() < 0.3) t = 1;
-          else if (Math.random() < 0.012) t = 1;
+
+          // ── Ilha de papel central (contraste do manifesto) ──
+          // elipse centrada no texto; borda com dithering orgânico
+          const dx = (nx - 0.5) / 0.36;
+          const dy = (ny - 0.46) / 0.32;
+          const d = Math.hypot(dx, dy);
+
+          let t = 1;
+          if (d < 0.94) {
+            t = 0; // dentro da ilha: papel puro
+          } else if (d < 1.3) {
+            // anel de transição: densidade cai com o ruído da borda
+            const keep = clamp01(1.3 - d) * (0.45 + 0.55 * edgeNoise(nx * 2 + ny));
+            t = Math.random() < keep ? 1 : 0;
+          } else if (Math.random() < 0.06) {
+            t = 0; // respiros esparsos na trama densa
+          }
+
           target[i] = t;
-          values[i] = t * (0.35 + Math.random() * 0.65);
-          colors[i] = pickColor(nx, ny);
+          values[i] = t ? 0.4 + Math.random() * 0.6 : 0;
+          phase[i] = Math.random() * Math.PI * 2;
+
+          if (t === 0) continue;
+          // cor: bandas quentes à esq., teal à dir., base tinta/verde
+          const warmN = Math.hypot(nx - 0.2, ny - 0.3);
+          const coolN = Math.hypot(nx - 0.85, ny - 0.55);
+          const goldN = Math.hypot(nx - 0.55, ny - 0.85);
+          if (coolN < 0.3) kind[i] = Math.random() < 0.7 ? 3 : 0;
+          else if (warmN < 0.28) kind[i] = Math.random() < 0.6 ? 1 : 2;
+          else if (goldN < 0.24) kind[i] = Math.random() < 0.5 ? 1 : 3;
+          else if (Math.random() < 0.16) kind[i] = Math.random() < 0.5 ? 1 : 3;
+          else kind[i] = Math.random() < 0.78 ? 0 : 4;
         }
       }
     };
@@ -115,10 +120,19 @@ export default function PixelField() {
             if (target[i] === 1) {
               erased[i] = 1;
               target[i] = 0;
-              values[i] = 0;
             }
           }
         }
+      }
+    };
+
+    const colorFor = (i: number): string => {
+      switch (kind[i]) {
+        case 1: return pal.gold;
+        case 2: return pal.terra;
+        case 3: return pal.teal;
+        case 4: return pal.forest;
+        default: return pal.base;
       }
     };
 
@@ -127,11 +141,15 @@ export default function PixelField() {
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const i = r * cols + c;
-          const v = values[i];
-          if (v < 0.05) continue;
-          const size = CELL * v * 0.92;
+          const base = values[i];
+          if (base < 0.04) continue;
+
+          // onda de brilho: pulso senoidal lento com fase própria por célula
+          const wave = 0.72 + 0.28 * Math.sin(time * 1.6 + phase[i]);
+          const v = base * wave;
+          const size = CELL * v * 0.94;
           const off = (CELL - size) / 2;
-          ctx.fillStyle = colors[i];
+          ctx.fillStyle = colorFor(i);
           ctx.fillRect(c * CELL + off, r * CELL + off, size, size);
         }
       }
@@ -143,11 +161,12 @@ export default function PixelField() {
           erased[i] = 0;
           target[i] = 1;
         }
-        values[i] += (target[i] - values[i]) * 0.09;
+        values[i] += (target[i] - values[i]) * 0.085;
       }
     };
 
     const loop = () => {
+      time += 1 / 60;
       step();
       draw();
       raf = requestAnimationFrame(loop);

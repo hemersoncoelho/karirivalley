@@ -85,8 +85,6 @@ export default function PixelField() {
             // anel de transição: densidade cai com o ruído da borda
             const keep = clamp01(1.3 - d) * (0.45 + 0.55 * edgeNoise(nx * 2 + ny));
             t = Math.random() < keep ? 1 : 0;
-          } else if (Math.random() < 0.06) {
-            t = 0; // respiros esparsos na trama densa
           }
 
           target[i] = t;

@@ -55,7 +55,7 @@ export default function Navbar() {
         <img
           src="/logo-element.png"
           alt=""
-          style={{ height: 26, width: "auto" }}
+          style={{ height: 17, width: "auto" }}
         />
         <span
           style={{

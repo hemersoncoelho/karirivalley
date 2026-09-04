@@ -55,7 +55,7 @@ export default function HeroSection() {
             height: "100%",
             objectFit: "cover",
             display: "block",
-            opacity: dark ? 0.35 : 0.5,
+            opacity: dark ? 0.18 : 0.3,
             filter: dark ? "brightness(.8) blur(18px)" : "contrast(1.02) brightness(1.06) blur(18px)",
             transform: "scale(1.08)", // esconde as bordas escurecidas do blur
             mixBlendMode: dark ? "screen" : "multiply",

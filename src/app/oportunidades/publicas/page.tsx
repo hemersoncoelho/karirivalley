@@ -38,7 +38,7 @@ export default async function PublicOportunidadesPage() {
   return (
     <main style={{ background: "var(--nb-page-bg)" }}>
       {/* Header editorial */}
-      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 150 }}>
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 96 }}>
         <SectionIndex index="—" label="Oportunidades" accentColor="#8A5C13" />
         <h1
           className="kv-display"

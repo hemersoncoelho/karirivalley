@@ -30,7 +30,7 @@ export default async function PublicAgendaPage() {
   return (
     <main style={{ background: "var(--nb-page-bg)" }}>
       {/* Header editorial */}
-      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 150 }}>
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 96 }}>
         <SectionIndex index="—" label="Agenda" />
         <h1
           className="kv-display"

@@ -38,18 +38,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-[52px]"
+      className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-[52px]"
       style={{
-        paddingTop: stuck ? 10 : 18,
-        paddingBottom: stuck ? 10 : 18,
-        // glass com gradiente: denso no topo, dissolve até transparente embaixo
-        background: `linear-gradient(to bottom, color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "88%" : "68%"}, transparent) 0%, color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "70%" : "34%"}, transparent) 55%, transparent 100%)`,
+        paddingTop: 10,
+        paddingBottom: 10,
+        background: `color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "85%" : "62%"}, transparent)`,
         backdropFilter: "blur(14px) saturate(150%)",
         WebkitBackdropFilter: "blur(14px) saturate(150%)",
-        maskImage: "linear-gradient(to bottom, black 62%, transparent 100%)",
-        WebkitMaskImage: "linear-gradient(to bottom, black 62%, transparent 100%)",
-        borderBottom: "none",
-        transition: "padding .3s ease",
+        borderBottom: `1px solid ${stuck ? "var(--nb-line)" : "transparent"}`,
+        transition: "border-color .3s ease, background .3s ease",
       }}
     >
       {/* Wordmark tipográfico + elemento de marca */}

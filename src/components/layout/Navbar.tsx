@@ -42,11 +42,14 @@ export default function Navbar() {
       style={{
         paddingTop: stuck ? 10 : 18,
         paddingBottom: stuck ? 10 : 18,
-        background: `color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "85%" : "62%"}, transparent)`,
+        // glass com gradiente: denso no topo, dissolve até transparente embaixo
+        background: `linear-gradient(to bottom, color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "88%" : "68%"}, transparent) 0%, color-mix(in srgb, var(--nb-navbar-bg) ${stuck ? "70%" : "34%"}, transparent) 55%, transparent 100%)`,
         backdropFilter: "blur(14px) saturate(150%)",
         WebkitBackdropFilter: "blur(14px) saturate(150%)",
-        borderBottom: `1px solid ${stuck ? "var(--nb-line)" : "transparent"}`,
-        transition: "padding .3s ease, border-color .3s ease, background .3s ease",
+        maskImage: "linear-gradient(to bottom, black 62%, transparent 100%)",
+        WebkitMaskImage: "linear-gradient(to bottom, black 62%, transparent 100%)",
+        borderBottom: "none",
+        transition: "padding .3s ease",
       }}
     >
       {/* Wordmark tipográfico + elemento de marca */}

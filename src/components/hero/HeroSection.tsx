@@ -35,11 +35,7 @@ export default function HeroSection() {
     <section
       id="hero"
       className="relative flex min-h-screen flex-col overflow-hidden"
-      style={{
-        background: dark ? "var(--kv-dark)" : "var(--nb-page-bg)",
-        // reserva o header (fixed) para a trama não ficar oculta atrás do vidro
-        paddingTop: 76,
-      }}
+      style={{ background: dark ? "var(--kv-dark)" : "var(--nb-page-bg)" }}
     >
       {/* ── Vídeo da marca como textura de fundo — lavado e desfocado, em loop ── */}
       <div
@@ -71,7 +67,7 @@ export default function HeroSection() {
 
       {/* ── Manifesto central ── */}
       <div
-        className="relative flex flex-1 flex-col items-center justify-center px-6 pb-14 pt-20 text-center"
+        className="relative flex flex-1 flex-col items-center justify-center px-6 pb-14 pt-32 text-center"
         style={{
           zIndex: 10,
           opacity: ready ? 1 : 0,

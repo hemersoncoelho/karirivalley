@@ -3,21 +3,13 @@
 import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 import type React from "react";
-import { SectionIndex, DiamondMark } from "@/components/ui/editorial";
+import { SectionIndex } from "@/components/ui/editorial";
 
 /**
- * "O ecossistema" — recomposta com respiro:
- * esquerda: headline + chips ilustrados; direita: quadro com as pílulas
- * de membros por cima e selo rotativo; base: faixa panorâmica da chapada
- * (paisagem-montanha) atravessando o viewport inteiro.
+ * "O ecossistema" — orgânica: headline + jornada ilustrada do ecossistema
+ * (asset próprio) à esquerda; colagem orgânica de fotos com pílulas de
+ * membros e selo à direita. Faixa panorâmica da chapada fecha o capítulo.
  */
-const ACTORS = [
-  { icon: "/media/icone-foguete.png", label: "STARTUPS", bg: "#F1E9D8", fg: "#C25A2E" },
-  { icon: "/media/icone-talentos.png", label: "TALENTOS", bg: "#E4EBDD", fg: "#5F8753" },
-  { icon: "/media/icone-empresa.png", label: "EMPRESAS", bg: "#F3E9CF", fg: "#C99A2E" },
-  { icon: "/media/icone-universidade.png", label: "UNIVERSIDADES", bg: "#DFEFEA", fg: "#166E62" },
-] as const;
-
 const MEMBERS = [
   { face: "/media/faces/face-1.jpg", name: "Maria", tag: "STARTUP", dot: "#239D8C" },
   { face: "/media/faces/face-2.jpg", name: "Pedro", tag: "INVESTIMENTO", dot: "#E9B23C" },
@@ -105,8 +97,8 @@ export default function AboutSection() {
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 pt-24 lg:px-16">
         <SectionIndex index="01" label="Ecossistema" accentColor="#C25A2E" />
 
-        <div className="mt-10 grid grid-cols-1 items-start gap-14 lg:grid-cols-[6fr_5fr]">
-          {/* ── Esquerda: headline + chips ilustrados ── */}
+        <div className="mt-10 grid grid-cols-1 items-start gap-14 lg:grid-cols-[5fr_6fr]">
+          {/* ── Esquerda: headline + jornada ilustrada ── */}
           <div style={{ position: "relative", zIndex: 2 }}>
             <h2
               className="kv-display"
@@ -137,41 +129,25 @@ export default function AboutSection() {
               }}
             >
               <span>IDEIAS</span>
-              <DiamondMark size={5} color="#C25A2E" />
+              <span style={{ color: "#C25A2E" }}>◆</span>
               <span>TALENTOS</span>
-              <DiamondMark size={5} color="#C25A2E" />
+              <span style={{ color: "#C25A2E" }}>◆</span>
               <span>INVESTIMENTO</span>
-              <DiamondMark size={5} color="#C25A2E" />
+              <span style={{ color: "#C25A2E" }}>◆</span>
               <span>IMPACTO</span>
             </p>
 
-            {/* chips ilustrados com ícones PNG */}
-            <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4" style={fadeUp(0.2)}>
-              {ACTORS.map(a => (
-                <div
-                  key={a.label}
-                  style={{
-                    background: a.bg,
-                    borderRadius: 18,
-                    padding: "24px 14px 20px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 12,
-                    boxShadow: "0 1px 2px rgba(22,20,15,.05)",
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.icon} alt="" aria-hidden="true" style={{ width: 58, height: 58, objectFit: "contain" }} />
-                  <p className="kv-kicker" style={{ margin: 0, color: a.fg, fontSize: 10.5, textAlign: "center" }}>
-                    {a.label}
-                  </p>
-                  <span aria-hidden="true" style={{ color: a.fg, fontSize: 15, lineHeight: 1 }}>→</span>
-                </div>
-              ))}
+            {/* Jornada ilustrada: as 4 paradas do ecossistema */}
+            <div style={{ margin: "18px -8px 0", ...fadeUp(0.2) }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/media/jornada-ecossistema.png"
+                alt="Jornada do ecossistema: startups geram ideias, talentos constroem, empresas transformam e universidades impulsionam"
+                style={{ width: "100%", maxWidth: 640, height: "auto", display: "block" }}
+              />
             </div>
 
-            <div style={{ marginTop: 34, ...fadeUp(0.3) }}>
+            <div style={{ marginTop: 10, ...fadeUp(0.3) }}>
               <Link
                 href="/sobre"
                 className="kv-kicker inline-flex items-center gap-3 no-underline"
@@ -185,9 +161,14 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* ── Direita: quadro com selo, folha e pílulas de membros ── */}
+          {/* ── Direita: colagem orgânica + selo + pílulas ── */}
           <div style={{ position: "relative", zIndex: 1, ...fadeUp(0.2) }}>
-            {/* folha de mandacaru atrás do quadro, com respiro do texto */}
+            {/* selo rotativo */}
+            <div style={{ position: "absolute", top: -20, right: 6, zIndex: 4 }}>
+              <RotatingSeal />
+            </div>
+
+            {/* folha atrás da colagem */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/media/deco-layer-11.png"
@@ -195,92 +176,84 @@ export default function AboutSection() {
               aria-hidden="true"
               style={{
                 position: "absolute",
-                left: -70,
-                top: -40,
-                width: 220,
+                left: -56,
+                top: 60,
+                width: 200,
                 opacity: 0.95,
                 pointerEvents: "none",
-                transform: "rotate(-12deg)",
+                transform: "rotate(-14deg)",
               }}
             />
 
-            {/* selo rotativo: canto superior do quadro, sem cortar */}
-            <div style={{ position: "absolute", top: -46, right: 24, zIndex: 3 }}>
-              <RotatingSeal />
-            </div>
-
-            {/* quadro fotográfico */}
-            <div
-              style={{
-                position: "relative",
-                borderRadius: 24,
-                overflow: "hidden",
-                border: "1px solid rgba(22,20,15,.1)",
-                boxShadow: "0 24px 48px rgba(22,20,15,.14)",
-                background: "#2A2417",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/media/comunidade-3.jpg"
-                alt="A comunidade Kariri Valley reunida em um encontro"
-                style={{ width: "100%", height: "auto", minHeight: 420, maxHeight: 480, objectFit: "cover", display: "block" }}
-              />
-
-              {/* gradiente de leitura na base */}
+            {/* colagem orgânica: formas irregulares sobrepostas */}
+            <div style={{ position: "relative", paddingRight: 4 }}>
+              {/* foto principal */}
               <div
-                aria-hidden="true"
                 style={{
-                  position: "absolute", inset: "auto 0 0 0", height: 140,
-                  background: "linear-gradient(to top, rgba(6,13,8,.55), transparent)",
+                  borderRadius: "58% 42% 46% 54% / 44% 52% 48% 56%",
+                  overflow: "hidden",
+                  boxShadow: "0 24px 48px rgba(22,20,15,.14)",
                 }}
-              />
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/media/comunidade-2.jpg"
+                  alt="Apresentadora da comunidade durante encontro no Lumiere"
+                  style={{ width: "100%", height: "auto", display: "block", aspectRatio: "5 / 5.4", objectFit: "cover" }}
+                />
+              </div>
 
-              {/* legenda sobre a imagem */}
+              {/* foto secundária sobreposta */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: -18,
+                  bottom: -34,
+                  width: "46%",
+                  borderRadius: "44% 56% 58% 42% / 52% 44% 56% 48%",
+                  overflow: "hidden",
+                  border: "4px solid var(--nb-page-bg)",
+                  boxShadow: "0 16px 32px rgba(22,20,15,.16)",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/media/comunidade-6.webp"
+                  alt="Público acompanhando talk"
+                  style={{ width: "100%", height: "auto", display: "block", aspectRatio: "1 / 0.9", objectFit: "cover" }}
+                />
+              </div>
+
+              {/* legenda manuscrita */}
               <p
                 style={{
                   position: "absolute",
-                  left: 24,
-                  bottom: 20,
+                  left: 4,
+                  bottom: -74,
                   margin: 0,
                   fontFamily: "var(--font-fraunces), Georgia, serif",
                   fontStyle: "italic",
-                  fontSize: 21,
+                  fontSize: 22,
                   lineHeight: 1.3,
-                  color: "#FBF6EA",
-                  maxWidth: 220,
+                  color: "var(--nb-heading)",
+                  maxWidth: 240,
                 }}
               >
                 mais conexões para um Cariri maior
               </p>
-
-              {/* rótulo lateral dentro do quadro */}
-              <p
-                className="kv-kicker"
-                style={{
-                  position: "absolute",
-                  right: 18,
-                  bottom: 20,
-                  margin: 0,
-                  writingMode: "vertical-rl",
-                  color: "rgba(251,246,234,.8)",
-                }}
-              >
-                DO CARIRI PARA O MUNDO
-              </p>
             </div>
 
-            {/* pílulas de membros: empilhadas sobre o canto do quadro, dentro do espaço */}
+            {/* pílulas de membros à direita da colagem */}
             <div
               style={{
                 position: "absolute",
-                top: 84,
-                right: 20,
+                top: 140,
+                right: -10,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-end",
                 gap: 10,
-                zIndex: 2,
+                zIndex: 3,
               }}
             >
               {MEMBERS.map(m => (
@@ -291,8 +264,8 @@ export default function AboutSection() {
         </div>
       </div>
 
-      {/* ── Faixa panorâmica da chapada atravessando o viewport ── */}
-      <div style={{ marginTop: 72, position: "relative", overflow: "hidden" }}>
+      {/* ── Faixa panorâmica da chapada fechando o capítulo ── */}
+      <div style={{ marginTop: 130, position: "relative", overflow: "hidden" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/media/paisagem-montanha.png"

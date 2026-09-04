@@ -35,12 +35,12 @@ export function AdminSidebar({ mobileOpen, onClose }: AdminSidebarProps) {
           "fixed inset-y-0 left-0 z-50 flex w-64 flex-col text-[var(--kv-cream)] transition-transform lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
-        style={{ backgroundColor: "#241B1A" }}
+        style={{ backgroundColor: "var(--kv-bg)" }}
       >
         <div className="flex items-center justify-between px-5 py-5">
           <Link href="/admin" className="flex items-center gap-2.5" onClick={onClose}>
             <span
-              className="flex size-8 items-center justify-center rounded-lg text-sm font-bold text-[#241B1A]"
+              className="flex size-8 items-center justify-center rounded-lg text-sm font-bold text-[var(--kv-bg)]"
               style={{ backgroundColor: "var(--kv-gold)" }}
             >
               KV

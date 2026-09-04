@@ -41,7 +41,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const allowed = currentUser.role === "admin" && (!currentItem || canAccess(currentItem, currentUser.role))
 
   return (
-    <div className="min-h-screen bg-[#F7F4EE] text-neutral-900">
+    <div className="min-h-screen bg-[var(--nb-sand)] text-neutral-900">
       <AdminSidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
       <div className="lg:pl-64">
         <AdminTopbar onMenuClick={() => setMobileOpen(true)} />

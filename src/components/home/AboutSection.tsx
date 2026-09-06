@@ -97,7 +97,7 @@ export default function AboutSection() {
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 pt-24 lg:px-16">
         <SectionIndex index="01" label="Ecossistema" accentColor="#C25A2E" />
 
-        <div className="mt-10 grid grid-cols-1 items-start gap-14 lg:grid-cols-[5fr_6fr]">
+        <div className="mt-8 grid grid-cols-1 items-start gap-10 lg:grid-cols-[11fr_9fr]">
           {/* ── Esquerda: headline + jornada ilustrada ── */}
           <div style={{ position: "relative", zIndex: 2 }}>
             <h2
@@ -138,12 +138,12 @@ export default function AboutSection() {
             </p>
 
             {/* Jornada ilustrada: as 4 paradas do ecossistema */}
-            <div style={{ margin: "18px -8px 0", ...fadeUp(0.2) }}>
+            <div style={{ margin: "10px -20px 0", ...fadeUp(0.2) }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/media/jornada-ecossistema.png"
                 alt="Jornada do ecossistema: startups geram ideias, talentos constroem, empresas transformam e universidades impulsionam"
-                style={{ width: "100%", maxWidth: 640, height: "auto", display: "block" }}
+                style={{ width: "100%", height: "auto", display: "block" }}
               />
             </div>
 
@@ -164,9 +164,9 @@ export default function AboutSection() {
           {/* ── Direita: colagem orgânica + selo + pílulas ── */}
           <div style={{ position: "relative", zIndex: 1, ...fadeUp(0.2) }}>
             {/* selo rotativo */}
-            <div style={{ position: "absolute", top: -20, right: 6, zIndex: 4 }}>
+            {/*<div style={{ position: "absolute", top: -20, right: 6, zIndex: 4 }}>
               <RotatingSeal />
-            </div>
+            </div>*/}
 
             {/* folha atrás da colagem */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -223,24 +223,6 @@ export default function AboutSection() {
                   style={{ width: "100%", height: "auto", display: "block", aspectRatio: "1 / 0.9", objectFit: "cover" }}
                 />
               </div>
-
-              {/* legenda manuscrita */}
-              <p
-                style={{
-                  position: "absolute",
-                  left: 4,
-                  bottom: -74,
-                  margin: 0,
-                  fontFamily: "var(--font-fraunces), Georgia, serif",
-                  fontStyle: "italic",
-                  fontSize: 22,
-                  lineHeight: 1.3,
-                  color: "var(--nb-heading)",
-                  maxWidth: 240,
-                }}
-              >
-                mais conexões para um Cariri maior
-              </p>
             </div>
 
             {/* pílulas de membros à direita da colagem */}
@@ -256,9 +238,9 @@ export default function AboutSection() {
                 zIndex: 3,
               }}
             >
-              {MEMBERS.map(m => (
+              {/*{MEMBERS.map(m => (
                 <MemberPill key={m.name} m={m} />
-              ))}
+              ))}*/}
             </div>
           </div>
         </div>
@@ -268,7 +250,7 @@ export default function AboutSection() {
       <div style={{ marginTop: 130, position: "relative", overflow: "hidden" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/media/paisagem-montanha.png"
+          src="/media/div.png"
           alt="Ilustração da paisagem do Cariri: igreja, chapada, sol e árvores"
           style={{
             width: "100%",

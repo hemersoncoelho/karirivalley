@@ -23,7 +23,7 @@ export default function StatsSection() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "var(--nb-forest)", padding: "88px 0 96px" }}
+      style={{ background: "var(--nb-forest)", padding: "0px 0 96px" }}
     >
       {/* Halftone como textura da banda — a trama de pontos conecta sertão × tecnologia */}
       <div
@@ -33,7 +33,7 @@ export default function StatsSection() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/media/halftone-detail.avif"
+          src="/media/comunidade-4.webp"
           alt=""
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -41,20 +41,6 @@ export default function StatsSection() {
 
       {/* Mandacaru emoldurando a banda de impacto */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/media/deco-layer-11.png"
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          left: -50,
-          top: "50%",
-          transform: "translateY(-50%) rotate(8deg)",
-          width: 280,
-          opacity: 0.5,
-          pointerEvents: "none",
-        }}
-      />
 
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex

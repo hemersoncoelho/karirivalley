@@ -6,28 +6,43 @@ import type React from "react";
 import { SectionIndex } from "@/components/ui/editorial";
 
 /**
- * "Para quem é o vale" — recriação da AudienceSection.
- * Arquétipo: 3 cards fechados grandes (imagem no topo, conteúdo na base),
- * como vitrines de aplicativo — cada um com sua foto tratada em halftone.
+ * "Para quem é o vale" — três audiências com identidade própria:
+ * cada card tem pastel, cor de acento e micro-lista distintos
+ * (irmãos pela anatomia, únicos pela cor e conteúdo).
  */
 const CARDS = [
   {
-    title: "Quem empreende",
-    desc: "Fundadores e startups encontram sócios, mentores e os primeiros clientes — perto de casa.",
+    num: "01",
+    chip: "QUEM EMPREENDE",
+    title: "Fundadores e startups",
+    desc: "Do primeiro protótipo à rodada: gente construindo negócio no interior.",
     img: "/media/comunidade-3.jpg",
-    alt: "Comunidade reunida em encontro do Kariri Valley",
+    alt: "Fundadores reunidos em encontro da comunidade",
+    bodyBg: "#F7E7DF",
+    accent: "#C25A2E",
+    finds: ["Sócios e primeiros clientes", "Editais, aceleração e mentoria"],
   },
   {
-    title: "Quem constrói",
-    desc: "Devs, designers e talentos tech trabalham para fora sem sair do Cariri.",
+    num: "02",
+    chip: "QUEM CONSTRÓI",
+    title: "Talentos tech e criativos",
+    desc: "Trabalhe para fora, viva no Cariri — com uma comunidade técnica por perto.",
     img: "/media/comunidade-5.webp",
     alt: "Talentos da comunidade em talk técnica",
+    bodyBg: "#E4EBDD",
+    accent: "#5F8753",
+    finds: ["Projetos remotos e locais", "Talks e comunidade técnica"],
   },
   {
-    title: "Quem fomenta",
-    desc: "Investidores, empresas e universidades descobrem — e aceleram — o que nasce no interior.",
+    num: "03",
+    chip: "QUEM FOMENTA",
+    title: "Investidores e instituições",
+    desc: "Descubra e acelere o que nasce no interior — com dados e acesso direto.",
     img: "/media/comunidade-6.webp",
     alt: "Parceiros institucionais em apresentação",
+    bodyBg: "#F3E9CF",
+    accent: "#C99A2E",
+    finds: ["Startups em tração, com MRR", "Talentos prontos para construir"],
   },
 ] as const;
 
@@ -49,20 +64,20 @@ export default function AudienceSection() {
           className="kv-display mt-10"
           style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px", maxWidth: 720, ...fadeUp(0) }}
         >
-          Feito para quem{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>faz</em> —
-          de todo jeito.
+          O vale é de{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>quem faz</em>{" "}
+          acontecer.
         </h2>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {CARDS.map((c, i) => (
             <article
-              key={c.title}
+              key={c.num}
               style={{
-                background: "var(--nb-cream)",
-                border: "1px solid rgba(22,20,15,.08)",
                 borderRadius: 20,
                 overflow: "hidden",
+                background: c.bodyBg,
+                border: "1px solid rgba(22,20,15,.08)",
                 boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
                 display: "flex",
                 flexDirection: "column",
@@ -77,13 +92,37 @@ export default function AudienceSection() {
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 />
               </div>
-              <div style={{ padding: "22px 24px 26px" }}>
-                <h3 style={{ margin: "0 0 8px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 22, color: "var(--nb-heading)" }}>
+
+              <div style={{ padding: "20px 22px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
+                <span
+                  className="kv-kicker"
+                  style={{
+                    alignSelf: "flex-start",
+                    fontSize: 10, padding: "4px 11px", borderRadius: 999,
+                    background: "var(--nb-cream)", color: c.accent,
+                    border: `1px solid ${c.accent}33`,
+                    marginBottom: 12,
+                  }}
+                >
+                  {c.num} · {c.chip}
+                </span>
+
+                <h3 style={{ margin: "0 0 8px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
                   {c.title}
                 </h3>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: "var(--nb-body)" }}>
+                <p style={{ margin: "0 0 14px", fontSize: 13.5, lineHeight: 1.6, color: "var(--nb-body)" }}>
                   {c.desc}
                 </p>
+
+                {/* micro-lista: o que encontra no vale */}
+                <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 7 }}>
+                  {c.finds.map(f => (
+                    <p key={f} style={{ margin: 0, display: "flex", alignItems: "baseline", gap: 8, fontSize: 13, color: "var(--nb-body-strong)" }}>
+                      <span aria-hidden="true" style={{ color: c.accent, fontSize: 8 }}>◆</span>
+                      {f}
+                    </p>
+                  ))}
+                </div>
               </div>
             </article>
           ))}

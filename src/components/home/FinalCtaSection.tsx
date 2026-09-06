@@ -17,7 +17,7 @@ export default function FinalCtaSection() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "var(--nb-forest-dark)", padding: "120px 0 110px" }}
+      style={{ background: "var(--nb-forest-dark)", padding: "80px 0 120px" }}
     >
       {/* Chapada ao fundo do fechamento */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -27,7 +27,7 @@ export default function FinalCtaSection() {
         aria-hidden="true"
         style={{
           position: "absolute",
-          bottom: -10,
+          bottom: -40,
           left: "50%",
           transform: "translateX(-50%)",
           width: "min(1100px, 105vw)",
@@ -38,7 +38,7 @@ export default function FinalCtaSection() {
       {/* Bromélia emergindo na lateral */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/media/deco-layer-4.png"
+        src="/media/deco-layer-5.png"
         alt=""
         aria-hidden="true"
         style={{

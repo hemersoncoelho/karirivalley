@@ -45,7 +45,7 @@ export default async function HomePage() {
       <FeaturedMembersSection />
       <CompaniesShowcaseSection />
       <StatsSection />
-      <InterstitialBand lema="Conectar quem faz — Cariri, Ceará" />
+
       <FinalCtaSection />
     </main>
   );

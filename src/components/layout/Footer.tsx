@@ -30,7 +30,7 @@ const COLOPHON: React.CSSProperties = {
   fontSize: 11,
   letterSpacing: ".12em",
   textTransform: "uppercase",
-  color: "rgba(244,238,225,.5)",
+  color: "rgb(244,244,244)",
 };
 
 export default function Footer() {
@@ -62,12 +62,11 @@ export default function Footer() {
       {/* Banda de display — o nome como manchete de fechamento */}
       <div className="mx-auto max-w-[1240px] px-6 md:px-[52px] pt-16 pb-8" style={{ position: "relative" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap" }}>
-          <DiamondMark size={12} />
           <span
             className="kv-kicker"
             style={{ color: "var(--nb-mustard)" }}
           >
-            O mapa vivo da inovação
+            O mapa vivo da inovação do kariri
           </span>
         </div>
         <p

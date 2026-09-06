@@ -76,7 +76,7 @@ export default function AudienceSection() {
               style={{
                 borderRadius: 20,
                 overflow: "hidden",
-                background: c.bodyBg,
+                background: "var(--nb-cream)",
                 border: "1px solid rgba(22,20,15,.08)",
                 boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
                 display: "flex",
@@ -84,12 +84,25 @@ export default function AudienceSection() {
                 ...fadeUp(0.08 + i * 0.07),
               }}
             >
-              <div className="kv-photo" style={{ aspectRatio: "16 / 10" }}>
+              <div style={{ position: "relative", aspectRatio: "16 / 10", overflow: "hidden" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={c.img}
                   alt={c.alt}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(1) contrast(1.06)" }}
+                />
+                {/* duotone: sombras no acento, altas luzes no papel */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: c.accent, mixBlendMode: "multiply", opacity: 0.92 }} />
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "#F4EEE1", mixBlendMode: "lighten", opacity: 0.28 }} />
+                {/* trama halftone */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute", inset: 0,
+                    backgroundImage: "radial-gradient(rgba(6,13,8,.5) 1px, transparent 1.15px)",
+                    backgroundSize: "5px 5px",
+                    opacity: 0.25,
+                  }}
                 />
               </div>
 

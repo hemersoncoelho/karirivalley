@@ -47,10 +47,9 @@ export default function StatsSection() {
           index="08"
           label="Impacto"
           accentColor="var(--nb-mustard)"
-          style={{ borderTopColor: "rgba(244,238,225,.35)" }}
         />
 
-        <div className="mt-14 grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
+        <div className=" grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
           {STATS.map((s, i) => (
             <div key={s.label} style={{ ...fadeUp(0.08 + i * 0.07), borderTop: "1px solid rgba(244,238,225,.35)", paddingTop: 20 }}>
               <p

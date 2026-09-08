@@ -125,7 +125,7 @@ export default function BenefitsSection() {
           top: 0,
           right: 0,
           height: "calc(100% - 260px)",
-          width: "min(50%, 820px)",
+          width: "min(45%, 740px)",
           zIndex: 0,
           pointerEvents: "none",
         }}
@@ -138,7 +138,7 @@ export default function BenefitsSection() {
             width: "100%",
             height: "100%",
             objectFit: "contain",
-            objectPosition: "right center",
+            objectPosition: "right 22%",
             display: "block",
           }}
         />
@@ -208,15 +208,23 @@ export default function BenefitsSection() {
       </div>
 
       {/* ── Mini-seção: o que sustenta o vale ── */}
-      <div className="relative" style={{ marginTop: 96, ...fadeUp(0.2) }}>
+      <div className="relative" style={{ marginTop: 130, ...fadeUp(0.2) }}>
         <div className="mx-auto max-w-[1300px] px-6 lg:px-16">
           <p
             className="kv-kicker"
-            style={{ margin: "0", display: "flex", alignItems: "center", gap: 9, color: "var(--nb-body-strong)" }}
+            style={{ margin: "0 0 14px", display: "flex", alignItems: "center", gap: 9, color: "var(--nb-body-strong)" }}
           >
             <DiamondMark size={7} color="var(--nb-terracotta)" />
             O QUE SUSTENTA O VALE
           </p>
+          <h3
+            className="kv-display"
+            style={{ fontSize: "clamp(24px, 2.4vw, 34px)", color: "var(--nb-heading)", margin: "0 0 44px", maxWidth: 620, lineHeight: 1.15, fontWeight: 600 }}
+          >
+            Uma base sólida,{" "}
+            <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>construída</em>{" "}
+            para você se apoiar
+          </h3>
 
           {/* desktop: linha pontilhada serpenteando pelas 5 paradas */}
           <div className="relative hidden md:block" style={{ paddingTop: STOP_PT }}>

@@ -8,7 +8,8 @@ import { MapPin, Rocket, ShieldCheck, Sparkles, Search } from "lucide-react";
 /**
  * "O que o vale devolve" — benefícios como trilha editorial numerada
  * (hairlines + ícones em círculos pastel) e ilustração colagem em
- * sangria na borda direita. Conforme mockup aprovado.
+ * sangria na borda direita. Abaixo, mini-seção "o que sustenta o vale":
+ * cinco paradas com ilustrações colagem ligadas por linha pontilhada.
  */
 const BENEFITS = [
   {
@@ -37,17 +38,68 @@ const BENEFITS = [
   },
 ] as const;
 
-const TRAIL = [
-  { icon: ShieldCheck, label: "Aprovação manual", accent: "#C25A2E", pastel: "#F7E7DF", yOff: -18, rot: -3 },
-  { icon: MapPin, label: "12 cidades do Cariri", accent: "#5F8753", pastel: "#E4EBDD", yOff: 16, rot: 2 },
-  { icon: Rocket, label: "Perfis de empresa com MRR", accent: "#C99A2E", pastel: "#F3E9CF", yOff: -14, rot: -2 },
-  { icon: Sparkles, label: "Indicação entre membros", accent: "#239D8C", pastel: "#DFEAE7", yOff: 18, rot: 2.5 },
-  { icon: Search, label: "Busca por interesse", accent: "#1E4D3A", pastel: "#E3E9DC", yOff: -12, rot: -2 },
+const STOPS = [
+  {
+    asset: "/media/sustenta-1.png",
+    icon: ShieldCheck,
+    label: "Aprovação manual",
+    desc: "Cada perfil é analisado por pessoas reais.",
+    num: "01",
+    accent: "#C25A2E",
+    pastel: "#F7E7DF",
+  },
+  {
+    asset: "/media/sustenta-2.png",
+    icon: MapPin,
+    label: "12 cidades do Cariri",
+    desc: "Talentos e oportunidades em toda a região.",
+    num: "02",
+    accent: "#5F8753",
+    pastel: "#E4EBDD",
+  },
+  {
+    asset: "/media/sustenta-3.png",
+    icon: Rocket,
+    label: "Perfis de empresa com MRR",
+    desc: "Startups em tração, com receita recorrente.",
+    num: "03",
+    accent: "#C99A2E",
+    pastel: "#F3E9CF",
+  },
+  {
+    asset: "/media/sustenta-4.png",
+    icon: Sparkles,
+    label: "Indicação entre membros",
+    desc: "Conexões que geram oportunidades reais.",
+    num: "04",
+    accent: "#239D8C",
+    pastel: "#DFEAE7",
+  },
+  {
+    asset: "/media/sustenta-5.png",
+    icon: Search,
+    label: "Busca por interesse",
+    desc: "Encontre pessoas e projetos alinhados com seus objetivos.",
+    num: "05",
+    accent: "#1E4D3A",
+    pastel: "#E3E9DC",
+  },
 ] as const;
 
-/** Altura da faixa da trilha e centro da linha. */
-const TRAIL_H = 170;
-const TRAIL_MID = 78;
+/** Geometria das paradas e da linha pontilhada (desktop). */
+const STOP_IMG_H = 180;
+const STOP_PT = 24; // padding-top da faixa desktop
+const SVG_H = 120;
+// centro da linha a partir do topo da faixa desktop (atravessa as ilustrações)
+const CIRCLES_MID = STOP_PT + STOP_IMG_H * 0.62;
+const SVG_TOP = CIRCLES_MID - SVG_H / 2;
+// pontinhos coloridos entre as paradas (x em %, y relativo ao topo do SVG)
+const MID_DOTS = [
+  { left: "20%", y: 51, color: "#C25A2E" },
+  { left: "40%", y: 55, color: "#5F8753" },
+  { left: "60%", y: 68, color: "#C99A2E" },
+  { left: "80%", y: 65, color: "#239D8C" },
+] as const;
 
 export default function BenefitsSection() {
   const { ref, inView } = useInView();
@@ -155,109 +207,121 @@ export default function BenefitsSection() {
         </div>
       </div>
 
-      {/* ── Mini-seção: capacidades como paradas na linha orgânica ── */}
+      {/* ── Mini-seção: o que sustenta o vale ── */}
       <div className="relative" style={{ marginTop: 96, ...fadeUp(0.2) }}>
         <div className="mx-auto max-w-[1300px] px-6 lg:px-16">
           <p
             className="kv-kicker"
-            style={{ margin: "0 0 6px", display: "flex", alignItems: "center", gap: 9, color: "var(--nb-body-strong)" }}
+            style={{ margin: "0", display: "flex", alignItems: "center", gap: 9, color: "var(--nb-body-strong)" }}
           >
             <DiamondMark size={7} color="var(--nb-terracotta)" />
             O QUE SUSTENTA O VALE
           </p>
 
-          {/* desktop: linha serpenteante horizontal com paradas */}
-          <div className="relative hidden md:block" style={{ height: TRAIL_H }}>
+          {/* desktop: linha pontilhada serpenteando pelas 5 paradas */}
+          <div className="relative hidden md:block" style={{ paddingTop: STOP_PT }}>
             <svg
               aria-hidden="true"
-              viewBox="0 0 1000 170"
+              viewBox="0 0 1000 120"
               preserveAspectRatio="none"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+              style={{
+                position: "absolute",
+                top: SVG_TOP,
+                left: 0,
+                width: "100%",
+                height: SVG_H,
+                zIndex: 0,
+              }}
             >
               <path
-                d="M 0 92 C 40 82, 66 76, 100 74 C 170 70, 228 104, 300 106 C 372 108, 430 74, 500 72 C 570 70, 630 102, 700 104 C 772 106, 838 76, 900 74 C 942 72, 972 84, 1000 88"
+                d="M 16 64 C 44 62, 68 60, 100 60 C 160 60, 230 46, 300 46 C 370 46, 430 64, 500 64 C 570 64, 630 72, 700 72 C 770 72, 830 58, 900 58 C 930 58, 960 62, 984 64"
                 fill="none"
-                stroke="var(--nb-line)"
+                stroke="var(--nb-heading)"
                 strokeWidth="1.6"
                 strokeDasharray="0.5 7"
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
+                opacity="0.55"
               />
             </svg>
 
-            {TRAIL.map((c, i) => {
-              const Icon = c.icon;
-              return (
-                <div
-                  key={c.label}
-                  style={{
-                    position: "absolute",
-                    left: `${i * 20 + 10}%`,
-                    top: TRAIL_MID + c.yOff - 21,
-                    transform: "translateX(-50%)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 9,
-                    zIndex: 1,
-                  }}
-                >
-                  <span
-                    style={{
-                      width: 42,
-                      height: 42,
-                      background: c.pastel,
-                      borderRadius: "60% 40% 55% 45% / 50% 55% 45% 50%",
-                      transform: `rotate(${c.rot}deg)`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 6px 16px rgba(22,20,15,.08)",
-                    }}
-                  >
-                    <Icon size={17} strokeWidth={2.2} color={c.accent} />
-                  </span>
-                  <span
-                    className="kv-kicker"
-                    style={{
-                      fontSize: 11,
-                      color: "var(--nb-body-strong)",
-                      background: "var(--nb-page-bg)",
-                      padding: "2px 8px",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {c.label}
-                  </span>
-                </div>
-              );
-            })}
+            {/* pontinhos coloridos no trajeto */}
+            {MID_DOTS.map(d => (
+              <span
+                key={d.left}
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: d.left,
+                  top: SVG_TOP + d.y,
+                  transform: "translate(-50%, -50%)",
+                  width: 8,
+                  height: 8,
+                  borderRadius: 999,
+                  background: d.color,
+                  zIndex: 0,
+                }}
+              />
+            ))}
+
+            <div className="grid grid-cols-5" style={{ position: "relative", zIndex: 1 }}>
+              {STOPS.map(s => {
+                return (
+                  <div key={s.num} style={{ textAlign: "center", padding: "0 10px" }}>
+                    {/* ilustração colagem */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={s.asset}
+                      alt=""
+                      aria-hidden="true"
+                      style={{
+                        width: "100%",
+                        height: STOP_IMG_H,
+                        objectFit: "contain",
+                        objectPosition: "center bottom",
+                        display: "block",
+                      }}
+                    />
+                    <p className="kv-index-num" style={{ margin: "14px 0 0", fontSize: 12, color: s.accent }}>
+                      {s.num}
+                    </p>
+                    <p className="kv-kicker" style={{ margin: "5px 0 0", fontSize: 12, color: "var(--nb-heading)" }}>
+                      {s.label}
+                    </p>
+                    <p style={{ margin: "7px auto 0", fontSize: 13, lineHeight: 1.55, color: "var(--nb-body)", maxWidth: 190 }}>
+                      {s.desc}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* mobile: paradas empilhadas, sem linha */}
-          <div className="flex flex-col gap-3 md:hidden" style={{ paddingTop: 10 }}>
-            {TRAIL.map(c => {
-              const Icon = c.icon;
+          <div className="flex flex-col gap-7 md:hidden" style={{ paddingTop: 20 }}>
+            {STOPS.map(s => {
+              const Icon = s.icon;
               return (
-                <span key={c.label} style={{ display: "inline-flex", alignItems: "center", gap: 11, width: "fit-content" }}>
-                  <span
-                    style={{
-                      width: 30,
-                      height: 30,
-                      flexShrink: 0,
-                      background: c.pastel,
-                      borderRadius: "60% 40% 55% 45% / 50% 55% 45% 50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Icon size={14} strokeWidth={2.2} color={c.accent} />
-                  </span>
-                  <span className="kv-kicker" style={{ fontSize: 11, color: "var(--nb-body-strong)" }}>
-                    {c.label}
-                  </span>
-                </span>
+                <div key={s.num} style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={s.asset}
+                    alt=""
+                    aria-hidden="true"
+                    style={{ width: 88, height: 88, objectFit: "contain", flexShrink: 0 }}
+                  />
+                  <div>
+                    <p className="kv-index-num" style={{ margin: "0 0 2px", fontSize: 11, color: s.accent }}>
+                      {s.num}
+                    </p>
+                    <p className="kv-kicker" style={{ margin: "0 0 3px", fontSize: 11.5, color: "var(--nb-heading)" }}>
+                      {s.label}
+                    </p>
+                    <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.5, color: "var(--nb-body)" }}>
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
               );
             })}
           </div>

@@ -28,8 +28,8 @@ export default function StatsSection() {
       {/* Halftone como textura da banda — a trama de pontos conecta sertão × tecnologia */}
       <div
         aria-hidden="true"
-        className="kv-photo absolute inset-0"
-        style={{ opacity: 0.18, pointerEvents: "none" }}
+        className="kv-photo"
+        style={{ opacity: 0.18, pointerEvents: "none", position: "absolute", inset: 0 }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -44,14 +44,15 @@ export default function StatsSection() {
 
       <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex
-          index="08"
-          label="Impacto"
+          index=""
+          label=""
           accentColor="var(--nb-mustard)"
+          style={{ borderTopColor: "rgba(244,238,225,.0)" }}
         />
 
-        <div className=" grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
+        <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
           {STATS.map((s, i) => (
-            <div key={s.label} style={{ ...fadeUp(0.08 + i * 0.07), borderTop: "1px solid rgba(244,238,225,.35)", paddingTop: 20 }}>
+            <div key={s.label} style={{ ...fadeUp(0.08 + i * 0.07), paddingTop: 20 }}>
               <p
                 className="kv-index-num"
                 style={{ margin: 0, fontSize: "clamp(56px, 6vw, 84px)", fontWeight: 700, lineHeight: 1, color: "var(--nb-sand)" }}

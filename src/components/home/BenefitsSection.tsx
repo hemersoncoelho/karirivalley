@@ -196,14 +196,14 @@ export default function BenefitsSection() {
             <DiamondMark size={7} color="var(--nb-terracotta)" />
             O QUE SUSTENTA O VALE
           </p>
-          <h3
+          <h2
             className="kv-display"
-            style={{ fontSize: "clamp(24px, 2.4vw, 34px)", color: "var(--nb-heading)", margin: "0 0 44px", maxWidth: 620, lineHeight: 1.15, fontWeight: 600 }}
+            style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "0 0 44px", maxWidth: 720, lineHeight: 1.08, ...fadeUp(0) }}
           >
             Uma base sólida,{" "}
             <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>construída</em>{" "}
             para você se apoiar
-          </h3>
+          </h2>
 
           {/* desktop: linha pontilhada serpenteando pelas 5 paradas */}
           <div className="relative hidden md:block" style={{ paddingTop: STOP_PT }}>

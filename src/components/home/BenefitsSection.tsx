@@ -2,7 +2,8 @@
 
 import { useInView } from "@/hooks/useInView";
 import type React from "react";
-import { SectionIndex } from "@/components/ui/editorial";
+import { DiamondMark, SectionIndex } from "@/components/ui/editorial";
+import { MapPin, Rocket, ShieldCheck, Sparkles, Search } from "lucide-react";
 
 /**
  * "O que o vale devolve" — benefícios como trilha editorial numerada
@@ -36,6 +37,18 @@ const BENEFITS = [
   },
 ] as const;
 
+const TRAIL = [
+  { icon: ShieldCheck, label: "Aprovação manual", accent: "#C25A2E", pastel: "#F7E7DF", yOff: -18, rot: -3 },
+  { icon: MapPin, label: "12 cidades do Cariri", accent: "#5F8753", pastel: "#E4EBDD", yOff: 16, rot: 2 },
+  { icon: Rocket, label: "Perfis de empresa com MRR", accent: "#C99A2E", pastel: "#F3E9CF", yOff: -14, rot: -2 },
+  { icon: Sparkles, label: "Indicação entre membros", accent: "#239D8C", pastel: "#DFEAE7", yOff: 18, rot: 2.5 },
+  { icon: Search, label: "Busca por interesse", accent: "#1E4D3A", pastel: "#E3E9DC", yOff: -12, rot: -2 },
+] as const;
+
+/** Altura da faixa da trilha e centro da linha. */
+const TRAIL_H = 170;
+const TRAIL_MID = 78;
+
 export default function BenefitsSection() {
   const { ref, inView } = useInView();
 
@@ -54,12 +67,13 @@ export default function BenefitsSection() {
       <div
         ref={ref}
         aria-hidden="true"
+        className="hidden lg:block"
         style={{
           position: "absolute",
           top: 0,
           right: 0,
-          bottom: 0,
-          width: "min(52%, 860px)",
+          height: "calc(100% - 260px)",
+          width: "min(50%, 820px)",
           zIndex: 0,
           pointerEvents: "none",
         }}
@@ -95,7 +109,7 @@ export default function BenefitsSection() {
             A plataforma cuida da estrutura. Você cuida do que só você pode fazer.
           </p>
 
-          <div style={{ borderBottom: "1px solid var(--nb-line)", maxWidth: 700 }}>
+          <div style={{ borderBottom: "1px solid var(--nb-line)", maxWidth: 560 }}>
             {BENEFITS.map((b, i) => (
               <div
                 key={b.title}
@@ -131,12 +145,121 @@ export default function BenefitsSection() {
                   <h3 style={{ margin: "0 0 5px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
                     {b.title}
                   </h3>
-                  <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: "var(--nb-body)", maxWidth: 460 }}>
+                  <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: "var(--nb-body)", maxWidth: 400 }}>
                     {b.desc}
                   </p>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Mini-seção: capacidades como paradas na linha orgânica ── */}
+      <div className="relative" style={{ marginTop: 96, ...fadeUp(0.2) }}>
+        <div className="mx-auto max-w-[1300px] px-6 lg:px-16">
+          <p
+            className="kv-kicker"
+            style={{ margin: "0 0 6px", display: "flex", alignItems: "center", gap: 9, color: "var(--nb-body-strong)" }}
+          >
+            <DiamondMark size={7} color="var(--nb-terracotta)" />
+            O QUE SUSTENTA O VALE
+          </p>
+
+          {/* desktop: linha serpenteante horizontal com paradas */}
+          <div className="relative hidden md:block" style={{ height: TRAIL_H }}>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 1000 170"
+              preserveAspectRatio="none"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+            >
+              <path
+                d="M 0 92 C 40 82, 66 76, 100 74 C 170 70, 228 104, 300 106 C 372 108, 430 74, 500 72 C 570 70, 630 102, 700 104 C 772 106, 838 76, 900 74 C 942 72, 972 84, 1000 88"
+                fill="none"
+                stroke="var(--nb-line)"
+                strokeWidth="1.6"
+                strokeDasharray="0.5 7"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+
+            {TRAIL.map((c, i) => {
+              const Icon = c.icon;
+              return (
+                <div
+                  key={c.label}
+                  style={{
+                    position: "absolute",
+                    left: `${i * 20 + 10}%`,
+                    top: TRAIL_MID + c.yOff - 21,
+                    transform: "translateX(-50%)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 9,
+                    zIndex: 1,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 42,
+                      height: 42,
+                      background: c.pastel,
+                      borderRadius: "60% 40% 55% 45% / 50% 55% 45% 50%",
+                      transform: `rotate(${c.rot}deg)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 6px 16px rgba(22,20,15,.08)",
+                    }}
+                  >
+                    <Icon size={17} strokeWidth={2.2} color={c.accent} />
+                  </span>
+                  <span
+                    className="kv-kicker"
+                    style={{
+                      fontSize: 11,
+                      color: "var(--nb-body-strong)",
+                      background: "var(--nb-page-bg)",
+                      padding: "2px 8px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {c.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* mobile: paradas empilhadas, sem linha */}
+          <div className="flex flex-col gap-3 md:hidden" style={{ paddingTop: 10 }}>
+            {TRAIL.map(c => {
+              const Icon = c.icon;
+              return (
+                <span key={c.label} style={{ display: "inline-flex", alignItems: "center", gap: 11, width: "fit-content" }}>
+                  <span
+                    style={{
+                      width: 30,
+                      height: 30,
+                      flexShrink: 0,
+                      background: c.pastel,
+                      borderRadius: "60% 40% 55% 45% / 50% 55% 45% 50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Icon size={14} strokeWidth={2.2} color={c.accent} />
+                  </span>
+                  <span className="kv-kicker" style={{ fontSize: 11, color: "var(--nb-body-strong)" }}>
+                    {c.label}
+                  </span>
+                </span>
+              );
+            })}
           </div>
         </div>
       </div>

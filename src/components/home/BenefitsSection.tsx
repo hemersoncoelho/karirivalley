@@ -168,39 +168,18 @@ export default function BenefitsSection() {
                 style={{
                   borderTop: "1px solid var(--nb-line)",
                   padding: "26px 0",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 22,
                   ...fadeUp(0.1 + i * 0.07),
                 }}
               >
-                {/* ícone em círculo pastel */}
-                <span
-                  style={{
-                    width: 76,
-                    height: 76,
-                    flexShrink: 0,
-                    background: b.pastel,
-                    borderRadius: 999,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={b.icon} alt="" aria-hidden="true" style={{ width: 46, height: 46, objectFit: "contain" }} />
-                </span>
-                <div>
-                  <p className="kv-index-num" style={{ margin: "0 0 3px", fontSize: 11.5, color: b.accent }}>
-                    {b.num}
-                  </p>
-                  <h3 style={{ margin: "0 0 5px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
-                    {b.title}
-                  </h3>
-                  <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: "var(--nb-body)", maxWidth: 400 }}>
-                    {b.desc}
-                  </p>
-                </div>
+                <p className="kv-index-num" style={{ margin: "0 0 3px", fontSize: 11.5, color: b.accent }}>
+                  {b.num}
+                </p>
+                <h3 style={{ margin: "0 0 5px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 21, color: "var(--nb-heading)" }}>
+                  {b.title}
+                </h3>
+                <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: "var(--nb-body)", maxWidth: 400 }}>
+                  {b.desc}
+                </p>
               </div>
             ))}
           </div>

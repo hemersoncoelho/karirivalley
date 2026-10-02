@@ -40,9 +40,7 @@ export default function HeroSection() {
           O futuro do Cariri<br />tem a <em>nossa cara.</em>
         </h1>
         <p className={styles.heroDescription}>
-          Gente que se encontra, compartilha ideias e faz acontecer.
-          Somos o Kariri Valley: um movimento de pessoas que acreditam
-          na força do nosso território.
+          Pessoas, ideias e encontros que fazem a inovação acontecer no Cariri.
         </p>
         <div className={styles.heroActions}>
           <EditorialButton href="/como-participar" size="lg">Fazer parte</EditorialButton>

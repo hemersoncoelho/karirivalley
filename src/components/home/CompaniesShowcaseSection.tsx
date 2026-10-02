@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SectionIndex, MetaDot } from "@/components/ui/editorial";
+import styles from "./fusion.module.css";
 
 /** Os quatro atores da comunidade, com ilustrações próprias do Cariri. */
 const COMPANIES = [
@@ -32,47 +33,49 @@ export default function CompaniesShowcaseSection() {
           {COMPANIES.map((c) => (
             <div
               key={c.name}
+              className={styles.framedCard}
               style={{
-                background: "var(--nb-card-bg)",
                 border: "1px solid rgba(22,20,15,.08)",
-                borderRadius: 20,
-                padding: "24px 22px 22px",
-                boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
+                overflow: "hidden",
                 transition: "transform .25s ease, box-shadow .25s ease",
               }}
             >
-              <div
-                style={{
-                  aspectRatio: "3 / 2",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  marginBottom: 16, overflow: "hidden",
-                }}
-              >
-                <Image
-                  src={c.image}
-                  width={1536} height={1024}
-                  alt="" aria-hidden="true" loading="lazy"
-                  sizes="(max-width: 639px) 90vw, (max-width: 1023px) 45vw, 280px"
-                  style={{ width: "100%", height: "auto", objectFit: "contain" }}
-                />
+              <div className={styles.photoFrame}>
+                <div
+                  style={{
+                    aspectRatio: "3 / 2",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Image
+                    src={c.image}
+                    width={1536} height={1024}
+                    alt="" aria-hidden="true" loading="lazy"
+                    sizes="(max-width: 639px) 90vw, (max-width: 1023px) 45vw, 280px"
+                    style={{ width: "100%", height: "auto", objectFit: "contain" }}
+                  />
+                </div>
               </div>
-              <p style={{ margin: "0 0 3px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, color: "var(--nb-heading)" }}>
-                {c.name}
-              </p>
-              <p style={{ margin: "0 0 14px", fontSize: 12.5, color: "var(--nb-body)" }}>
-                {c.sector}
-              </p>
-              <span
-                className="kv-kicker"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 7,
-                  fontSize: 10, padding: "4px 11px", borderRadius: 999,
-                  background: "rgba(194,90,46,.09)", color: "var(--nb-opportunity-accent)",
-                }}
-              >
-                <MetaDot role="opportunity" style={{ width: 5, height: 5 }} />
-                {c.stage}
-              </span>
+              <div style={{ padding: "20px 22px 24px" }}>
+                <p style={{ margin: "0 0 3px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 19, color: "var(--nb-heading)" }}>
+                  {c.name}
+                </p>
+                <p style={{ margin: "0 0 14px", fontSize: 12.5, color: "var(--nb-body)" }}>
+                  {c.sector}
+                </p>
+                <span
+                  className="kv-kicker"
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 7,
+                    fontSize: 10, padding: "4px 11px", borderRadius: 999,
+                    background: "rgba(194,90,46,.09)", color: "var(--nb-opportunity-accent)",
+                  }}
+                >
+                  <MetaDot role="opportunity" style={{ width: 5, height: 5 }} />
+                  {c.stage}
+                </span>
+              </div>
             </div>
           ))}
         </div>

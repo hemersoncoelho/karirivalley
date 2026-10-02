@@ -154,3 +154,5 @@ Na home, Próximos encontros e O que está aberto agora só aparecem quando a co
 A transição dentro de Benefícios usa uma faixa em --nb-community-surface para O que sustenta o vale, com borda superior fina e respiro próprio. A colagem de pessoas pertence apenas ao bloco O que a gente faz circular, sem avançar sobre as cinco paradas ilustradas. Preservar o conteúdo e a trilha pontilhada.
 
 A faixa animada de palavras da comunidade fica depois da galeria, antes do convite final; não pertence à hero. A paisagem termina na base da hero, cujo controle de pausa é independente do controle da faixa.
+
+Os cards de Muitas vozes, Rostos do vale e Diferentes caminhos compartilham .framedCard em fusion.module.css: fundo, raio, sombra e contorno tracejado têm uma única definição. Os valores podem ser refinados diretamente nessa regra; evitar sobreposições inline nos componentes.

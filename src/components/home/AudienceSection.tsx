@@ -68,10 +68,8 @@ export default function AudienceSection() {
               key={c.num}
               className={styles.framedCard}
               style={{
-                borderRadius: 3,
                 overflow: "hidden",
                 border: "1px solid rgba(22,20,15,.08)",
-                boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
                 display: "flex",
                 flexDirection: "column",
               }}

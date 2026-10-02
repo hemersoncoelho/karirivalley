@@ -193,11 +193,11 @@ export default function BenefitsSection() {
           </p>
           <h2
             className="kv-display"
-            style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "0 0 44px", maxWidth: 720, lineHeight: 1.08 }}
+            style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "0 0 44px", lineHeight: 1.08 }}
           >
             Uma base sólida,{" "}
-            <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-community-accent)" }}>construída</em>{" "}
-            para você se apoiar
+            <span style={{ fontWeight: 400, color: "#777" }}>construída para você se apoiar</span>{" "}
+
           </h2>
 
           {/* desktop: linha pontilhada serpenteando pelas 5 paradas */}

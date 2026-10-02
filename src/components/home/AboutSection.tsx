@@ -38,10 +38,10 @@ export default function AboutSection() {
               <br />
               feito por pessoas
               <br />
-              <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-community-accent)" }}>
-                que constroem
+              <em style={{ fontStyle: "italic", fontWeight: 400, color: "#777" }}>
+                que constroem o Cariri
               </em>{" "}
-              o Cariri
+
             </h2>
 
             <p

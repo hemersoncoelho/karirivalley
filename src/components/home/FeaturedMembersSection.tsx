@@ -18,7 +18,7 @@ export default function FeaturedMembersSection() {
         <SectionIndex index="06" label="Quem faz" title="a comunidade em movimento" />
         <div className={`mt-10 ${styles.peopleHeading}`}>
           <h2 id="people-heading" className="kv-display" style={{ fontSize: "clamp(32px, 3.6vw, 48px)", color: "var(--nb-heading)", margin: 0 }}>
-            Rostos do <em style={{ fontWeight: 400, color: "var(--nb-community-accent)" }}>vale.</em>
+            Rostos do <em style={{ fontWeight: 400}}>vale.</em>
           </h2>
           <Link href="/membros" className="inline-flex min-h-11 items-center gap-3 text-sm underline underline-offset-4" style={{ color: "var(--nb-heading)" }}>Conhecer a comunidade <span aria-hidden="true">↗</span></Link>
         </div>

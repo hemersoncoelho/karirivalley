@@ -23,10 +23,10 @@ export default function CompaniesShowcaseSection() {
 
         <h2
           className="kv-display mt-10"
-          style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px", maxWidth: 680 }}
+          style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px" }}
         >
-          Diferentes caminhos. Uma vontade{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-community-accent)" }}>em comum.</em>
+          Diferentes caminhos. {" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "#777" }}>Uma vontade em comum.</em>
         </h2>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

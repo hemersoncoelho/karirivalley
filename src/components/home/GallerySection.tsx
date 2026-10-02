@@ -11,7 +11,7 @@ export default function GallerySection() {
       <div className={styles.container}>
         <div className={styles.sectionLabel}><span className={styles.eyebrow}>Memória da comunidade</span><span className={styles.sectionNote}>{galleryPhotos.length} registros da nossa trajetória</span></div>
         <div className={styles.galleryHeading}>
-          <h2 id="gallery-title" className={`kv-display ${styles.sectionTitle}`}>A gente faz história.<br />E guarda <em>esses encontros.</em></h2>
+          <h2 id="gallery-title" className={`kv-display ${styles.sectionTitle}`}>A gente faz história.<br />E guarda esses encontros.</h2>
           <div><p>Por trás de cada ideia, tem gente. Um pouco dos rostos, das trocas e dos momentos que fazem o Kariri Valley.</p><Link href="/galeria" className={styles.textLink}>Ver a galeria completa <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
         </div>
         <div className={styles.photoStrip}>

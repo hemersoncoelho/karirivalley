@@ -58,8 +58,8 @@ export default function AudienceSection() {
           className="kv-display mt-10"
           style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px", maxWidth: 720 }}
         >
-          Muitas vozes. Um Cariri de{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-opportunity-accent)" }}>possibilidades.</em>
+          Muitas vozes. {" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "#777777" }}>Um Cariri de possibilidades.</em>
         </h2>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

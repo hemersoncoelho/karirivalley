@@ -127,11 +127,12 @@ export default function Navbar() {
           {open ? <X size={19} aria-hidden="true" /> : <Menu size={19} aria-hidden="true" />}
         </button>
 
-        {open && (
           <div
             id="public-mobile-menu"
             ref={menuRef}
-            className="absolute top-full right-0 left-0 max-h-[calc(100dvh-56px)] overflow-y-auto border-b px-5 pb-7 pt-3 md:px-8 lg:hidden"
+            className="kv-mobile-menu absolute top-full right-0 left-0 max-h-[calc(100dvh-56px)] overflow-y-auto border-b px-5 pb-7 pt-3 md:px-8 lg:hidden"
+            hidden={!open}
+            inert={!open}
             style={{ background: "var(--nb-navbar-bg)", borderColor: "var(--nb-line-soft)", boxShadow: "0 14px 24px rgba(0,0,0,.08)" }}
           >
             <p className="kv-kicker mb-2 mt-2" style={{ color: "var(--nb-body)" }}>Encontre seu lugar no movimento</p>
@@ -156,7 +157,6 @@ export default function Navbar() {
               <Link href="/login" onClick={() => setOpenOnPath(null)} className="inline-flex min-h-12 items-center justify-center rounded-[2px] px-5 text-sm font-medium no-underline" style={{ color: "var(--nb-heading)", border: "1px solid var(--nb-line-soft)" }}>Entrar</Link>
             </div>
           </div>
-        )}
       </div>
     </nav>
     </>

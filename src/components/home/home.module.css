@@ -58,8 +58,10 @@
 .galleryHeading p { font-size: 15px; line-height: 1.8; color: var(--nb-body); margin: 0 0 14px; }
 .photoStrip { columns: 2; column-gap: 20px; margin-top: 40px; }
 .galleryPhoto { position: relative; display: inline-block; width: 100%; margin-bottom: 20px; break-inside: avoid; vertical-align: top; border-radius: 6px; overflow: hidden; }
-.galleryPhoto img { transition: transform .35s; }
-.galleryPhoto:hover img { transform: scale(1.035); }
+.galleryPhoto img { transition: transform 760ms var(--kv-motion-ease); }
+@media (hover: hover) and (pointer: fine) {
+  .galleryPhoto:hover img { transform: scale(1.018); }
+}
 .galleryPhoto > span { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; padding: 30px 16px 14px; color: var(--nb-cream); background: linear-gradient(transparent, rgba(0,0,0,.7)); font-size: 12px; }
 .finalCta { padding-block: 82px 88px; background: var(--nb-forest-dark); color: var(--nb-cream); }
 .finalCta .eyebrow { color: var(--nb-mustard); margin-top: 28px; }

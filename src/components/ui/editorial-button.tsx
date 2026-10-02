@@ -20,7 +20,6 @@ const BASE: CSSProperties = {
   textDecoration: "none",
   cursor: "pointer",
   whiteSpace: "nowrap",
-  transition: "transform .15s ease, box-shadow .2s ease, background .15s ease, color .15s ease",
 };
 
 const SIZES: Record<"sm" | "md" | "lg", CSSProperties> = {
@@ -62,20 +61,17 @@ export function EditorialButton({
           background: "var(--nb-btn-primary-bg)",
           color: "var(--nb-btn-primary-fg)",
           border: "none",
-          boxShadow: "0 1px 2px rgba(22,20,15,.15)",
         }
       : variant === "invert"
         ? {
             background: "var(--nb-heading)",
             color: "var(--nb-page-bg)",
             border: "none",
-            boxShadow: "0 1px 2px rgba(22,20,15,.15)",
           }
         : {
             background: "var(--nb-card-bg)",
             color: "var(--nb-btn-ghost-fg)",
             border: "1px solid rgba(22,20,15,.12)",
-            boxShadow: "0 1px 2px rgba(22,20,15,.06)",
           };
 
   const merged: CSSProperties = {
@@ -93,7 +89,8 @@ export function EditorialButton({
         href={href}
         onClick={onClick}
         style={merged}
-        className={className}
+        className={`kv-editorial-button ${className ?? ""}`}
+        data-variant={variant}
         target={target}
         rel={rel}
       >
@@ -106,7 +103,8 @@ export function EditorialButton({
       type={type}
       onClick={onClick}
       style={merged}
-      className={className}
+      className={`kv-editorial-button ${className ?? ""}`}
+      data-variant={variant}
       disabled={disabled}
     >
       {children}
@@ -149,7 +147,7 @@ export function TextLink({
       }}
     >
       <span style={{ borderBottom: "1px solid currentColor", paddingBottom: 1 }}>{children}</span>
-      <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
+      <span className="kv-link-arrow" aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
     </a>
   );
 }

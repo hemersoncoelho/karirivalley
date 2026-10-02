@@ -1,0 +1,37 @@
+/* One rhythm for interactive responses; page content stays visible. */
+:root {
+  --kv-motion-fast: 220ms;
+  --kv-motion-hover: 360ms;
+  --kv-motion-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+.kv-editorial-button {
+  box-shadow: 0 1px 2px rgb(22 20 15 / .12);
+  transition: transform var(--kv-motion-fast) var(--kv-motion-ease),
+    box-shadow var(--kv-motion-hover) var(--kv-motion-ease);
+}
+.kv-editorial-button[data-variant="ghost"] { box-shadow: 0 1px 2px rgb(22 20 15 / .06); }
+.kv-link-arrow { transition: transform var(--kv-motion-hover) var(--kv-motion-ease); }
+
+@media (hover: hover) and (pointer: fine) {
+  .kv-editorial-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 14px rgb(22 20 15 / .12); }
+  a:hover > .kv-link-arrow { transform: translateX(3px); }
+}
+.kv-editorial-button:active:not(:disabled) { transform: translateY(0); }
+a:focus-visible > .kv-link-arrow { transform: translateX(3px); }
+
+/* Native hidden/top-layer behavior stays intact in older browsers. */
+.kv-mobile-menu {
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity var(--kv-motion-fast) ease, translate var(--kv-motion-fast) var(--kv-motion-ease), display var(--kv-motion-fast) allow-discrete;
+}
+.kv-mobile-menu[hidden] { opacity: 0; translate: 0 -6px; }
+@starting-style {
+  .kv-mobile-menu:not([hidden]) { opacity: 0; translate: 0 -6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-editorial-button, .kv-link-arrow, .kv-mobile-menu { transition: none; }
+  .kv-editorial-button:hover, a:focus-visible > .kv-link-arrow, a:hover > .kv-link-arrow { transform: none; }
+}

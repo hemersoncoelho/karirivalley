@@ -153,6 +153,12 @@ Na home, Próximos encontros e O que está aberto agora só aparecem quando a co
 
 A transição dentro de Benefícios usa uma faixa em --nb-community-surface para O que sustenta o vale, com borda superior fina e respiro próprio. A colagem de pessoas pertence apenas ao bloco O que a gente faz circular, sem avançar sobre as cinco paradas ilustradas. Preservar o conteúdo e a trilha pontilhada.
 
-A faixa animada de palavras da comunidade fica depois da galeria, antes do convite final; não pertence à hero. A paisagem termina na base da hero, cujo controle de pausa é independente do controle da faixa.
+A faixa animada de palavras da comunidade fica depois da galeria, antes do convite final; não pertence à hero. Não tem botão de pausa: ocupa toda a largura, mantém a altura de 60px e pausa ao receber hover ou foco pelo teclado. A paisagem termina na base da hero, que mantém seu controle de pausa próprio.
 
 Os cards de Muitas vozes, Rostos do vale e Diferentes caminhos compartilham .framedCard em fusion.module.css: fundo, raio, sombra e contorno tracejado têm uma única definição. Os valores podem ser refinados diretamente nessa regra; evitar sobreposições inline nos componentes.
+
+Movimento público: manter todas as seções visíveis durante a rolagem, sem efeitos de entrada ou saída. Hovers discretos nos cards (elevação de 3px, zoom de 1,8% nas fotos), botões (2px) e setas (3px), com tempos de 220–760ms e desaceleração suave. Hovers com movimento só em dispositivos com ponteiro preciso; preferência por movimento reduzido desativa deslocamentos. Variáveis e transições de controles ficam em src/app/motion.css; cards e fotos nos módulos compartilhados. O menu usa transição curta de abertura/fechamento, mantendo o comportamento nativo de hidden e foco.
+
+Apenas a hero tem animação de abertura: ornamento, identificação, título, descrição e botões aparecem em uma sequência de até 900ms, com deslocamento de 8px e opacidade suave. Acontece uma vez ao abrir a página, sem gatilho de rolagem. Movimento reduzido mantém tudo visível desde o início; foco nos botões encerra sua entrada imediatamente.
+
+O campo de pixels participa da abertura: cada ponto ganha opacidade durante 800ms, com intervalos de até 180ms distribuídos pela trama. O tempo começa no primeiro quadro do canvas, evitando uma entrada brusca depois da hidratação. Redimensionar, pausar e retomar não repetem a abertura concluída; movimento reduzido mostra a trama estática imediatamente.

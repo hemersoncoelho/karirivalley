@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 const CELL = 15;
 const ERASE_RADIUS = 85;
 const REGEN_CHANCE = 0.012;
+const OPENING_DURATION = 800;
+const OPENING_STAGGER = 180;
 
 /**
  * Campo de pixels vivo preenchendo a hero inteira. O manifesto vive numa
@@ -15,6 +17,7 @@ const REGEN_CHANCE = 0.012;
  */
 export default function PixelField({ paused = false }: { paused?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const openingCompleteRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -28,6 +31,7 @@ export default function PixelField({ paused = false }: { paused?: boolean }) {
 
     let raf = 0;
     let time = 0;
+    let openingStartedAt: number | null = null;
     let w = 0;
     let h = 0;
     let cols = 0;
@@ -118,7 +122,8 @@ export default function PixelField({ paused = false }: { paused?: boolean }) {
       }
     };
 
-    const draw = () => {
+    const draw = (openingElapsed = OPENING_DURATION + OPENING_STAGGER) => {
+      const isOpening = openingElapsed < OPENING_DURATION + OPENING_STAGGER;
       ctx.clearRect(0, 0, w, h);
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -131,10 +136,16 @@ export default function PixelField({ paused = false }: { paused?: boolean }) {
           const v = base * wave;
           const size = CELL * v * 0.94;
           const off = (CELL - size) / 2;
+          if (isOpening) {
+            const delay = (phase[i] / (Math.PI * 2)) * OPENING_STAGGER;
+            const progress = Math.min(1, Math.max(0, (openingElapsed - delay) / OPENING_DURATION));
+            ctx.globalAlpha = progress * progress * (3 - 2 * progress);
+          }
           ctx.fillStyle = colorFor(i);
           ctx.fillRect(c * CELL + off, r * CELL + off, size, size);
         }
       }
+      ctx.globalAlpha = 1;
     };
 
     const step = () => {
@@ -147,10 +158,15 @@ export default function PixelField({ paused = false }: { paused?: boolean }) {
       }
     };
 
-    const loop = () => {
+    const loop = (timestamp: number) => {
+      openingStartedAt ??= timestamp;
+      const openingElapsed = openingCompleteRef.current
+        ? OPENING_DURATION + OPENING_STAGGER
+        : timestamp - openingStartedAt;
+      if (openingElapsed >= OPENING_DURATION + OPENING_STAGGER) openingCompleteRef.current = true;
       time += 1 / 60;
       step();
-      draw();
+      draw(openingElapsed);
       raf = requestAnimationFrame(loop);
     };
 
@@ -162,6 +178,7 @@ export default function PixelField({ paused = false }: { paused?: boolean }) {
     build();
 
     if (reduced) {
+      openingCompleteRef.current = true;
       values.set(target);
       draw();
       const redraw = () => { build(); values.set(target); draw(); };

@@ -37,7 +37,6 @@ export default function CompaniesShowcaseSection() {
               style={{
                 border: "1px solid rgba(22,20,15,.08)",
                 overflow: "hidden",
-                transition: "transform .25s ease, box-shadow .25s ease",
               }}
             >
               <div className={styles.photoFrame}>

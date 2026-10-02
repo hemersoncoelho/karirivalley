@@ -11,22 +11,47 @@
 .heroTitle em { font-style: italic; font-weight: 400; color: var(--nb-community-accent); }
 .heroDescription { max-width: 560px; color: var(--nb-body-strong); font-size: 16px; line-height: 1.75; border-top: 1px solid var(--nb-line); padding-top: 16px; margin: 30px 0 0; }
 .heroActions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
+@keyframes heroOpening {
+  from { opacity: 0; translate: 0 8px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .heroCopy > :is(.brandElement, .heroLabel, .heroTitle, .heroDescription, .heroActions) {
+    animation: heroOpening 700ms var(--kv-motion-ease) backwards;
+  }
+  .heroCopy > .heroLabel { animation-delay: 50ms; }
+  .heroCopy > .heroTitle { animation-delay: 100ms; }
+  .heroCopy > .heroDescription { animation-delay: 150ms; }
+  .heroCopy > .heroActions { animation-delay: 200ms; }
+  .heroCopy > .heroActions:focus-within { animation: none; }
+}
 .heroPlace { font-size: 11px; color: var(--nb-body-strong); margin: 24px 0 0; }
-.communityTicker { position: relative; z-index: 10; display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--nb-line); background: var(--nb-page-bg); padding: 8px 16px 8px 0; }
+.communityTicker { position: relative; z-index: 10; display: flex; align-items: center; min-height: 60px; border-top: 1px solid var(--nb-line); background: var(--nb-page-bg); padding: 8px 0; }
 .heroMotionToggle { position: absolute; right: 16px; bottom: 16px; z-index: 11; }
 .tickerContent { min-width: 0; flex: 1; }
 .motionToggle { display: grid; place-items: center; height: 44px; width: 44px; flex-shrink: 0; border: 1px solid var(--nb-line-soft); border-radius: 50%; background: var(--nb-card-bg); color: var(--nb-heading); cursor: pointer; }
-.communityTicker[data-motion-paused="true"] :global(.kv-ticker) { animation-play-state: paused; }
+.communityTicker:hover :global(.kv-ticker), .communityTicker:focus-within :global(.kv-ticker) { animation-play-state: paused; }
+.communityTicker:focus-visible { outline: 2px solid var(--nb-community-accent); outline-offset: -3px; }
 .collage { position: relative; padding-block: 24px 80px; }
 .photoFrame, .framedCard { position: relative; border-radius: 10px; background: #fcf3e6; }
-.framedCard { box-shadow: 0 1px 2px rgb(22 20 15 / .04), 0 12px 32px rgb(22 20 15 / .06); }
+.framedCard { box-shadow: 0 1px 2px rgb(22 20 15 / .04), 0 12px 32px rgb(22 20 15 / .06); transition: transform var(--kv-motion-hover) var(--kv-motion-ease), box-shadow var(--kv-motion-hover) var(--kv-motion-ease); }
 .photoFrame img {
   border-radius: 12px;
+  transition: transform 760ms var(--kv-motion-ease);
 }
 .photoFrame { padding: 14px; }
 .photoFrame::after, .framedCard::after { content: ''; position: absolute; inset: 5px; border: 1px dashed #cc734e; border-radius: 10px; opacity: .65; pointer-events: none; }
 .framedCard .photoFrame { padding-bottom: 0; }
 .framedCard .photoFrame::after { display: none; }
+.framedCard::after { transition: opacity var(--kv-motion-hover) ease; }
+.peopleCardCopy > span > span { transition: transform var(--kv-motion-hover) var(--kv-motion-ease); }
+@media (hover: hover) and (pointer: fine) {
+  .framedCard:hover { transform: translateY(-3px); box-shadow: 0 3px 8px rgb(22 20 15 / .04), 0 16px 36px rgb(22 20 15 / .09); }
+  .framedCard:hover::after { opacity: .9; }
+  .framedCard:hover .photoFrame img { transform: scale(1.018); }
+  .peopleCard:hover .peopleCardCopy > span > span { transform: translateX(3px); }
+}
+.framedCard:focus-visible::after { opacity: .9; }
 .collagePhoto, .collageSecond { box-shadow: 0 12px 32px rgb(22 20 15 / .12); }
 .collagePhoto { margin: 0 0 0 28px; position: relative; padding: 14px; transform: rotate(3deg); }
 .collagePhoto img { display: block; width: 100%; height: auto; }
@@ -59,4 +84,6 @@
   .videoBackground { display: none; }
   .peopleCard img { transition: none; }
   .peopleCard:hover img { transform: none; }
+  .framedCard, .framedCard::after, .photoFrame img, .peopleCardCopy > span > span { transition: none; }
+  .framedCard:hover, .framedCard:hover .photoFrame img, .peopleCard:hover .peopleCardCopy > span > span { transform: none; }
 }

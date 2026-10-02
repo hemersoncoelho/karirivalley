@@ -37,7 +37,7 @@ export default function HeroSection() {
         <BrandOrnament paused={paused} className={styles.brandElement} />
         <p className={`kv-kicker ${styles.heroLabel}`}>Comunidade de inovação do Cariri</p>
         <h1 id="hero-title" className={`kv-display ${styles.heroTitle}`}>
-          O futuro do Cariri<br />tem a <em>nossa cara.</em>
+          A inovação no Cariri<br /><em>começa aqui.</em>
         </h1>
         <p className={styles.heroDescription}>
           Pessoas, ideias e encontros que fazem a inovação acontecer no Cariri.

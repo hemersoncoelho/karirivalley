@@ -1,29 +1,19 @@
-"use client";
-
-import { useInView } from "@/hooks/useInView";
-import type React from "react";
 import { SectionIndex } from "@/components/ui/editorial";
 
 const STATS = [
-  { n: "214", label: "membros fundadores", note: "perfis aprovados na plataforma" },
-  { n: "12", label: "cidades conectadas", note: "Cariri e região do Ceará" },
-  { n: "40", label: "encontros realizados", note: "desde 2016, sem parar" },
-  { n: "07", label: "trilhas de participação", note: "do interesse ao impacto" },
+  { n: "2016", label: "primeiras articulações", note: "o começo da nossa construção coletiva" },
+  { n: "4", label: "hélices conectadas", note: "público, privado, academia e sociedade" },
+  { n: "2022", label: "Ceará Awards", note: "reconhecimento como Comunidade Destaque" },
+  { n: "45", label: "registros da comunidade", note: "encontros guardados na nossa galeria" },
 ] as const;
 
 export default function StatsSection() {
-  const { ref, inView } = useInView();
-
-  const fadeUp = (delay: number): React.CSSProperties => ({
-    opacity: inView ? 1 : 0,
-    transform: inView ? "translateY(0)" : "translateY(24px)",
-    transition: `opacity .7s ease ${delay}s, transform .7s ease ${delay}s`,
-  });
 
   return (
     <section
+      aria-label="Marcos da comunidade"
       className="relative overflow-hidden"
-      style={{ background: "var(--nb-forest)", padding: "0px 0 96px" }}
+      style={{ background: "var(--nb-forest)", padding: "48px 0 80px" }}
     >
       {/* Halftone como textura da banda — a trama de pontos conecta sertão × tecnologia */}
       <div
@@ -33,16 +23,13 @@ export default function StatsSection() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/media/comunidade-4.webp"
+          src="/media/gallery/20260801-195702-fav.webp"
           alt=""
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
 
-      {/* Mandacaru emoldurando a banda de impacto */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-
-      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
+      <div className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex
           index=""
           label=""
@@ -51,8 +38,8 @@ export default function StatsSection() {
         />
 
         <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
-          {STATS.map((s, i) => (
-            <div key={s.label} style={{ ...fadeUp(0.08 + i * 0.07), paddingTop: 20 }}>
+          {STATS.map((s) => (
+            <div key={s.label} style={{ paddingTop: 20 }}>
               <p
                 className="kv-index-num"
                 style={{ margin: 0, fontSize: "clamp(56px, 6vw, 84px)", fontWeight: 700, lineHeight: 1, color: "var(--nb-sand)" }}

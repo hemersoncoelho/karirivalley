@@ -261,9 +261,7 @@ h1, h2, h3, h4 {
   --shadow-nb-sand:  none;
 }
 
-/* ── Tema claro (impressão diurna) / escuro (impressão noturna) ─────────────
-   O site público usa a mesma estrutura JSX nos dois temas — só a "pele" muda
-   via estes tokens. Footer e CTA final são bandas de contraste fixo. */
+/* Tema claro único. Footer e CTA final mantêm suas bandas de contraste fixo. */
 :root {
   --nb-page-bg:            var(--nb-sand);
   --nb-heading:            var(--nb-ink);
@@ -296,37 +294,6 @@ h1, h2, h3, h4 {
   --nb-label-accent:       #8A5C13;
 }
 
-[data-nb-theme="dark"] {
-  --nb-page-bg:            var(--kv-dark);
-  --nb-heading:            var(--kv-cream);
-  --nb-body:               rgba(244, 237, 223, .58);
-  --nb-body-strong:        rgba(244, 237, 223, .78);
-
-  --nb-line:               rgba(244, 237, 223, .85);
-  --nb-line-soft:          rgba(244, 237, 223, .18);
-
-  --nb-navbar-bg:          var(--kv-dark);
-  --nb-navbar-border:      var(--nb-line);
-  --nb-link-fg:            rgba(244, 237, 223, .75);
-
-  --nb-btn-primary-bg:     var(--nb-turquoise);
-  --nb-btn-primary-fg:     var(--kv-dark);
-  --nb-btn-primary-border: 1px solid var(--nb-turquoise);
-  --nb-btn-ghost-fg:       rgba(244, 237, 223, .8);
-  --nb-btn-ghost-bg:       transparent;
-  --nb-btn-ghost-border:   1px solid var(--nb-line-soft);
-
-  --nb-card-bg:            #0F1A12;
-  --nb-card-blur:          none;
-  --nb-card-border:        1px solid rgba(244, 237, 223, .1);
-  --nb-card-shadow:        0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
-  --nb-card-radius:        18px;
-  --nb-card-header-bg:     transparent;
-  --nb-card-header-border: 1px solid var(--nb-line-soft);
-  --nb-card-divider:       var(--nb-line-soft);
-  --nb-avatar-ring:        var(--kv-dark);
-  --nb-label-accent:       var(--nb-mustard);
-}
 
 /* ── Utilitários editoriais "Imprensa do Vale" ─────────────────────────────
    Kicker/meta em monoespaçada caixa-alta; display em serifa; hairlines como
@@ -394,7 +361,6 @@ h1, h2, h3, h4 {
 }
 
 :root                   { --nb-dot: rgba(22, 20, 15, .28); }
-[data-nb-theme="dark"]  { --nb-dot: rgba(244, 237, 223, .22); }
 
 @keyframes kv-ticker-roll {
   from { transform: translateX(0); }
@@ -665,3 +631,57 @@ h1, h2, h3, h4 {
     transform: none;
   }
 }
+/* Public launch refinement: natural photography, readable roles, keyboard access. */
+:root {
+  --nb-community-accent: #196E60;
+  --nb-community-surface: #E8EBDD;
+  --nb-scrollbar-thumb: #788276;
+  --nb-scrollbar-track: var(--nb-page-bg);
+  --nb-scrollbar-hover: var(--nb-community-accent);
+  --nb-scrollbar-active: var(--nb-forest);
+}
+html { color-scheme: only light; scrollbar-gutter: stable; scroll-padding-top: 72px; }
+* { scrollbar-color: var(--nb-scrollbar-thumb) var(--nb-scrollbar-track); scrollbar-width: thin; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: var(--nb-scrollbar-track); }
+*::-webkit-scrollbar-thumb { background: var(--nb-scrollbar-thumb); border: 2px solid var(--nb-scrollbar-track); border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--nb-scrollbar-hover); }
+*::-webkit-scrollbar-thumb:active { background: var(--nb-scrollbar-active); }
+a, button, [role="button"] { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled), a { cursor: pointer; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid var(--nb-community-accent); outline-offset: 4px; }
+:where(main)[tabindex="-1"]:focus { outline: none; }
+.kv-public-nav-link { transition: color .15s; text-underline-offset: 7px; }
+.kv-public-nav-link:hover, .kv-public-nav-link[aria-current="page"] { color: var(--nb-community-accent); text-decoration: underline; }
+.kv-skip-link { position: fixed; top: 8px; left: 16px; z-index: 100; transform: translateY(-150%); padding: 12px 20px; border-radius: 4px; color: var(--nb-cream); background: var(--nb-forest); }
+.kv-skip-link:focus { transform: translateY(0); }
+.kv-home { background: var(--nb-page-bg); }
+.kv-home .kv-live-section { padding-bottom: 80px; }
+.kv-live-heading { flex-wrap: wrap; }
+.kv-opportunity-row { min-width: 0; }
+.kv-opportunity-title { min-width: 0; }
+@media (max-width: 767px) {
+  .kv-home .kv-live-section { padding-bottom: 60px; }
+  .kv-live-heading { align-items: start; gap: 14px; }
+  .kv-opportunity-row { grid-template-columns: 1fr auto !important; gap: 10px 12px !important; padding: 18px !important; }
+  .kv-opportunity-row .kv-opportunity-title { grid-row: 2; grid-column: 1; white-space: normal !important; overflow: visible !important; font-size: 18px !important; line-height: 1.5; }
+  .kv-opportunity-row .kv-opportunity-deadline { grid-row: 3; grid-column: 1; }
+  .kv-opportunity-row .kv-opportunity-arrow { grid-column: 2; grid-row: 1 / 4; }
+  .kv-home .kv-empty-state { padding: 32px 22px !important; }
+  input, select, textarea { font-size: max(16px, 1em); }
+}
+@media (forced-colors: active) {
+  * { scrollbar-color: auto; }
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline-color: Highlight; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+.kv-section-index-row { flex-wrap: wrap; row-gap: 8px !important; }
+@media (max-width: 479px) {
+  .kv-section-index-row > :last-child:not(:nth-child(2)) { width: 100%; margin-left: 0 !important; text-align: left !important; }
+}
+:root { --nb-opportunity-accent: #9B4220; }
+footer :where(a, button):focus-visible { outline-color: var(--nb-mustard); }
+.kv-home + footer .kv-footer-invitation { display: none; }

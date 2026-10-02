@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useNbTheme } from "@/hooks/useNbTheme";
 
 const CELL = 15;
 const ERASE_RADIUS = 85;
@@ -14,9 +13,8 @@ const REGEN_CHANCE = 0.012;
  * Ondas de brilho mantêm a trama em transformação; o cursor revela o papel
  * e as células se recompõem. reduced-motion: estático.
  */
-export default function PixelField() {
+export default function PixelField({ paused = false }: { paused?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { theme } = useNbTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,12 +22,9 @@ export default function PixelField() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dark = theme === "dark";
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const pal = dark
-      ? { base: "rgba(244,237,223,.92)", forest: "rgba(244,237,223,.55)", gold: "#E9B23C", terra: "#E0715A", teal: "#3FD4BF" }
-      : { base: "#16140F", forest: "#1E4D3A", gold: "#E9B23C", terra: "#C25A2E", teal: "#239D8C" };
+    const pal = { base: "#16140F", forest: "#1E4D3A", gold: "#E9B23C", terra: "#C25A2E", teal: "#239D8C" };
 
     let raf = 0;
     let time = 0;
@@ -70,8 +65,8 @@ export default function PixelField() {
 
           // ── Ilha de papel central (contraste do manifesto) ──
           // elipse ampla e de borda dura: sem anel de dithering
-          const dx = (nx - 0.5) / 0.42;
-          const dy = (ny - 0.46) / 0.4;
+          const dx = (nx - 0.5) / (w < 640 ? 0.6 : 0.42);
+          const dy = (ny - 0.46) / (w < 640 ? 0.48 : 0.4);
           const d = Math.hypot(dx, dy);
 
           const t = d < 1 ? 0 : 1;
@@ -169,7 +164,9 @@ export default function PixelField() {
     if (reduced) {
       values.set(target);
       draw();
-      return;
+      const redraw = () => { build(); values.set(target); draw(); };
+      window.addEventListener("resize", redraw, { passive: true });
+      return () => window.removeEventListener("resize", redraw);
     }
 
     const parent = canvas.parentElement;
@@ -188,7 +185,7 @@ export default function PixelField() {
       window.removeEventListener("resize", onResize);
       parent?.removeEventListener("pointermove", onMove);
     };
-  }, [theme]);
+  }, [paused]);
 
   return (
     <canvas

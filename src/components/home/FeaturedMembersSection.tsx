@@ -1,103 +1,44 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { useInView } from "@/hooks/useInView";
-import type React from "react";
 import { SectionIndex } from "@/components/ui/editorial";
+import { galleryPhotos } from "@/lib/gallery";
+import styles from "./fusion.module.css";
 
-/**
- * "Rostos do vale" — membros em destaque (mockado até a plataforma expor
- * destaques). Arquétipo: cards de retrato fechados com chip de área.
- */
-const MEMBERS = [
-  { name: "Maria Lima", role: "Fundadora", city: "Crato", photo: "/media/faces/face-1.jpg", tag: "Startups" },
-  { name: "Pedro Costa", role: "Investidor-anjo", city: "Juazeiro do Norte", photo: "/media/faces/face-2.jpg", tag: "Investimento" },
-  { name: "Ana Ferreira", role: "Pesquisadora · UFCA", city: "Barbalha", photo: "/media/faces/face-3.jpg", tag: "Educação" },
-  { name: "Rafael Bezerra", role: "Dev sênior · remoto", city: "Lavras da Mangabeira", photo: "/media/faces/face-4.jpg", tag: "Dev" },
-] as const;
+const MOMENTS = [
+  { id: "20230715-152511", title: "Compartilhar conhecimento", description: "Conversas que aproximam experiências e abrem novos caminhos.", photoPosition: "50% 42%" },
+  { id: "20231108-161347", title: "Construir junto", description: "Cada pessoa que chega também deixa sua marca no movimento.", photoPosition: "50% 35%" },
+  { id: "20231122-162417", title: "Colaborar com ideias", description: "Gente que se encontra para pensar, experimentar e fazer acontecer.", photoPosition: "50% 50%" },
+  { id: "img-20221105-wa0002-fav", title: "Celebrar o caminho", description: "As conquistas do Cariri têm a força de uma construção coletiva.", photoPosition: "50% 50%" },
+];
 
 export default function FeaturedMembersSection() {
-  const { ref, inView } = useInView();
-
-  const fadeUp = (delay: number): React.CSSProperties => ({
-    opacity: inView ? 1 : 0,
-    transform: inView ? "translateY(0)" : "translateY(24px)",
-    transition: `opacity .7s ease ${delay}s, transform .7s ease ${delay}s`,
-  });
-
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{ background: "var(--nb-page-bg)", padding: "0 0 112px" }}
-    >
-      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
-        <SectionIndex index="06" label="Quem faz" title="perfis verificados" />
-
-        <div className="mt-10 flex items-end justify-between gap-4">
-          <h2
-            className="kv-display"
-            style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: 0, ...fadeUp(0) }}
-          >
-            Rostos do <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>vale</em>
+    <section className="relative overflow-hidden pb-16 md:pb-28" style={{ background: "var(--nb-page-bg)" }} aria-labelledby="people-heading">
+      <div className="mx-auto max-w-[1300px] px-6 lg:px-16">
+        <SectionIndex index="06" label="Quem faz" title="a comunidade em movimento" />
+        <div className={`mt-10 ${styles.peopleHeading}`}>
+          <h2 id="people-heading" className="kv-display" style={{ fontSize: "clamp(32px, 3.6vw, 48px)", color: "var(--nb-heading)", margin: 0 }}>
+            Rostos do <em style={{ fontWeight: 400, color: "var(--nb-community-accent)" }}>vale.</em>
           </h2>
-          <Link
-            href="/membros"
-            className="kv-kicker"
-            style={{ color: "var(--nb-ink)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, ...fadeUp(0.05) }}
-          >
-            <span style={{ borderBottom: "1px solid var(--nb-ink)", paddingBottom: 2 }}>Diretório completo</span>
-            <span aria-hidden="true" style={{ fontSize: 9 }}>▸</span>
-          </Link>
+          <Link href="/membros" className="inline-flex min-h-11 items-center gap-3 text-sm underline underline-offset-4" style={{ color: "var(--nb-heading)" }}>Conhecer a comunidade <span aria-hidden="true">↗</span></Link>
         </div>
-
-        <div className="mt-8 grid grid-cols-2 gap-5 lg:grid-cols-4">
-          {MEMBERS.map((m, i) => (
-            <Link
-              key={m.name}
-              href="/membros"
-              className="group"
-              style={{
-                textDecoration: "none",
-                display: "block",
-                background: "var(--nb-cream)",
-                border: "1px solid rgba(22,20,15,.08)",
-                borderRadius: 20,
-                overflow: "hidden",
-                boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
-                transition: "transform .25s ease, box-shadow .25s ease",
-                ...fadeUp(0.08 + i * 0.06),
-              }}
-            >
-              <div className="kv-photo" style={{ aspectRatio: "4 / 5" }}>
-                <Image
-                  src={m.photo}
-                  alt={m.name}
-                  width={0}
-                  height={0}
-                  sizes="(max-width: 640px) 50vw, 25vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
-              </div>
-              <div style={{ padding: "16px 18px 18px" }}>
-                <p style={{ margin: "0 0 4px", fontFamily: "var(--font-fraunces), Georgia, serif", fontSize: 18, color: "var(--nb-heading)" }}>
-                  {m.name}
-                </p>
-                <p style={{ margin: "0 0 10px", fontSize: 12.5, color: "var(--nb-body)" }}>
-                  {m.role} — {m.city}
-                </p>
-                <span
-                  className="kv-kicker"
-                  style={{
-                    display: "inline-flex", fontSize: 10, padding: "4px 11px",
-                    borderRadius: 999, background: "rgba(35,157,140,.1)", color: "#166E62",
-                  }}
-                >
-                  {m.tag}
-                </span>
-              </div>
-            </Link>
-          ))}
+        <p className="mb-0 mt-4 max-w-[640px] text-base leading-[1.8]" style={{ color: "var(--nb-body)" }}>Por trás de cada ideia, tem gente. Estes são os rostos, as trocas e os momentos que fazem o Kariri Valley acontecer.</p>
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {MOMENTS.map(moment => {
+            const photo = galleryPhotos.find(item => item.id === moment.id)!;
+            return (
+              <Link key={moment.id} href="/galeria" className={`${styles.peopleCard} ${styles.framedCard}`}>
+                <div className={styles.photoFrame}>
+                  <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 639px) 90vw, (max-width: 1023px) 45vw, 280px" style={{ objectPosition: moment.photoPosition }} />
+                </div>
+                <div className={styles.peopleCardCopy}>
+                  <h3>{moment.title}</h3>
+                  <p>{moment.description}</p>
+                  <span>Ver nossos encontros <span aria-hidden="true">↗</span></span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,0 +1,46 @@
+.ornament {
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+  aspect-ratio: 524 / 104;
+}
+
+.gold { stroke: #e9b23c; }
+.coral { stroke: #df7667; }
+
+.center {
+  color: #239d8c;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: diamondPulse 8s ease-in-out infinite;
+}
+
+.rays {
+  stroke: #e9b23c;
+  animation: rayPulse 8s ease-in-out infinite;
+}
+
+.step0 { animation-delay: 0s; }
+.step1 { animation-delay: 0.35s; }
+.step2 { animation-delay: 0.7s; }
+.step3 { animation-delay: 1.05s; }
+.step4 { animation-delay: 1.4s; }
+
+.ornament[data-paused="true"] .center,
+.ornament[data-paused="true"] .rays {
+  animation-play-state: paused;
+}
+
+@keyframes diamondPulse {
+  0%, 32%, 100% { transform: scale(1); color: #239d8c; }
+  12% { transform: scale(1.15); color: #176d60; }
+}
+
+@keyframes rayPulse {
+  0%, 32%, 100% { stroke: #e9b23c; }
+  12% { stroke: #bd8220; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .center, .rays { animation: none; }
+}

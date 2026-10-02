@@ -14,7 +14,7 @@ export default function InterstitialBand({ lema = "Conectar quem faz" }: { lema?
         <DiamondMark size={9} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logo-element.png"
+          src="/logo-element-b.png"
           alt=""
           style={{ height: 30, width: "auto", opacity: 0.95 }}
         />

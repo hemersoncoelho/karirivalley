@@ -41,7 +41,7 @@ export function SectionIndex({
 }) {
   return (
     <header style={{ borderTop: "1px solid var(--nb-line)", paddingTop: 14, ...style }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+      <div className="kv-section-index-row" style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
         <span className="kv-index-num" style={{ fontSize: 13, color: accentColor }}>{index}</span>
         <span className="kv-kicker" style={{ color: accentColor }}>{label}</span>
         {title ? (

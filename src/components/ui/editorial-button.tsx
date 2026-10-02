@@ -1,7 +1,7 @@
 /**
  * Botões editoriais do site público ("Imprensa do Vale").
  * Primário: sólido verde-mata · Ghost: hairline · TextLink: mono com seta.
- * Sempre caixa-alta em Space Grotesk, raio 2px. Ver docs/design-system.md.
+ * Texto em Space Grotesk e cantos de 2px. Ver docs/design-system.md.
  */
 
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
@@ -11,7 +11,7 @@ const BASE: CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   gap: 8,
-  borderRadius: 999,
+  borderRadius: 2,
   fontFamily: "var(--font-geo)",
   fontSize: 14,
   fontWeight: 600,

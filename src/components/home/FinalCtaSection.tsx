@@ -1,23 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useInView } from "@/hooks/useInView";
-import type React from "react";
 import { DiamondMark } from "@/components/ui/editorial";
+import styles from "./fusion.module.css";
 
 export default function FinalCtaSection() {
-  const { ref, inView } = useInView();
-
-  const fadeUp = (delay: number): React.CSSProperties => ({
-    opacity: inView ? 1 : 0,
-    transform: inView ? "translateY(0)" : "translateY(28px)",
-    transition: `opacity .8s ease ${delay}s, transform .8s ease ${delay}s`,
-  });
 
   return (
     <section
-      className="relative overflow-hidden"
-      style={{ background: "var(--nb-forest-dark)", padding: "80px 0 120px" }}
+      className={styles.closing}
     >
       {/* Chapada ao fundo do fechamento */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -52,22 +41,21 @@ export default function FinalCtaSection() {
         }}
       />
 
-      <div ref={ref} className="relative mx-auto max-w-[900px] px-6 text-center">
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 22, ...fadeUp(0) }}>
+      <div className="relative mx-auto max-w-[900px] px-6 text-center">
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 22 }}>
           <DiamondMark size={11} />
         </div>
 
-        <p className="kv-kicker" style={{ color: "var(--nb-mustard)", marginBottom: 26, ...fadeUp(0.05) }}>
-          Edição aberta — novas inscrições
+        <p className="kv-kicker" style={{ color: "var(--nb-mustard)", marginBottom: 26 }}>
+          O próximo encontro pode começar com você
         </p>
 
         <h2
           className="kv-display"
-          style={{ fontSize: "clamp(38px, 5.4vw, 72px)", color: "var(--nb-sand)", marginBottom: 26, ...fadeUp(0.1) }}
+          style={{ fontSize: "clamp(38px, 5.4vw, 72px)", color: "var(--nb-sand)", marginBottom: 26 }}
         >
-          Faça parte da edição que está{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-mustard)" }}>conectando</em>{" "}
-          o Cariri
+          Traga sua ideia. Traga sua curiosidade.{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-mustard)" }}>Venha somar.</em>
         </h2>
 
         <p
@@ -77,14 +65,12 @@ export default function FinalCtaSection() {
             color: "rgba(244,238,225,.72)",
             maxWidth: 520,
             margin: "0 auto 44px",
-            ...fadeUp(0.2),
           }}
         >
-          A comunidade se constrói a cada novo membro. Traga seu trabalho,
-          sua ideia ou sua curiosidade — a ponte já está aqui.
+          Uma comunidade se constrói com a presença de cada pessoa. O Cariri tem muito para criar — e fica ainda melhor com você por perto.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4" style={fadeUp(0.3)}>
+        <div className={styles.closingActions}>
           <Link
             href="/como-participar"
             className="kv-press kv-kicker inline-flex items-center"

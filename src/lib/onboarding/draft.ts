@@ -28,7 +28,12 @@ export function loadDraft(): OnboardingDraft {
 }
 
 export function saveDraft(patch: Partial<OnboardingDraft>): OnboardingDraft {
-  const merged = { ...loadDraft(), ...patch }
+  const current = loadDraft()
+  const changingAccount = patch.email !== undefined &&
+    patch.email.trim().toLowerCase() !== current.email?.trim().toLowerCase()
+  // Entering another account must not attach the previous person's profile
+  // fields to the new identity, including before email confirmation/reload.
+  const merged = { ...(changingAccount ? { step: 1 } : current), ...patch }
   try {
     window.localStorage.setItem(DRAFT_KEY, JSON.stringify(merged))
   } catch {

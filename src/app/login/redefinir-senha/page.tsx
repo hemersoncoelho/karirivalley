@@ -80,7 +80,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "var(--kv-dark)" }}>
+    <main id="conteudo" tabIndex={-1} className="flex min-h-screen items-center justify-center px-6 py-24" style={{ background: "var(--kv-dark)" }}>
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <p className="text-xs font-semibold tracking-[2.5px] text-[var(--kv-gold)] uppercase">Kariri Valley</p>

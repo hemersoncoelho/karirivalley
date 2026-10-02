@@ -53,7 +53,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   if (!event) notFound();
 
   return (
-    <main style={{ background: "var(--nb-page-bg)" }}>
+    <main id="conteudo" tabIndex={-1} style={{ background: "var(--nb-page-bg)" }}>
       <article className="mx-auto max-w-[820px] px-6 lg:px-16" style={{ paddingTop: 130, paddingBottom: 110 }}>
         <Link
           href="/agenda"

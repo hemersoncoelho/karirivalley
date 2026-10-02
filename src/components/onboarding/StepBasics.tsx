@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import {
@@ -36,7 +36,7 @@ export function StepBasics({ defaultValues, initialPhotoUrl, onSubmit, onBack }:
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<BasicsData>({
     resolver: zodResolver(basicsSchema),
@@ -52,7 +52,7 @@ export function StepBasics({ defaultValues, initialPhotoUrl, onSubmit, onBack }:
     },
   })
 
-  const bioLength = (watch("bio") ?? "").length
+  const bioLength = (useWatch({ control, name: "bio" }) ?? "").length
 
   function handlePhotoChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]

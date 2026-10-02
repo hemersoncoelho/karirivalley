@@ -1,0 +1,17 @@
+.overview {
+  position: relative;
+}
+
+.foundation {
+  margin-top: 80px;
+  padding: 64px 0 80px;
+  background: var(--nb-community-surface);
+  border-top: 1px solid var(--nb-line-soft);
+}
+
+@media (max-width: 767px) {
+  .foundation {
+    margin-top: 40px;
+    padding: 40px 0 48px;
+  }
+}

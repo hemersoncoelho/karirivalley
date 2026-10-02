@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import Link from "next/link"
 
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
@@ -44,97 +45,183 @@ function basicsFromMember(member: MemberRecord): Partial<BasicsData> {
 }
 
 export function OnboardingWizard() {
+  // Draft data stays behind the loading view until the session is ready, so the
+  // browser can initialize it without changing the server's hydration markup.
+  const [initialDraft] = useState(loadDraft)
+  const resolvedAccountRef = useRef<string | null>(null)
   const [ready, setReady] = useState(false)
-  const [step, setStep] = useState(1)
+  const [initializationError, setInitializationError] = useState(false)
+  const [initializationAttempt, setInitializationAttempt] = useState(0)
+  const [retryingInitialization, setRetryingInitialization] = useState(false)
+  const [draftResetForAccount, setDraftResetForAccount] = useState(false)
+  const [step, setStep] = useState(initialDraft.step ?? 1)
   const [userId, setUserId] = useState<string | null>(null)
   const [memberId, setMemberId] = useState<string | null>(null)
-  const [fullName, setFullName] = useState("")
-  const [email, setEmail] = useState("")
-  const [basics, setBasics] = useState<Partial<BasicsData>>({})
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
-  const [profiles, setProfiles] = useState<string[]>([])
-  const [interests, setInterests] = useState<string[]>([])
-  const [needs, setNeeds] = useState<string[]>([])
-  const [offers, setOffers] = useState<string[]>([])
-  const [visibility, setVisibility] = useState<Partial<VisibilityData>>({})
+  const [fullName, setFullName] = useState(initialDraft.fullName ?? "")
+  const [email, setEmail] = useState(initialDraft.email ?? "")
+  const [basics, setBasics] = useState<Partial<BasicsData>>(initialDraft.basics ?? {})
+  const [photoUrl, setPhotoUrl] = useState<string | null>(initialDraft.photoUrl ?? null)
+  const [profiles, setProfiles] = useState<string[]>(initialDraft.profiles ?? [])
+  const [interests, setInterests] = useState<string[]>(initialDraft.interests ?? [])
+  const [needs, setNeeds] = useState<string[]>(initialDraft.needs ?? [])
+  const [offers, setOffers] = useState<string[]>(initialDraft.offers ?? [])
+  const [visibility, setVisibility] = useState<Partial<VisibilityData>>(initialDraft.visibility ?? {})
   const [interestOptions, setInterestOptions] = useState<ChipOption[]>([])
 
   const advanceFromSession = useCallback(
-    async (sessionUserId: string, sessionEmail: string | null, sessionFullName: string | null) => {
-      setUserId(sessionUserId)
+    async (sessionUserId: string, sessionEmail: string | null, sessionFullName: string | null, isCurrent: () => boolean) => {
       const member = await fetchMyMember(sessionUserId)
+      if (!isCurrent()) return
       const draft = loadDraft()
+      const accountEmail = sessionEmail?.trim() ?? ""
+      const draftMatchesAccount = accountEmail !== "" &&
+        draft.email?.trim().toLowerCase() === accountEmail.toLowerCase()
+      const initialDraftMatchesAccount = accountEmail !== "" &&
+        initialDraft.email?.trim().toLowerCase() === accountEmail.toLowerCase()
+      const restoringSameAccount = resolvedAccountRef.current === sessionUserId
+      const accountDraft: OnboardingDraft = draftMatchesAccount && initialDraftMatchesAccount ? draft : {}
+      const accountFullName = member ? member.full_name : sessionFullName?.trim() ||
+        (draftMatchesAccount ? draft.fullName?.trim() ?? "" : "")
+      const incompatibleDraft = !restoringSameAccount && (
+        (Object.keys(initialDraft).length > 0 && !initialDraftMatchesAccount) ||
+        (Object.keys(draft).length > 0 && !draftMatchesAccount)
+      )
 
-      let minimumStep = 2
-      setFullName((current) => current || draft.fullName || sessionFullName || "")
-      if (member) {
-        minimumStep = 3
-        setMemberId(member.id)
-        setFullName(member.full_name)
-        setEmail(member.email)
-        setBasics((current) => ({ ...basicsFromMember(member), ...current }))
-        setPhotoUrl((current) => current ?? member.photo_url)
-        setProfiles((current) => (current.length > 0 ? current : member.occupation_areas ?? []))
-      } else {
-        setEmail((current) => current || sessionEmail || "")
+      if (incompatibleDraft) {
+        // StepAccount merges identity into the draft; remove previous-account
+        // fields only after the new session has been successfully resolved.
+        clearDraft()
+        saveDraft({ fullName: accountFullName, email: member?.email ?? accountEmail, step: member ? 3 : 2 })
+        setDraftResetForAccount(true)
       }
 
-      setStep((current) => Math.max(current, minimumStep, draft.step ?? 1))
+      setUserId(sessionUserId)
+      setMemberId(member?.id ?? null)
+      if (!restoringSameAccount) {
+        setInterests(accountDraft.interests ?? [])
+        setNeeds(accountDraft.needs ?? [])
+        setOffers(accountDraft.offers ?? [])
+        setVisibility(accountDraft.visibility ?? {})
+      }
+      if (member) {
+        setFullName(member.full_name)
+        setEmail(member.email)
+        setBasics((current) => ({ ...basicsFromMember(member), ...(restoringSameAccount ? current : accountDraft.basics ?? {}) }))
+        setPhotoUrl((current) => (restoringSameAccount ? current : accountDraft.photoUrl) ?? member.photo_url)
+        setProfiles((current) => {
+          const accountProfiles = restoringSameAccount ? current : accountDraft.profiles ?? []
+          return accountProfiles.length > 0 ? accountProfiles : member.occupation_areas ?? []
+        })
+        setStep((current) => Math.max(3, restoringSameAccount ? current : 1, accountDraft.step ?? 1))
+      } else {
+        setEmail(accountEmail)
+        setFullName((current) => accountFullName || (restoringSameAccount ? current : ""))
+        if (!restoringSameAccount) {
+          setBasics(accountDraft.basics ?? {})
+          setPhotoUrl(accountDraft.photoUrl ?? null)
+          setProfiles(accountDraft.profiles ?? [])
+        }
+        // Later steps require the member record created by saving step two.
+        setStep(2)
+      }
+      resolvedAccountRef.current = sessionUserId
     },
-    []
+    [initialDraft]
   )
 
   useEffect(() => {
-    const draft = loadDraft()
-    setStep(draft.step ?? 1)
-    setFullName(draft.fullName ?? "")
-    setEmail(draft.email ?? "")
-    setBasics(draft.basics ?? {})
-    setPhotoUrl(draft.photoUrl ?? null)
-    setProfiles(draft.profiles ?? [])
-    setInterests(draft.interests ?? [])
-    setNeeds(draft.needs ?? [])
-    setOffers(draft.offers ?? [])
-    setVisibility(draft.visibility ?? {})
+    let cancelled = false
+    let requestSequence = 0
+    let timeout: ReturnType<typeof setTimeout> | undefined
+    let unsubscribe = () => {}
 
-    const supabase = getSupabaseBrowserClient()
+    function beginRequest() {
+      const request = ++requestSequence
+      const isCurrent = () => !cancelled && request === requestSequence
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        if (!isCurrent()) return
+        requestSequence += 1
+        setInitializationError(true)
+        setRetryingInitialization(false)
+        setReady(false)
+      }, 15_000)
+      return isCurrent
+    }
+
+    function finishRequest(isCurrent: () => boolean, unavailable = false) {
+      if (!isCurrent()) return
+      clearTimeout(timeout)
+      setInitializationError(unavailable)
+      setRetryingInitialization(false)
+      setReady(!unavailable)
+    }
 
     async function init() {
-      const { data } = await supabase.auth.getSession()
-      if (data.session?.user) {
-        const user = data.session.user
-        await advanceFromSession(
-          user.id,
-          user.email ?? null,
-          (user.user_metadata?.full_name as string | undefined) ?? null
-        )
+      const isCurrent = beginRequest()
+      try {
+        const supabase = getSupabaseBrowserClient()
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event !== "SIGNED_IN" || !session?.user || cancelled) return
+          const user = session.user
+          const isCurrentSession = beginRequest()
+          void advanceFromSession(
+            user.id,
+            user.email ?? null,
+            (user.user_metadata?.full_name as string | undefined) ?? null,
+            isCurrentSession
+          ).then(
+            () => finishRequest(isCurrentSession),
+            () => finishRequest(isCurrentSession, true)
+          )
+        })
+        unsubscribe = () => subscription.unsubscribe()
+
+        const { data, error } = await supabase.auth.getSession()
+        if (!isCurrent()) return
+        if (error) throw error
+        if (data.session?.user) {
+          const user = data.session.user
+          await advanceFromSession(
+            user.id,
+            user.email ?? null,
+            (user.user_metadata?.full_name as string | undefined) ?? null,
+            isCurrent
+          )
+        } else {
+          resolvedAccountRef.current = null
+          setUserId(null)
+          setMemberId(null)
+          setStep(1)
+        }
+        finishRequest(isCurrent)
+      } catch {
+        finishRequest(isCurrent, true)
       }
-      setReady(true)
     }
-    init()
+    void init()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session?.user) {
-        const user = session.user
-        void advanceFromSession(
-          user.id,
-          user.email ?? null,
-          (user.user_metadata?.full_name as string | undefined) ?? null
-        )
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [advanceFromSession])
+    return () => {
+      cancelled = true
+      clearTimeout(timeout)
+      unsubscribe()
+    }
+  }, [advanceFromSession, initializationAttempt])
 
   useEffect(() => {
-    if (step !== 4 || interestOptions.length > 0) return
+    if (!ready || step !== 4 || interestOptions.length > 0) return
+    let cancelled = false
     fetchInterests()
-      .then((items) => setInterestOptions(items.map((item) => ({ value: item.id, label: item.name }))))
-      .catch(() => setInterestOptions([]))
-  }, [step, interestOptions.length])
+      .then((items) => {
+        if (!cancelled) setInterestOptions(items.map((item) => ({ value: item.id, label: item.name })))
+      })
+      .catch(() => {
+        if (!cancelled) setInterestOptions([])
+      })
+    return () => { cancelled = true }
+  }, [ready, step, interestOptions.length])
 
   function goTo(next: number, patch?: Partial<OnboardingDraft>) {
     saveDraft({ ...patch, step: next })
@@ -148,10 +235,38 @@ export function OnboardingWizard() {
     window.location.reload()
   }
 
+  if (initializationError) {
+    return (
+      <div aria-busy={retryingInitialization} className="space-y-6 rounded-2xl border border-white/15 bg-white/[0.03] p-6 sm:p-8">
+        <div role="alert">
+          <h1 className="m-0 text-2xl font-semibold leading-tight text-[var(--kv-cream)]">Não conseguimos abrir o cadastro agora</h1>
+          <p className="mb-0 mt-4 text-sm leading-7 text-[var(--kv-cream)]/75">Tente novamente em instantes. Se você já tinha um rascunho salvo neste navegador, ele será mantido.</p>
+        </div>
+        <button
+          type="button"
+          disabled={retryingInitialization}
+          aria-busy={retryingInitialization}
+          onClick={() => {
+            setReady(false)
+            setRetryingInitialization(true)
+            setInitializationAttempt((attempt) => attempt + 1)
+          }}
+          className="inline-flex min-h-11 w-full cursor-pointer items-center justify-center rounded-full bg-[var(--kv-gold)] px-4 text-sm font-semibold text-[var(--kv-dark)] transition-opacity hover:opacity-85 disabled:cursor-wait disabled:opacity-65 sm:w-[190px]"
+        >
+          {retryingInitialization ? "Tentando novamente…" : "Tentar novamente"}
+        </button>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[var(--kv-cream)]/85">
+          <Link href="/" className="inline-flex min-h-11 items-center underline underline-offset-4">Voltar ao início</Link>
+          <Link href="/galeria" className="inline-flex min-h-11 items-center underline underline-offset-4">Conhecer a galeria</Link>
+        </div>
+      </div>
+    )
+  }
+
   if (!ready) {
     return (
-      <div className="flex justify-center py-16">
-        <p className="text-sm text-[var(--kv-cream)]/40">Carregando…</p>
+      <div role="status" className="flex justify-center py-16">
+        <p className="text-sm text-[var(--kv-cream)]/75">Preparando seu cadastro…</p>
       </div>
     )
   }
@@ -170,6 +285,12 @@ export function OnboardingWizard() {
       <h1 className="text-center text-2xl font-semibold text-[var(--kv-cream)]">
         {STEP_TITLES[step - 1]}
       </h1>
+
+      {draftResetForAccount && (
+        <p role="status" className="rounded-xl border border-white/15 p-4 text-sm leading-6 text-[var(--kv-cream)]/80">
+          O rascunho anterior não pôde ser vinculado a esta conta. Continue o cadastro com seus dados.
+        </p>
+      )}
 
       {userId && (
         <p className="text-center text-xs text-[var(--kv-cream)]/40">

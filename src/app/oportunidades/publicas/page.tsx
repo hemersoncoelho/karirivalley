@@ -1,3 +1,4 @@
+import { loadPublicContent } from "@/lib/public-content";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,8 +6,9 @@ import { SearchX } from "lucide-react";
 
 import { fetchPublicOpportunities } from "@/lib/members/opportunities";
 import { LinkifiedText } from "@/components/ui/linkified-text";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { ShareButton } from "@/components/ui/share-button";
-import { SectionIndex, MetaDot } from "@/components/ui/editorial";
+import { SectionIndex } from "@/components/ui/editorial";
 
 export const metadata: Metadata = {
   title: "Oportunidades — Kariri Valley",
@@ -28,24 +30,24 @@ const TYPE_LABELS: Record<string, string> = {
 
 function formatDeadline(value: string): string {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(
-    new Date(value),
+    new Date(value.length === 10 ? `${value}T12:00:00Z` : value),
   );
 }
 
 export default async function PublicOportunidadesPage() {
-  const opportunities = await fetchPublicOpportunities();
+  const { data: opportunities, unavailable } = await loadPublicContent(fetchPublicOpportunities);
 
   return (
-    <main style={{ background: "var(--nb-page-bg)" }}>
+    <main id="conteudo" tabIndex={-1} style={{ background: "var(--nb-page-bg)" }}>
       {/* Header editorial */}
-      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 96 }}>
-        <SectionIndex index="—" label="Oportunidades" accentColor="#8A5C13" />
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: "clamp(48px, 8vw, 96px)" }}>
+        <SectionIndex index="—" label="Oportunidades" accentColor="var(--nb-label-accent)" />
         <h1
           className="kv-display"
           style={{ fontSize: "clamp(42px, 5.6vw, 80px)", color: "var(--nb-heading)", margin: "28px 0 0" }}
         >
           O que está{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>aberto</em> agora
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-opportunity-accent)" }}>aberto</em> agora
         </h1>
         <div
           className="flex flex-wrap items-end justify-between gap-4"
@@ -56,7 +58,7 @@ export default async function PublicOportunidadesPage() {
             de inovação do Cariri.
           </p>
           <p className="kv-meta" style={{ color: "var(--nb-body)", margin: 0 }}>
-            {opportunities.length} {opportunities.length === 1 ? "chamada ativa" : "chamadas ativas"}
+            {unavailable ? "" : opportunities.length} {unavailable ? "Atualização indisponível" : opportunities.length === 1 ? "chamada ativa" : "chamadas ativas"}
           </p>
         </div>
       </section>
@@ -65,13 +67,14 @@ export default async function PublicOportunidadesPage() {
       <section className="mx-auto max-w-[900px] px-6 lg:px-16" style={{ paddingTop: 48, paddingBottom: 120 }}>
         {opportunities.length === 0 ? (
           <div className="text-center" style={{ border: "1px dashed var(--nb-line)", padding: "64px 32px" }}>
-            <SearchX size={26} strokeWidth={1.8} color="var(--nb-body)" style={{ marginBottom: 18 }} />
+            <SearchX size={26} strokeWidth={1.8} color="var(--nb-body)" aria-hidden="true" style={{ margin: "0 auto 18px" }} />
             <h2 className="kv-display" style={{ fontSize: 26, color: "var(--nb-heading)", marginBottom: 10 }}>
-              Nenhuma chamada aberta no momento
+              {unavailable ? "Não foi possível carregar as oportunidades" : "Nenhuma chamada aberta no momento"}
             </h2>
             <p className="kv-meta" style={{ color: "var(--nb-body)", maxWidth: 420, margin: "0 auto", textTransform: "none", letterSpacing: ".04em" }}>
-              Em breve, editais, vagas, programas e mentorias estarão disponíveis aqui.
+              {unavailable ? "Tente novamente em alguns instantes. Você também pode conhecer a comunidade e sua trajetória." : "Quando novas vagas, editais e programas forem publicados, você encontra por aqui."}
             </p>
+            {unavailable && <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm font-semibold" style={{ color: "var(--nb-heading)" }}><RefreshButton /><Link href="/galeria" className="underline underline-offset-4">Conhecer a galeria</Link></div>}
           </div>
         ) : (
           <div className="flex flex-col">
@@ -87,7 +90,7 @@ export default async function PublicOportunidadesPage() {
                 }}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-terracotta)", fontWeight: 700 }}>
+                  <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-opportunity-accent)", fontWeight: 700 }}>
                     <span className="kv-index-num">{String(i + 1).padStart(2, "0")}</span>
                     {TYPE_LABELS[opp.opportunity_type] ?? opp.opportunity_type}
                     {opp.deadline && (

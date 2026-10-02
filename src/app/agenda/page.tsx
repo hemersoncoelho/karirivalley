@@ -1,3 +1,4 @@
+import { loadPublicContent } from "@/lib/public-content";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { CalendarX2 } from "lucide-react";
 
 import { fetchPublicUpcomingEvents } from "@/lib/members/events";
 import { LinkifiedText } from "@/components/ui/linkified-text";
+import { RefreshButton } from "@/components/ui/refresh-button";
 import { ShareButton } from "@/components/ui/share-button";
 import { SectionIndex, MetaDot } from "@/components/ui/editorial";
 
@@ -16,6 +18,7 @@ export const metadata: Metadata = {
 
 function formatEventDate(value: string): string {
   return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Fortaleza",
     weekday: "long",
     day: "2-digit",
     month: "long",
@@ -25,19 +28,19 @@ function formatEventDate(value: string): string {
 }
 
 export default async function PublicAgendaPage() {
-  const events = await fetchPublicUpcomingEvents();
+  const { data: events, unavailable } = await loadPublicContent(fetchPublicUpcomingEvents);
 
   return (
-    <main style={{ background: "var(--nb-page-bg)" }}>
+    <main id="conteudo" tabIndex={-1} style={{ background: "var(--nb-page-bg)" }}>
       {/* Header editorial */}
-      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: 96 }}>
+      <section className="mx-auto max-w-[1300px] px-6 lg:px-16" style={{ paddingTop: "clamp(48px, 8vw, 96px)" }}>
         <SectionIndex index="—" label="Agenda" />
         <h1
           className="kv-display"
           style={{ fontSize: "clamp(42px, 5.6vw, 80px)", color: "var(--nb-heading)", margin: "28px 0 0" }}
         >
           O que acontece no{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-turquoise)" }}>vale</em>
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-community-accent)" }}>vale</em>
         </h1>
         <div
           className="flex flex-wrap items-end justify-between gap-4"
@@ -48,7 +51,7 @@ export default async function PublicAgendaPage() {
             o ecossistema de inovação do Cariri.
           </p>
           <p className="kv-meta" style={{ color: "var(--nb-body)", margin: 0 }}>
-            {events.length} {events.length === 1 ? "edição programada" : "edições programadas"}
+            {unavailable ? "" : events.length} {unavailable ? "Atualização indisponível" : events.length === 1 ? "edição programada" : "edições programadas"}
           </p>
         </div>
       </section>
@@ -60,13 +63,14 @@ export default async function PublicAgendaPage() {
             className="text-center"
             style={{ border: "1px dashed var(--nb-line)", padding: "64px 32px" }}
           >
-            <CalendarX2 size={26} strokeWidth={1.8} color="var(--nb-body)" style={{ marginBottom: 18 }} />
+            <CalendarX2 size={26} strokeWidth={1.8} color="var(--nb-body)" aria-hidden="true" style={{ margin: "0 auto 18px" }} />
             <h2 className="kv-display" style={{ fontSize: 26, color: "var(--nb-heading)", marginBottom: 10 }}>
-              A agenda está entre edições
+              {unavailable ? "Não foi possível carregar a agenda" : "Novos encontros a caminho"}
             </h2>
             <p className="kv-meta" style={{ color: "var(--nb-body)", maxWidth: 420, margin: "0 auto", textTransform: "none", letterSpacing: ".04em" }}>
-              Em breve, novos encontros da comunidade serão divulgados por aqui.
+              {unavailable ? "Tente novamente em alguns instantes. Enquanto isso, conheça os registros dos nossos encontros na galeria." : "Assim que novos encontros forem publicados, você encontra todas as informações por aqui."}
             </p>
+            {unavailable && <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm font-semibold" style={{ color: "var(--nb-heading)" }}><RefreshButton /><Link href="/galeria" className="underline underline-offset-4">Conhecer a galeria</Link></div>}
           </div>
         ) : (
           <div className="flex flex-col">
@@ -82,7 +86,7 @@ export default async function PublicAgendaPage() {
                 }}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-turquoise)", fontWeight: 700 }}>
+                  <p className="kv-meta" style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, color: "var(--nb-community-accent)", fontWeight: 700 }}>
                     <MetaDot role="event" />
                     {formatEventDate(event.starts_at)}
                   </p>

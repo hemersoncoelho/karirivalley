@@ -1,9 +1,7 @@
-"use client";
-
 import Link from "next/link";
-import { useInView } from "@/hooks/useInView";
-import type React from "react";
 import { SectionIndex } from "@/components/ui/editorial";
+import { galleryPhotos } from "@/lib/gallery";
+import styles from "./fusion.module.css";
 
 /**
  * "Para quem é o vale" — três audiências com identidade própria:
@@ -15,95 +13,79 @@ const CARDS = [
     num: "01",
     chip: "QUEM EMPREENDE",
     title: "Fundadores e startups",
-    desc: "Do primeiro protótipo à rodada: gente construindo negócio no interior.",
-    img: "/media/comunidade-3.jpg",
+    desc: "Gente que tira ideias do papel, constrói negócios e cria novas oportunidades no Cariri.",
+    img: "/media/gallery/img-20250405-wa0128-fav.webp",
     alt: "Fundadores reunidos em encontro da comunidade",
     bodyBg: "#F7E7DF",
     accent: "#C25A2E",
+    photoPosition: "50% 78%",
     finds: ["Sócios e primeiros clientes", "Editais, aceleração e mentoria"],
   },
   {
     num: "02",
     chip: "QUEM CONSTRÓI",
-    title: "Talentos tech e criativos",
-    desc: "Trabalhe para fora, viva no Cariri — com uma comunidade técnica por perto.",
-    img: "/media/comunidade-5.webp",
+    title: "Talentos e conhecimento",
+    desc: "Estudantes, profissionais, pesquisadores e criativos que compartilham conhecimento e experimentam caminhos.",
+    img: "/media/gallery/img-20251010-wa0134-fav.webp",
     alt: "Talentos da comunidade em talk técnica",
     bodyBg: "#E4EBDD",
     accent: "#5F8753",
+    photoPosition: "50% 50%",
     finds: ["Projetos remotos e locais", "Talks e comunidade técnica"],
   },
   {
     num: "03",
     chip: "QUEM FOMENTA",
-    title: "Investidores e instituições",
-    desc: "Descubra e acelere o que nasce no interior — com dados e acesso direto.",
-    img: "/media/comunidade-6.webp",
+    title: "Quem fortalece o território",
+    desc: "Instituições, universidades e setor público que somam forças pelo desenvolvimento do território.",
+    img: "/media/gallery/20231107-213939-fav.webp",
     alt: "Parceiros institucionais em apresentação",
     bodyBg: "#F3E9CF",
     accent: "#C99A2E",
-    finds: ["Startups em tração, com MRR", "Talentos prontos para construir"],
+    photoPosition: "50% 65%",
+    finds: ["Projetos e ideias do território", "Pessoas para construir junto"],
   },
 ] as const;
 
 export default function AudienceSection() {
-  const { ref, inView } = useInView();
-
-  const fadeUp = (delay: number): React.CSSProperties => ({
-    opacity: inView ? 1 : 0,
-    transform: inView ? "translateY(0)" : "translateY(24px)",
-    transition: `opacity .7s ease ${delay}s, transform .7s ease ${delay}s`,
-  });
 
   return (
     <section className="relative overflow-hidden" style={{ background: "var(--nb-page-bg)", padding: "0 0 112px" }}>
-      <div ref={ref} className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
+      <div className="relative mx-auto max-w-[1300px] px-6 lg:px-16">
         <SectionIndex index="02" label="Para quem é" title="quem se encontra no vale" />
 
         <h2
           className="kv-display mt-10"
-          style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px", maxWidth: 720, ...fadeUp(0) }}
+          style={{ fontSize: "clamp(28px, 3vw, 44px)", color: "var(--nb-heading)", margin: "40px 0 36px", maxWidth: 720 }}
         >
-          O vale é de{" "}
-          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-terracotta)" }}>quem faz</em>{" "}
-          acontecer.
+          Muitas vozes. Um Cariri de{" "}
+          <em style={{ fontStyle: "italic", fontWeight: 400, color: "var(--nb-opportunity-accent)" }}>possibilidades.</em>
         </h2>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {CARDS.map((c, i) => (
+          {CARDS.map((c) => (
             <article
               key={c.num}
+              className={styles.framedCard}
               style={{
-                borderRadius: 20,
+                borderRadius: 3,
                 overflow: "hidden",
-                background: "var(--nb-cream)",
                 border: "1px solid rgba(22,20,15,.08)",
                 boxShadow: "0 1px 2px rgba(22,20,15,.04), 0 12px 32px rgba(22,20,15,.06)",
                 display: "flex",
                 flexDirection: "column",
-                ...fadeUp(0.08 + i * 0.07),
               }}
             >
-              <div style={{ position: "relative", aspectRatio: "16 / 10", overflow: "hidden" }}>
+              <div className={styles.photoFrame}>
+                <div style={{ position: "relative", aspectRatio: "2 / 1", overflow: "hidden" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={c.img}
-                  alt={c.alt}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "grayscale(1) contrast(1.06)" }}
+                  alt={galleryPhotos.find(photo => photo.src === c.img)?.alt ?? c.alt}
+                  loading="lazy"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: c.photoPosition, display: "block" }}
                 />
-                {/* duotone: sombras no acento, altas luzes no papel */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: c.accent, mixBlendMode: "multiply", opacity: 0.92 }} />
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "#F4EEE1", mixBlendMode: "lighten", opacity: 0.28 }} />
-                {/* trama halftone */}
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute", inset: 0,
-                    backgroundImage: "radial-gradient(rgba(6,13,8,.5) 1px, transparent 1.15px)",
-                    backgroundSize: "5px 5px",
-                    opacity: 0.25,
-                  }}
-                />
+                </div>
               </div>
 
               <div style={{ padding: "20px 22px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
@@ -112,7 +94,7 @@ export default function AudienceSection() {
                   style={{
                     alignSelf: "flex-start",
                     fontSize: 10, padding: "4px 11px", borderRadius: 999,
-                    background: "var(--nb-cream)", color: c.accent,
+                    background: "var(--nb-card-bg)", color: "var(--nb-opportunity-accent)",
                     border: `1px solid ${c.accent}33`,
                     marginBottom: 12,
                   }}
@@ -140,6 +122,8 @@ export default function AudienceSection() {
             </article>
           ))}
         </div>
+        <p className="mt-8 max-w-[700px] text-base leading-[1.8]" style={{ color: "var(--nb-body)" }}>A força da comunidade está em juntar perspectivas diferentes. Você pode chegar com um projeto, uma experiência ou uma pergunta. Sua vontade de participar também move o ecossistema.</p>
+        <Link href="/como-participar" className="inline-flex min-h-11 items-center gap-3 text-sm font-semibold underline underline-offset-4" style={{ color: "var(--nb-community-accent)" }}>Encontre seu lugar <span aria-hidden="true">↗</span></Link>
       </div>
     </section>
   );

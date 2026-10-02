@@ -28,7 +28,7 @@
 
 ## 🧭 Sobre a Kariri Valley
 
-No interior do Ceará, longe dos grandes polos de tecnologia do litoral, um movimento prova que inovação também floresce no sertão. A Kariri Valley nasceu em **2017** como um coletivo em **Juazeiro do Norte, Crato e Barbalha**, com encontros mensais e eventos abertos — de Fuck-up Nights a Startup Jua, de Campus Party Day ao Kariri Valley Day. Em **2018**, ajudou a pautar a **Lei Complementar nº 117/2018**, que reduziu impostos para empresas de base tecnológica no Cariri.
+No Cariri, as primeiras articulações para reunir iniciativas de inovação começaram em **2016**, instigadas pela Secretaria de Desenvolvimento Econômico e Inovação e pelo SEBRAE. Em **2017**, o movimento ganhou força como Ecossistema de Inovação do Cariri, o Kariri Valley. Eventos como E-Week e Campus Party Day ampliaram a participação em **2018**, ano da Lei Municipal de Inovação e Cidades Inteligentes de Juazeiro do Norte. O Startup Juá marcou **2019**. Após o enfraquecimento do movimento em **2020**, os encontros regulares retornaram em **2022**, quando a comunidade recebeu o **Ceará Awards como Comunidade Destaque**. Desde **2023**, novos ambientes, startups e comunidades fortalecem esse movimento orgânico.
 
 Hoje, a Kariri Valley é um **mapa vivo do ecossistema de inovação da região**: da ideia ao investimento, do laboratório à política pública, reunimos todos os agentes que fazem o futuro acontecer — para que possam se encontrar, colaborar e crescer juntos.
 

@@ -3,7 +3,6 @@ import { Space_Grotesk, Inter, Fraunces, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { NbThemeProvider } from "@/components/providers/NbThemeProvider";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -35,9 +34,10 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kariri Valley — O mapa vivo da inovação no Cariri",
+  metadataBase: new URL("https://www.karirivalley.com.br"),
+  title: "Kariri Valley — Comunidade de inovação do Cariri",
   description:
-    "Conectamos startups, talentos, empresas, universidades e instituições para fortalecer o ecossistema de inovação do Cariri, CE.",
+    "Pessoas que se encontram, compartilham ideias e fazem a inovação acontecer no Cariri. Conheça a comunidade, nossa história e nossos encontros.",
   keywords: [
     "Kariri Valley",
     "inovação",
@@ -50,20 +50,17 @@ export const metadata: Metadata = {
     "Barbalha",
   ],
   openGraph: {
-    title: "Kariri Valley — O mapa vivo da inovação no Cariri",
+    title: "Kariri Valley — Comunidade de inovação do Cariri",
     description:
-      "Conectamos startups, talentos, empresas, universidades e instituições para fortalecer o ecossistema de inovação do Cariri, CE.",
+      "Gente que se encontra, compartilha ideias e transforma o Cariri. Faça parte desse movimento.",
+    siteName: "Kariri Valley",
+    images: [{ url: "/media/gallery/20260801-195702-fav.webp", width: 2000, height: 1126, alt: "Comunidade Kariri Valley reunida no Cariri" }],
     locale: "pt_BR",
     type: "website",
   },
+  twitter: { card: "summary_large_image" },
+  icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
 };
-
-const SET_NB_THEME_SCRIPT = `
-  try {
-    var t = localStorage.getItem("kv-nb-theme");
-    if (t === "dark") document.documentElement.setAttribute("data-nb-theme", "dark");
-  } catch (e) {}
-`;
 
 export default function RootLayout({
   children,
@@ -74,17 +71,11 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${spaceGrotesk.variable} ${inter.variable} ${fraunces.variable} ${spaceMono.variable} h-full antialiased scroll-smooth`}
-      suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: SET_NB_THEME_SCRIPT }} />
-      </head>
       <body className="min-h-full flex flex-col" style={{ backgroundColor: "var(--nb-sand)" }}>
-        <NbThemeProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </NbThemeProvider>
+        <Navbar />
+        {children}
+        <Footer />
       </body>
     </html>
   );
